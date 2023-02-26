@@ -8,7 +8,7 @@ export const movieRouter = createTRPCRouter({
       z.object({ limit: z.number(), comingSoon: z.boolean(), date: z.date() })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.movies.findMany();
+      const moviesList = await ctx.prisma.movie.findMany({ take: input.limit });
       return moviesList;
     }),
 });

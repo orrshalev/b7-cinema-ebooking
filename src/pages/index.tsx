@@ -7,10 +7,10 @@ import Image from "next/image";
 import { api } from "../utils/api";
 import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
-import type { Movies } from "@prisma/client";
+import type { Movie } from "@prisma/client";
 
 type MoviePreviewCardProps = {
-  movie: Movies;
+  movie: Movie;
   setTrailerModalOpen: (open: boolean) => void;
 };
 

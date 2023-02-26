@@ -14,19 +14,20 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// TODO: relaseDate
 model Movie {
-    id          String     @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    synopsis    String
-    releaseDate DateTime
-    rating      String
-    genres      String[]
-    showtimes   DateTime[]
-    poster      String
-    trailer     String
-    length      Int
-    cast        String[]
-    directors   String[]
-    producers   String[]
-    reviews     String[]
+    id        String     @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    synopsis  String
+    // releaseDate DateTime
+    rating    String
+    genres    String[]
+    showtimes DateTime[]
+    poster    String
+    trailer   String
+    length    Int
+    cast      String[]
+    directors String[]
+    producers String[]
+    reviews   String[]
 }
