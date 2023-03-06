@@ -31,3 +31,21 @@ model Movie {
     producers String[]
     reviews   String[]
 }
+
+model User{
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    email       String
+    firstname   String
+    lastname    String
+    phonenumber String  
+    password    String
+    address     String?
+    paymentinfo PaymentInfo[]
+}
+
+model PaymentInfo {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    address     String
+    user        User     @relation(fields: [userid], references: [id])
+    userid      String   @db.ObjectId
+}
