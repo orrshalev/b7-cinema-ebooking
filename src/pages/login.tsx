@@ -4,8 +4,45 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useFormik } from 'formik';
+import { useSession, signIn, signOut } from "next-auth/react";
+import Credentials from "next-auth/providers/credentials";
 
-const login: NextPage = () => {
+
+const Login: NextPage = () => {
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password:''
+    },
+    onSubmit
+  });
+
+  async function onSubmit(values: { email: string; password: string; }) {
+    if (!values.email || !values.password) {
+      alert("Please enter your email and password!");
+    }
+    else {
+      // const status = await signIn('credentials', {
+      //   redirect: false,
+      //   email: values.email,
+      //   password: values.password,
+      //   callbackUrl: '/'
+      // })
+      console.log(values)
+      // authentication
+      if (values.email == "jenny@gmail.com" && values.password == "hello") {
+        alert("Login successful");
+      } else {
+        alert("Incorrect email or password.")
+      }
+
+      console.log(status);
+      // if(status?.ok)console.log("success!");
+    }
+  }
+
   return (
     <>
       <Head>
@@ -19,24 +56,35 @@ const login: NextPage = () => {
           <h1 className="text-center text-3xl font-semibold text-dark-red ">
             Sign in
           </h1>
-          <form className="mt-6">
+
+          <form onSubmit={formik.handleSubmit} className="mt-6">
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Email
               </label>
               <input
-                type="email"
+                id="email"
+                type="email"        
+                {...formik.getFieldProps('email')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
               />
+              {formik.errors.email && (
+                <div className="text-danger">{formik.errors.email}</div>
+              )}
             </div>
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Password
               </label>
               <input
-                type="password"
+                id="password"
+                type="password"           
+                {...formik.getFieldProps('password')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
               />
+              {formik.errors.password && (
+                <div className="text-danger">{formik.errors.password}</div>
+              )}
             </div>
             <a href="#" className="text-xs text-dark-red hover:underline">
               Forget Password?
@@ -65,4 +113,4 @@ const login: NextPage = () => {
   );
 };
 
-export default login;
+export default Login;
