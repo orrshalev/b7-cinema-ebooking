@@ -1,16 +1,59 @@
 import React, { useState } from "react";
+import { Navigate } from 'react-router-dom';
 import type { NextPage } from "next";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { states, months, days } from "../utils/consts";
 import Link from "next/link";
+import { Formik, Field, Form, FormikHelpers, validateYupSchema } from 'formik';
+import { string } from "zod";
+
+interface Payment {
+cardNumber: string;
+billAddress: string;
+billCity:        string;
+billState:       string;
+billZip:         string;
+cardType:        string;
+billMonth:           string;
+billDay:             string;
+cvv:             string; 
+}
+const emptyPayment = (): Payment => ({
+  cardNumber:  '',
+  billAddress: '',
+  billCity:        '',
+  billState:       '',
+  billZip:         '',
+  cardType:        '',
+  billMonth:           '',
+  billDay:             '',
+  cvv:             '' 
+});
+
+interface Values { 
+  firstName:   string;
+  lastName:    string;
+  email:       string;
+  phoneNumber: string;  
+  password:    string;
+  homeAddress: string;
+  city:        string;
+  state:       string;
+  zip:         string;
+  paymentMethod: Payment;
+}
+
+
 
 const Signup: NextPage = () => {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [toNext, setToNext] = useState(false)
 
   return (
     <>
+    {toNext ? <Navigate to="/registration-confirmation" /> : null}
       <Head>
         <title>Cinema E-Booking App</title>
         <meta name="description" content="Buy your tickets today!" />
@@ -23,7 +66,28 @@ const Signup: NextPage = () => {
             Sign Up
           </h1>
           <p className="pb-5 text-center text-xs text-red-500">* Required</p>
-          <form className="my-auto w-full max-w-lg">
+          <Formik
+            initialValues={{
+              firstName: '',
+              lastName: '',
+              email: '',
+              phoneNumber: '',
+              password: '',
+              homeAddress: '',
+              city: '',
+              state: '',
+              zip: '',
+              paymentMethod: emptyPayment()
+            }}
+            onSubmit = {(values: Values, { setSubmitting }: FormikHelpers<Values>
+              ) => {
+                setTimeout(() => {
+                  alert(JSON.stringify(values, null, 2));
+                  setSubmitting(false);
+                }, 500);
+              }}
+              >
+          <Form className="my-auto w-full max-w-lg">
             <div className="-mx-3 mb-6 flex flex-wrap">
               <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">
                 <label
@@ -32,12 +96,14 @@ const Signup: NextPage = () => {
                 >
                   First Name<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Field
                   className="mb-3 block w-full appearance-none rounded border bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:bg-white focus:outline-none"
                   id="grid-first-name"
+                  name="firstName"
                   type="text"
+                  pattern="^[A-Za-z]{1,50}$"
                   placeholder="Jane"
-                />
+                required/>
               </div>
               <div className="w-full px-3 md:w-1/2">
                 <label
@@ -46,12 +112,14 @@ const Signup: NextPage = () => {
                 >
                   Last Name<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Field
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-last-name"
+                  name="lastName"
                   type="text"
+                  pattern="^[A-Za-z]{1,50}$"
                   placeholder="Doe"
-                />
+                required/>
               </div>
             </div>
             <div className="-mx-3 mb-6 flex flex-wrap">
@@ -62,12 +130,13 @@ const Signup: NextPage = () => {
                 >
                   Email<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Field
                   className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-email-address"
-                  type="text"
+                  name ="email"
+                  type="email"
                   placeholder="example@gmail.com"
-                />
+                  required/> 
               </div>
             </div>
             <div className="-mx-3 mb-6 flex flex-wrap">
@@ -78,12 +147,14 @@ const Signup: NextPage = () => {
                 >
                   Phone number<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Field
                   className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-phone-number"
-                  type="text"
+                  type="tel"
+                  name="phoneNumber"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                   placeholder="111-1111-1111"
-                />
+                  required/>
               </div>
             </div>
             <div className="-mx-3 mb-6 flex flex-wrap">
@@ -94,12 +165,14 @@ const Signup: NextPage = () => {
                 >
                   Password<span className="text-red-500">*</span>
                 </label>
-                <input
+                <Field
                   className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-password"
                   type="password"
+                  name="password"
                   placeholder="******************"
-                />
+                  pattern=".{8,}" 
+                  required/>
                 <p className="text-xs italic text-gray-600">
                   Must be at least 8 characters long
                 </p>
@@ -113,10 +186,11 @@ const Signup: NextPage = () => {
                 >
                   Home Address
                 </label>
-                <input
+                <Field
                   className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-home-address"
                   type="text"
+                  name="homeAddress"
                 />
               </div>
             </div>
@@ -128,10 +202,12 @@ const Signup: NextPage = () => {
                 >
                   City
                 </label>
-                <input
+                <Field
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-city"
                   type="text"
+                  name="city"
+                  pattern="^[A-Za-z]{1,50}$"
                   placeholder="Albuquerque"
                 />
               </div>
@@ -143,14 +219,62 @@ const Signup: NextPage = () => {
                   State
                 </label>
                 <div className="relative">
-                  <select
+                  <Field as='select'
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-state"
-                  >
-                    {states.map((state) => {
-                      return <option key={state}>{state}</option>;
-                    })}
-                  </select>
+                    name="state">
+                      	<option value="AL">Alabama</option>
+	                      <option value="AK">Alaska</option>
+	                      <option value="AZ">Arizona</option>
+	                      <option value="AR">Arkansas</option>
+	                      <option value="CA">California</option>
+	                      <option value="CO">Colorado</option>
+	                      <option value="CT">Connecticut</option>
+                      	<option value="DE">Delaware</option>
+                      	<option value="DC">District Of Columbia</option>
+	                      <option value="FL">Florida</option>
+	                      <option value="GA">Georgia</option>
+	                      <option value="HI">Hawaii</option>
+	                      <option value="ID">Idaho</option>
+	                      <option value="IL">Illinois</option>
+	                      <option value="IN">Indiana</option>
+	                      <option value="IA">Iowa</option>
+	                      <option value="KS">Kansas</option>
+	                      <option value="KY">Kentucky</option>
+	                      <option value="LA">Louisiana</option>
+	                      <option value="ME">Maine</option>
+	                      <option value="MD">Maryland</option>
+	                      <option value="MA">Massachusetts</option>
+	                      <option value="MI">Michigan</option>
+	                      <option value="MN">Minnesota</option>
+	                      <option value="MS">Mississippi</option>
+	                      <option value="MO">Missouri</option>
+	                      <option value="MT">Montana</option>
+	                      <option value="NE">Nebraska</option>
+	                      <option value="NV">Nevada</option>
+	                      <option value="NH">New Hampshire</option>
+	                      <option value="NJ">New Jersey</option>
+	                      <option value="NM">New Mexico</option>
+	                      <option value="NY">New York</option>
+	                      <option value="NC">North Carolina</option>
+	                      <option value="ND">North Dakota</option>
+	                      <option value="OH">Ohio</option>
+	                      <option value="OK">Oklahoma</option>
+	                      <option value="OR">Oregon</option>
+	                      <option value="PA">Pennsylvania</option>
+	                      <option value="RI">Rhode Island</option>
+	                      <option value="SC">South Carolina</option>
+	                      <option value="SD">South Dakota</option>
+	                      <option value="TN">Tennessee</option>
+	                      <option value="TX">Texas</option>
+	                      <option value="UT">Utah</option>
+	                      <option value="VT">Vermont</option>
+	                      <option value="VA">Virginia</option>
+	                      <option value="WA">Washington</option>
+	                      <option value="WV">West Virginia</option>
+	                      <option value="WI">Wisconsin</option>
+	                      <option value="WY">Wyoming</option>
+                  </Field>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
                       className="h-4 w-4 fill-current"
@@ -169,10 +293,12 @@ const Signup: NextPage = () => {
                 >
                   Zip
                 </label>
-                <input
+                <Field
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="grid-zip"
                   type="text"
+                  name="zip"
+                  pattern=".{4,5}[0-9]"
                   placeholder="90210"
                 />
               </div>
@@ -202,12 +328,14 @@ const Signup: NextPage = () => {
                     >
                       Card Number<span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Field
                       className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-card-number"
                       type="text"
+                      name="cardNumber"
+                      pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"
                       placeholder="####-####-####-####"
-                    />
+                    required/>
                   </div>
                 </div>
                 <div className="-mx-3 mb-6 flex flex-wrap">
@@ -218,11 +346,12 @@ const Signup: NextPage = () => {
                     >
                       Billing Address<span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Field
                       className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-shipping-address"
                       type="text"
-                    />
+                      name="billAddress"
+                    required/>
                   </div>
                 </div>
                 <div className="-mx-3 mb-10 flex flex-wrap">
@@ -233,12 +362,14 @@ const Signup: NextPage = () => {
                     >
                       City<span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Field
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-city"
                       type="text"
+                      name="billCity"
+                      pattern="^[A-Za-z]{1,50}$"
                       placeholder="Albuquerque"
-                    />
+                    required/>
                   </div>
                   <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
                     <label
@@ -248,14 +379,63 @@ const Signup: NextPage = () => {
                       State<span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <select
+                      <Field as="select"
                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-state"
-                      >
-                        {states.map((state) => {
-                          return <option key={state}>{state}</option>;
-                        })}
-                      </select>
+                        name="billState"
+                      required>
+                        <option value="AL">Alabama</option>
+	                      <option value="AK">Alaska</option>
+	                      <option value="AZ">Arizona</option>
+	                      <option value="AR">Arkansas</option>
+	                      <option value="CA">California</option>
+	                      <option value="CO">Colorado</option>
+	                      <option value="CT">Connecticut</option>
+                      	<option value="DE">Delaware</option>
+                      	<option value="DC">District Of Columbia</option>
+	                      <option value="FL">Florida</option>
+	                      <option value="GA">Georgia</option>
+	                      <option value="HI">Hawaii</option>
+	                      <option value="ID">Idaho</option>
+	                      <option value="IL">Illinois</option>
+	                      <option value="IN">Indiana</option>
+	                      <option value="IA">Iowa</option>
+	                      <option value="KS">Kansas</option>
+	                      <option value="KY">Kentucky</option>
+	                      <option value="LA">Louisiana</option>
+	                      <option value="ME">Maine</option>
+	                      <option value="MD">Maryland</option>
+	                      <option value="MA">Massachusetts</option>
+	                      <option value="MI">Michigan</option>
+	                      <option value="MN">Minnesota</option>
+	                      <option value="MS">Mississippi</option>
+	                      <option value="MO">Missouri</option>
+	                      <option value="MT">Montana</option>
+	                      <option value="NE">Nebraska</option>
+	                      <option value="NV">Nevada</option>
+	                      <option value="NH">New Hampshire</option>
+	                      <option value="NJ">New Jersey</option>
+	                      <option value="NM">New Mexico</option>
+	                      <option value="NY">New York</option>
+	                      <option value="NC">North Carolina</option>
+	                      <option value="ND">North Dakota</option>
+	                      <option value="OH">Ohio</option>
+	                      <option value="OK">Oklahoma</option>
+	                      <option value="OR">Oregon</option>
+	                      <option value="PA">Pennsylvania</option>
+	                      <option value="RI">Rhode Island</option>
+	                      <option value="SC">South Carolina</option>
+	                      <option value="SD">South Dakota</option>
+	                      <option value="TN">Tennessee</option>
+	                      <option value="TX">Texas</option>
+	                      <option value="UT">Utah</option>
+	                      <option value="VT">Vermont</option>
+	                      <option value="VA">Virginia</option>
+	                      <option value="WA">Washington</option>
+	                      <option value="WV">West Virginia</option>
+	                      <option value="WI">Wisconsin</option>
+	                      <option value="WY">Wyoming</option>
+                      </Field>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg
                           className="h-4 w-4 fill-current"
@@ -274,12 +454,14 @@ const Signup: NextPage = () => {
                     >
                       Zip<span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Field
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-zip"
                       type="text"
+                      name="billZip"
+                      pattern=".{4,5}[0-9]"
                       placeholder="90210"
-                    />
+                    required/>
                   </div>
                 </div>
 
@@ -292,13 +474,13 @@ const Signup: NextPage = () => {
                       Payment Type<span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <select
+                      <Field as="select"
                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-payment-type"
-                      >
-                        <option>Credit</option>
-                        <option>Debit</option>
-                      </select>
+                      required>
+                        <option value="Credit">Credit</option>
+                        <option value="Debit">Debit</option>
+                      </Field>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg
                           className="h-4 w-4 fill-current"
@@ -318,14 +500,14 @@ const Signup: NextPage = () => {
                       Month<span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <select
+                      <Field
                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-month"
-                      >
-                        {months.map((month) => {
-                          return <option key={month}>{month}</option>;
-                        })}
-                      </select>
+                        name="billMonth"
+                        placeholder="12"
+                        pattern='([1-9]|1[012])'
+                      required/>
+
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg
                           className="h-4 w-4 fill-current"
@@ -345,14 +527,13 @@ const Signup: NextPage = () => {
                       Day<span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <select
+                      <Field 
                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-month"
-                      >
-                        {days.map((day) => {
-                          return <option key={day}>{day}</option>;
-                        })}
-                      </select>
+                        name="billDay"
+                        placeholder="31"
+                        pattern="([0-2]\d|3[0-1])"
+                      required/>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg
                           className="h-4 w-4 fill-current"
@@ -371,30 +552,35 @@ const Signup: NextPage = () => {
                     >
                       CVV<span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Field
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-cvv"
                       type="text"
+                      name="cvv"
+                      pattern="([0-9]{3})"
                       placeholder="###"
-                    />
+                    required/>
                   </div>
                 </div>
               </>
             )}
             <div className="mt-6 flex justify-center">
-              <Link
-                href="/registration-confirmation"
+              <button
+                type = "submit"
                 className="w-full transform rounded-md bg-dark-red px-8 py-4 text-center tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none"
               >
                 Sign up
-              </Link>
+              </button>
             </div>
-          </form>
-        </div>
+          </Form> 
+          </Formik>
+        </div>  
       </main>
       <Footer />
     </>
   );
 };
+
+
 
 export default Signup;

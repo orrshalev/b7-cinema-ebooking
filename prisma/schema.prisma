@@ -32,14 +32,13 @@ model Movie {
     reviews   String[]
 }
 
-<<<<<<< Updated upstream
 model User{
     id          String     @id @default(auto()) @map("_id") @db.ObjectId
     email       String
     firstName   String
     lastName    String
     phoneNumber String  
-    passord    String
+    password    String
     address     String?
     paymentInfo PaymentInfo[]
 }
@@ -50,22 +49,3 @@ model PaymentInfo {
     user        User     @relation(fields: [userId], references: [id])
     userId      String   @db.ObjectId
 }
-=======
-model User {
-    id              String     @id @default(auto()) @map("_id") @db.ObjectId
-    email           String
-    firstName       String
-    lastName        String
-    phoneNumber     String
-    password        String
-    address         String
-    paymentInfo     PaymentInfo[]
-}
-
-model PaymentInfo {
-    id              String     @id @default(auto()) @map("_id") @db.ObjectId
-    address         String
-    user            User       @relation(fields: [userId], references: [id])
-    userId          String     @db.ObjectId
-}
->>>>>>> Stashed changes
