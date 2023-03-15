@@ -5,8 +5,9 @@ import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useFormik } from 'formik';
-import { useSession, signIn, signOut } from "next-auth/react";
-import Credentials from "next-auth/providers/credentials";
+import bcrypt from 'bcryptjs'
+// import { useSession, signIn, signOut } from "next-auth/react";
+// import Credentials from "next-auth/providers/credentials";
 
 
 const Login: NextPage = () => {
@@ -19,7 +20,7 @@ const Login: NextPage = () => {
     onSubmit
   });
 
-  async function onSubmit(values: { email: string; password: string; }) {
+  /*async*/ function onSubmit(values: { email: string; password: string; }) {
     if (!values.email || !values.password) {
       alert("Please enter your email and password!");
     }
@@ -31,14 +32,53 @@ const Login: NextPage = () => {
       //   callbackUrl: '/'
       // })
       console.log(values)
+
+      async function hashPassword(plaintextPassword : string) {
+          const hash = await bcrypt.hash(plaintextPassword, 10);
+          
+      }
+    
+      // compare password
+      async function comparePassword(plaintextPassword : string, hash : string) {
+          const result = await bcrypt.compare(plaintextPassword, hash);
+          return result;
+      }
+
+      const saltRounds = 10;
+    //   const salt = bcrypt.genSaltSync(saltRounds);
+    //   const hash = bcrypt.hashSync(values.password, salt);
+
+    //   async function checkUser(username : string, password : string) {
+    //     //... fetch user from a db etc.
+    
+    //     const match = await bcrypt.compare(password, user.passwordHash);
+    
+    //     if(match) {
+    //         //login
+    //     }
+    
+    //     //...
+    // }
+
+    const hashPassword1 = async () => {
+      const hash = await bcrypt.hash(values.password, saltRounds)
+      console.log(hash)
+      console.log(await bcrypt.compare(values.password, hash))
+    }
+    
+    hashPassword1()
+    //.catch(err => handle(err))
+    .then(() => console.log('this will succeed'))
+    .catch(() => 'obligatory catch')
+
       // authentication
-      if (values.email == "jenny@gmail.com" && values.password == "hello") {
+      if (values.email == "jenny@gmail.com" && values.password == "abc123") {
         alert("Login successful");
       } else {
         alert("Incorrect email or password.")
       }
 
-      console.log(status);
+      // console.log(status);
       // if(status?.ok)console.log("success!");
     }
   }
