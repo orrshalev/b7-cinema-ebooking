@@ -10,7 +10,12 @@ export const userRouter = createTRPCRouter({
         cvv: z.string(), state: z.string()})
         )
         .query(async({input, ctx}) => { 
-            ctx.prisma.
+            const user = await ctx.prisma.user.create({data: {
+            email: input.email, firstName: input.firstName, lastName: input.lastName, phoneNumber: input.phoneNumber,
+            password: input.password, homeAddress: input.homeAddress, cardNumber: input.cardNumber, billAddress: input.billAddress,
+            cvv: input.cvv, state: input.state
+            },})
+            return user;
 
-        }
+        })
 })
