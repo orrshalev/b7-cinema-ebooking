@@ -9,29 +9,6 @@ import Link from "next/link";
 import { Formik, Field, Form, FormikHelpers, validateYupSchema } from 'formik';
 import { string } from "zod";
 
-interface Payment {
-cardNumber: string;
-billAddress: string;
-billCity:        string;
-billState:       string;
-billZip:         string;
-cardType:        string;
-billMonth:           string;
-billDay:             string;
-cvv:             string; 
-}
-const emptyPayment = (): Payment => ({
-  cardNumber:  '',
-  billAddress: '',
-  billCity:        '',
-  billState:       '',
-  billZip:         '',
-  cardType:        '',
-  billMonth:           '',
-  billDay:             '',
-  cvv:             '' 
-});
-
 interface Values { 
   firstName:   string;
   lastName:    string;
@@ -42,18 +19,24 @@ interface Values {
   city:        string;
   state:       string;
   zip:         string;
-  paymentMethod: Payment;
+  cardNumber: string;
+  billAddress: string;
+  billCity:        string;
+  billState:       string;
+  billZip:         string;
+  cardType:        string;
+  billMonth:           string;
+  billDay:             string;
+  cvv:             string;
 }
 
 
 
 const Signup: NextPage = () => {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [toNext, setToNext] = useState(false)
 
   return (
     <>
-    {toNext ? <Navigate to="/registration-confirmation" /> : null}
       <Head>
         <title>Cinema E-Booking App</title>
         <meta name="description" content="Buy your tickets today!" />
@@ -77,7 +60,15 @@ const Signup: NextPage = () => {
               city: '',
               state: '',
               zip: '',
-              paymentMethod: emptyPayment()
+              cardNumber:  '',
+              billAddress: '',
+              billCity:        '',
+              billState:       '',
+              billZip:         '',
+              cardType:        '',
+              billMonth:           '',
+              billDay:             '',
+              cvv:             '' 
             }}
             onSubmit = {(values: Values, { setSubmitting }: FormikHelpers<Values>
               ) => {
