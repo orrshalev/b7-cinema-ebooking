@@ -107,7 +107,7 @@ const Login: NextPage = () => {
                 type="email"        
                 {...formik.getFieldProps('email')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
-              />
+              required/>
               {formik.errors.email && (
                 <div className="text-danger">{formik.errors.email}</div>
               )}
@@ -118,10 +118,11 @@ const Login: NextPage = () => {
               </label>
               <input
                 id="password"
-                type="password"           
+                type="password"
+                pattern=".{8,}"            
                 {...formik.getFieldProps('password')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
-              />
+              required/>
               {formik.errors.password && (
                 <div className="text-danger">{formik.errors.password}</div>
               )}
