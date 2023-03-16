@@ -43,10 +43,5 @@ model User{
     cardNumber  String?
     billAddress String?
     cvv         String? 
-    state       State @default(ACTIVE)
-    
+    state       String    @default("ACTIVE")
 }
- enum State { 
-    INACTIVE
-    ACTIVE
- }
