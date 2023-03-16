@@ -8,7 +8,7 @@ export const userRouter = createTRPCRouter({
       z.object({ email: z.string() })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.user.findMany({ take: 1 });
-      return moviesList;
+      const findUser = await ctx.prisma.user.findMany({ take: 1 });
+      return findUser;
     }),
 });
