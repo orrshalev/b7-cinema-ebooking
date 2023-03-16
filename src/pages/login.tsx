@@ -6,6 +6,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { useFormik } from 'formik';
 import bcrypt from 'bcryptjs'
+import { getSession } from "next-auth/react";
 // import { useSession, signIn, signOut } from "next-auth/react";
 // import Credentials from "next-auth/providers/credentials";
 
@@ -155,3 +156,16 @@ const Login: NextPage = () => {
 };
 
 export default Login;
+
+Login.getInitialProps = async(context) => {
+  const {req,res} = context;
+  const session = await getSession({req});
+
+  if (session && res && session.accessToken) {
+    res.writeHead(302, {
+      Location: "/",
+    });
+    res.end()
+    return;
+  }
+}

@@ -10,22 +10,22 @@ import bcrypt from 'bcryptjs'
 //     },
 //   })
 // }
-class findUser {
-    email : string
-    pw : string
-    constructor(values: { email: string; password: string; }){
-        this.email=values.email,
-        this.pw=values.password;
-     }
+// class findUser {
+//     email : string
+//     pw : string
+//     constructor(values: { email: string; password: string; }){
+//         this.email=values.email,
+//         this.pw=values.password;
+//      }
 
-    userFound(values: { email: string; password: string; }) {
-    return api.user.getUser.useQuery({
-      email : values.email,
-    });
-    }
-}
+//     userFound(values: { email: string; password: string; }) {
+//     return api.user.getUser.useQuery({
+//       email : values.email,
+//     });
+//     }
+// }
 
-export { findUser }
+// export { findUser }
 
 // if (findUser.email != null)
 //     isFound = true
