@@ -72,9 +72,9 @@ const Login: NextPage = (props): JSX.Element => {
               required/>
                 <div className="text-danger"></div>
             </div>
-            <a href="/forgotpwdemail" className="text-xs text-dark-red hover:underline">
+            <Link href="/forgotpwdemail" className="text-xs text-dark-red hover:underline">
               Forget Password?
-            </a>
+            </Link>
             <div className="mt-6">
               <button className="w-full transform rounded-md bg-dark-red px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none">
                 Login
