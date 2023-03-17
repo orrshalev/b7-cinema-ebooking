@@ -5,11 +5,7 @@ import { useSession } from "next-auth/react";
 
 const Navbar = () => {
   const { status, data } = useSession();
-    if (status == "authenticated") {
-      const linkEl = document.getElementById('loginlink')
-      linkEl.textContent = "Logout"
-      // linkEl.setAttribute('href', '/')
-    }
+
   return (
     <nav className="px-auto  top-0 w-full border-gray-200 bg-dark-red py-2.5 font-exo sm:px-4">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
@@ -60,15 +56,29 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
+              {data?.user ? (
+                <>
             <li>
               <Link
-                id="loginlink"
-                href="/login"
+                id="logoutlink"
+                href="#"
                 className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
               >
-                Login
+                Logout
               </Link>
-            </li>
+              </li>
+              </>
+              ): (
+                <li>
+                <Link
+                  id="loginlink"
+                  href="#"
+                  className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
+                >
+                  Login
+                </Link>
+                </li>
+            )}
           </ul>
         </div>
       </div>
