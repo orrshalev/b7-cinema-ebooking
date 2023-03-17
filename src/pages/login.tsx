@@ -1,131 +1,76 @@
-import React from "react";
+import React, { FormEventHandler, useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useFormik } from 'formik';
-import bcrypt from 'bcryptjs'
-// import { useSession, signIn, signOut } from "next-auth/react";
-// import Credentials from "next-auth/providers/credentials";
+import { signIn } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 
+const Login: NextPage = (props): JSX.Element => {
+ 
+  const [userInfo, setUserInfo] = useState({email: '', password: ''})
+  const handleSubmit:FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
 
-const Login: NextPage = () => {
-
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password:''
-    },
-    onSubmit
-  });
-
-  /*async*/ function onSubmit(values: { email: string; password: string; }) {
-    if (!values.email || !values.password) {
-      alert("Please enter your email and password!");
-    }
-    else {
-      // const status = await signIn('credentials', {
-      //   redirect: false,
-      //   email: values.email,
-      //   password: values.password,
-      //   callbackUrl: '/'
-      // })
-      console.log(values)
-
-      async function hashPassword(plaintextPassword : string) {
-          const hash = await bcrypt.hash(plaintextPassword, 10);
-          
-      }
-    
-      // compare password
-      async function comparePassword(plaintextPassword : string, hash : string) {
-          const result = await bcrypt.compare(plaintextPassword, hash);
-          return result;
-      }
-
-      const saltRounds = 10;
-    //   const salt = bcrypt.genSaltSync(saltRounds);
-    //   const hash = bcrypt.hashSync(values.password, salt);
-
-    //   async function checkUser(username : string, password : string) {
-    //     //... fetch user from a db etc.
-    
-    //     const match = await bcrypt.compare(password, user.passwordHash);
-    
-    //     if(match) {
-    //         //login
-    //     }
-    
-    //     //...
-    // }
-
-    const hashPassword1 = async () => {
-      const hash = await bcrypt.hash(values.password, saltRounds)
-      console.log(hash)
-      console.log(await bcrypt.compare(values.password, hash))
-    }
-    
-    hashPassword1()
-    //.catch(err => handle(err))
-    .then(() => console.log('this will succeed'))
-    .catch(() => 'obligatory catch')
-
-      // authentication
-      if (values.email == "jenny@gmail.com" && values.password == "abc123") {
-        alert("Login successful");
-      } else {
-        alert("Incorrect email or password.")
-      }
-
-      // console.log(status);
-      // if(status?.ok)console.log("success!");
-    }
-  }
-
+    signIn("credentials", {
+      email: userInfo.email,
+      password: userInfo.password,
+      redirect: false
+    }).then((response) => {
+      // Access the status field of the response object
+      if (response.error == null) alert("Login Success!");
+      else alert("Invalid credentials. Please try again.")
+    }).catch((error) => {
+      // Handle any errors that occurred during authentication
+      alert(error)
+    });
+  };
   return (
     <>
-      <Head>
-        <title>Cinema E-Booking App</title>
-        <meta name="description" content="Buy your tickets today!" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Head>
+      <title>Cinema E-Booking App</title>
+      <meta name="description" content="Buy your tickets today!" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
       <Navbar />
       <main className="flex min-h-screen flex-col items-center ">
         <div className="my-auto w-full rounded-md bg-white p-6 shadow-md lg:max-w-xl">
-          <h1 className="text-center text-3xl font-semibold text-dark-red ">
+          <h1 className="text-center text-3xl font-semibold text-dark-red">
             Sign in
           </h1>
 
-          <form onSubmit={formik.handleSubmit} className="mt-6">
+          <form onSubmit={handleSubmit} className="mt-6">
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Email
               </label>
               <input
+                value={userInfo.email}
+                onChange={ ({ target }) =>
+                  setUserInfo({ ...userInfo, email: target.value})
+                }
                 id="email"
                 type="email"        
-                {...formik.getFieldProps('email')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
               required/>
-              {formik.errors.email && (
-                <div className="text-danger">{formik.errors.email}</div>
-              )}
+                <div className="text-danger"></div>
             </div>
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Password
               </label>
               <input
+                value={userInfo.password}
+                onChange={ ({ target }) =>
+                  setUserInfo({ ...userInfo, password: target.value})
+                }
                 id="password"
                 type="password"
                 pattern=".{8,}"            
-                {...formik.getFieldProps('password')}
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
               required/>
-              {formik.errors.password && (
-                <div className="text-danger">{formik.errors.password}</div>
-              )}
+                <div className="text-danger"></div>
             </div>
             <a href="#" className="text-xs text-dark-red hover:underline">
               Forget Password?
