@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { signIn } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 
 const Login: NextPage = (props): JSX.Element => {
  
@@ -12,13 +13,28 @@ const Login: NextPage = (props): JSX.Element => {
   const handleSubmit:FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const res = signIn("credentials", {
+    signIn("credentials", {
       email: userInfo.email,
       password: userInfo.password,
       redirect: false
+    }).then((response) => {
+      // Access the status field of the response object
+      if (response.error == null) alert("Login Success!");
+      else alert("Invalid credentials.")
+    }).catch((error) => {
+      // Handle any errors that occurred during authentication
+      alert(error)
     });
 
-    console.log(res)
+    // if (JSON.stringify(res) == "{}") {
+    //   alert("Login success!")
+    // }
+    // else {
+    //   alert("Incorrect credentials! Try again.")
+    // }
+    // res.then().catch((err) => {
+    //   alert("Invalid credentials.")
+    // })
   };
   return (
     <>
