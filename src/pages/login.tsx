@@ -20,21 +20,11 @@ const Login: NextPage = (props): JSX.Element => {
     }).then((response) => {
       // Access the status field of the response object
       if (response.error == null) alert("Login Success!");
-      else alert("Invalid credentials.")
+      else alert("Invalid credentials. Please try again.")
     }).catch((error) => {
       // Handle any errors that occurred during authentication
       alert(error)
     });
-
-    // if (JSON.stringify(res) == "{}") {
-    //   alert("Login success!")
-    // }
-    // else {
-    //   alert("Incorrect credentials! Try again.")
-    // }
-    // res.then().catch((err) => {
-    //   alert("Invalid credentials.")
-    // })
   };
   return (
     <>

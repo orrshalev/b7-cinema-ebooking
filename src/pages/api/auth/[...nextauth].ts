@@ -24,7 +24,7 @@ const authOptions: NextAuthOptions = {
         const user = await prisma.user.findFirst({where: {email: email}})
 
         if (user == null) {
-          throw new Error('Email does not exist. Please sign up for an account.')
+          throw new Error('Incorrect credentials')
         }
         if (await bcrypt.compare(password, user.password) === true) {
           return {email: email, name: user.firstName + " " + user.lastName}
