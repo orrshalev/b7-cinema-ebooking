@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const { status, data } = useSession();
@@ -60,6 +60,7 @@ const Navbar = () => {
                 <>
             <li>
               <Link
+                onClick={() => signOut()}
                 id="logoutlink"
                 href="#"
                 className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
@@ -72,7 +73,7 @@ const Navbar = () => {
                 <li>
                 <Link
                   id="loginlink"
-                  href="#"
+                  href="/login"
                   className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
                 >
                   Login
