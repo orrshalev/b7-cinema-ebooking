@@ -37,6 +37,23 @@ interface Values {
 
 
 const Signup: NextPage = () => {
+  const signupMutation = api.user.createUser.useMutation();
+
+  const handleSignup = async (values, { setSubmitting }) => {
+    const result = await signupMutation.mutateAsync({email: values.email, firstName: values.firstName, lastName: values.lastName, phoneNumber: values.phoneNumber,
+            password: values.password, homeAddress: combine(values.homeAddress, combine(values.city, combine(values.state, values.zip))), 
+            cardNumber: values.cardNumber, billAddress: combine(values.billAddress, combine(values.billCity, combine(values.billState, values.billZip))),
+            cvv: values.cvv, state: "ACTIVE"});
+
+    setSubmitting(false);
+
+    if (result.error) {
+      alert(result.error.message);
+    } else {
+      alert('Signup successful!');
+    }
+  };
+
   const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   return (
@@ -74,18 +91,7 @@ const Signup: NextPage = () => {
               billDay:             '',
               cvv:             '' 
             }}
-            onSubmit = {(values: Values, { setSubmitting }: FormikHelpers<Values>
-              ) => {
-                setTimeout(() => {
-                  const user = api.user.createUser.useQuery({
-                    email: values.email, firstName: values.firstName, lastName: values.lastName, phoneNumber: values.phoneNumber,
-                    password: values.password, homeAddress: combine(values.homeAddress, combine(values.city, combine(values.state, values.zip))), 
-                    cardNumber: values.cardNumber, billAddress: combine(values.billAddress, combine(values.billCity, combine(values.billState, values.billZip))),
-                    cvv: values.cvv, state: "ACTIVE",
-                  });
-                  setSubmitting(false);
-                }, 500);
-              }}
+            onSubmit = {handleSignup}
               >
           <Form className="my-auto w-full max-w-lg">
             <div className="-mx-3 mb-6 flex flex-wrap">
