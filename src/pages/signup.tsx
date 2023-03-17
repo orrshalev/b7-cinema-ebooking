@@ -178,6 +178,18 @@ const Signup: NextPage = () => {
               </div>
             </div>
             <div className="mt-6 w-full px-3 md:mb-0 md:w-1/3">
+            <input
+                id="promo-checkbox"
+                type="checkbox"
+                value=""
+                className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+              />
+              <label
+                htmlFor="promo-checkbox"
+                className="ml-2 text-sm font-medium text-gray-700"
+              >
+                Subscribe for promotions
+              </label><br/><br/>
               <input
                 id="payment-checkbox"
                 type="checkbox"

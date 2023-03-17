@@ -38,7 +38,7 @@ const login: NextPage = () => {
                 className="mt-2 block w-full rounded-md border bg-white px-4 py-2 text-dark-red focus:border-light-coral focus:outline-none focus:ring focus:ring-light-coral focus:ring-opacity-40"
               />
             </div>
-            <a href="#" className="text-xs text-dark-red hover:underline">
+            <a href="/forgotpwdemail" className="text-xs text-dark-red hover:underline">
               Forget Password?
             </a>
             <div className="mt-6">
