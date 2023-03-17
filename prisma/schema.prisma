@@ -31,3 +31,18 @@ model Movie {
     producers String[]
     reviews   String[]
 }
+
+model User{
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    email       String
+    firstName   String
+    lastName    String
+    phoneNumber String  
+    password    String
+    homeAddress String?
+    cardNumber  String?
+    billAddress String?
+    cvv         String? 
+    state       String    @default("ACTIVE")
+    admin       Boolean    @default(false) 
+}
