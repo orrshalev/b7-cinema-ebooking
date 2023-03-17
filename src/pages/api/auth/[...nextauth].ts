@@ -27,7 +27,7 @@ const authOptions: NextAuthOptions = {
           throw new Error('Invalid email or password')
         }
         if (user.email == email && user.password == password) {
-          throw new Error('Login Successful!')
+          return { id: password, name: "Jenny Ngo", email: email}
         }
       }
     })

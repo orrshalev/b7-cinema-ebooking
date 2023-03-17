@@ -32,7 +32,7 @@ const Login: NextPage = (props): JSX.Element => {
       <Navbar />
       <main className="flex min-h-screen flex-col items-center ">
         <div className="my-auto w-full rounded-md bg-white p-6 shadow-md lg:max-w-xl">
-          <h1 className="text-center text-3xl font-semibold text-dark-red ">
+          <h1 className="text-center text-3xl font-semibold text-dark-red">
             Sign in
           </h1>
 
