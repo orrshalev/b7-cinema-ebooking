@@ -5,8 +5,6 @@ import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { signIn } from 'next-auth/react';
-import { api } from "~/utils/api";
-import { prisma } from "~/server/db";
 
 const Login: NextPage = (props): JSX.Element => {
  

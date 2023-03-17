@@ -2,6 +2,7 @@ import NextAuth, {NextAuthOptions} from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '~/server/db';
 import { api } from '~/utils/api';
+import bcrypt from 'bcrypt'
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -22,12 +23,14 @@ const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findFirst({where: {email: email}})
 
-        // throw new Error(user?.email)
         if (user == null) {
-          throw new Error('Invalid email or password')
+          throw new Error('Email does not exist. Please sign up for an account.')
         }
-        if (user.email == email && user.password == password) {
-          return { id: password, name: "Jenny Ngo", email: email}
+        if (await bcrypt.compare(password, user.password) === true) {
+          return {email: email, name: user.firstName + " " + user.lastName}
+        }
+        else {
+          throw new Error('Incorrect credentials')
         }
       }
     })
