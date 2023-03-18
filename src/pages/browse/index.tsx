@@ -7,6 +7,7 @@ import { daysNames } from "../../utils/consts";
 import Image from "next/image";
 import TrailerModal from "../../components/TrailerModal";
 import type { Movie } from "../../types/Movie";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 type MoviePreviewCardProps = {
