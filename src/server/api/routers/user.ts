@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -35,7 +32,7 @@ export const userRouter = createTRPCRouter({
           cvv: input.cvv,
           state: input.state,
           confirmed: false,
-          confirmCode: (Math.random() + 1).toString(36).substring(7),
+          confirmCode: (Math.random() + 1).toString(36).substring(6),
         },
       });
       return user;

@@ -1,43 +1,45 @@
-import NextAuth, {NextAuthOptions} from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from '~/server/db';
-import { api } from '~/utils/api';
-import bcrypt from 'bcrypt'
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { prisma } from "~/server/db";
+import { api } from "~/utils/api";
+import bcrypt from "bcrypt";
 
 const authOptions: NextAuthOptions = {
   session: {
-    strategy: 'jwt'
+    strategy: "jwt",
   },
-  providers:[
+  providers: [
     CredentialsProvider({
-      type: 'credentials',
+      type: "credentials",
       credentials: {
-        email: { label: "email", type: "email", placeholder: "me@email.com"},
-        password: { label: "Password", type: "password"}
+        email: { label: "email", type: "email", placeholder: "me@email.com" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req){
-        const {email, password} = credentials as {
+      async authorize(credentials, req) {
+        const { email, password } = credentials as {
           email: string;
           password: string;
         };
 
-        const user = await prisma.user.findFirst({where: {email: email}})
+        const user = await prisma.user.findFirst({ where: { email: email } });
 
         if (user == null) {
-          throw new Error('Incorrect credentials')
+          throw new Error("Incorrect credentials");
         }
-        if (await bcrypt.compare(password, user.password) === true) {
-          return {email: email, name: user.firstName + " " + user.lastName}
+        if (user.password == password) {
+          return { email: email, name: user.firstName + " " + user.lastName };
         }
-        else {
-          throw new Error('Incorrect credentials')
+        if ((await bcrypt.compare(password, user.password)) === true) {
+          return { email: email, name: user.firstName + " " + user.lastName };
+        } else {
+          throw new Error("Incorrect credentials");
         }
-      }
-    })
+      },
+    }),
   ],
   pages: {
-    signIn: '../../login'
-  }
-}
+    signIn: "../../login",
+  },
+};
 
 export default NextAuth(authOptions);
