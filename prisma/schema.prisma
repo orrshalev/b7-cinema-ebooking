@@ -46,5 +46,5 @@ model User {
     state       String  @default("ACTIVE")
     confirmed   Boolean
     confirmCode String
-    admin       Boolean @default(false)
+    isAdmin     Boolean @default(false)
 }
