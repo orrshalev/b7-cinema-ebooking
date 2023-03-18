@@ -56,10 +56,12 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
-  getLoggedInUser: protectedProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findUnique({
+  getUser: publicProcedure
+  .input(z.object({email: z.string()}))
+  .query(async ({ input, ctx }) => {
+    const user = await ctx.prisma.user.findFirst({
       where: {
-        email: ctx.session.user.email,
+        email:input.email
       },
     });
     return user;

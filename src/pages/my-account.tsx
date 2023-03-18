@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
@@ -7,6 +7,7 @@ import { states, months, days } from "../utils/consts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { api } from "~/utils/api";
+import type { Session } from "next-auth";
 
 interface User {
   firstName: string;
@@ -34,9 +35,13 @@ const NotLoggedIn = () => (
   </div>
 );
 
-const EditProfile = () => {
+type EditProfileProps = {
+  data: Session;
+};
+
+const EditProfile = ({ data }: EditProfileProps) => {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const loggedInUser = api.user.getLoggedInUser.useQuery();
+  const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
 
   const currentUser = loggedInUser.data;
   const [user, setUser] = useState(currentUser);
@@ -48,11 +53,15 @@ const EditProfile = () => {
     }
   };
 
+  useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(user);
   };
-  if (loggedInUser.data) {
+  if (user) {
     return (
       <div className="mx-auto max-w-md">
         <h1 className="mb-4 text-3xl font-bold text-black">Edit Profile</h1>
@@ -469,7 +478,7 @@ const MyAccount: NextPage = () => {
       </Head>
       <Navbar />
       <main className="my-10 flex min-h-screen flex-col items-center">
-        {data?.user ? <EditProfile /> : <NotLoggedIn />}
+        {data?.user ? <EditProfile data={data} /> : <NotLoggedIn />}
       </main>
       <Footer />
     </>
