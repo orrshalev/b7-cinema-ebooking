@@ -16,16 +16,16 @@ const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-
+        if (!credentials) {
+          throw new Error("No credentials provided");
+        }
+        const { email, password } = credentials;
         const user = await prisma.user.findFirst({ where: { email: email } });
 
         if (user == null) {
           throw new Error("Incorrect credentials");
         }
+        // Added because encryption not happening on client side yet
         if (user.password == password) {
           return { email: email, name: user.firstName + " " + user.lastName };
         }

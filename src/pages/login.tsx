@@ -4,8 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const Login: NextPage = (props): JSX.Element => {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
@@ -40,7 +39,6 @@ const Login: NextPage = (props): JSX.Element => {
           <h1 className="text-center text-3xl font-semibold text-dark-red">
             Sign in
           </h1>
-
           <form onSubmit={handleSubmit} className="mt-6">
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
