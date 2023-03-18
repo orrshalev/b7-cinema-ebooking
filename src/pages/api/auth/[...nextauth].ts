@@ -25,15 +25,14 @@ const authOptions: NextAuthOptions = {
 
         if (user == null) {
           throw new Error('Incorrect credentials')
-        }
+        } 
         if (await bcrypt.compare(password, user.password) === true) {
           return {
             email: email, 
             name: user.firstName + " " + user.lastName,
-            isAdmin: true
-          }
+            isAdmin: user.isAdmin
         }
-        else {
+      } else {
           throw new Error('Incorrect credentials')
         }
       }
