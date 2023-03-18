@@ -18,6 +18,7 @@ type MoviePreviewCardProps = {
 };
 
 const MoviePreviewCard = (props: MoviePreviewCardProps) => {
+
   const [isHovered, setIsHovered] = useState(false);
   const { movie, setTrailerModalOpen } = props;
 

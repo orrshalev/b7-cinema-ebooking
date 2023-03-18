@@ -27,7 +27,11 @@ const authOptions: NextAuthOptions = {
           throw new Error('Incorrect credentials')
         }
         if (await bcrypt.compare(password, user.password) === true) {
-          return {email: email, name: user.firstName + " " + user.lastName}
+          return {
+            email: email, 
+            name: user.firstName + " " + user.lastName,
+            isAdmin: true
+          }
         }
         else {
           throw new Error('Incorrect credentials')
@@ -37,6 +41,14 @@ const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: '../../login'
+  },
+  callbacks: {
+    jwt(params) {
+      if (params.user?.isAdmin) {
+        params.token.isAdmin = params.user.isAdmin;
+      }
+      return params.token
+    }
   }
 }
 
