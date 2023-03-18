@@ -34,8 +34,25 @@ export const userRouter = createTRPCRouter({
           billAddress: input.billAddress,
           cvv: input.cvv,
           state: input.state,
+          confirmed: false,
+          confirmCode: (Math.random() + 1).toString(36).substring(7),
         },
       });
       return user;
+    }),
+  confirmUser: publicProcedure
+    .input(z.object({ email: z.string(), confirmCode: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user && user.confirmCode == input.confirmCode) {
+        await ctx.prisma.user.update({
+          where: { email: input.email },
+          data: { confirmed: true },
+        });
+        return true;
+      }
+      return false;
     }),
 });
