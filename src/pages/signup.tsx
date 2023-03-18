@@ -8,6 +8,10 @@ import { states, months, days } from "../utils/consts";
 import Link from "next/link";
 import { Formik, Field, Form, FormikHelpers, validateYupSchema } from 'formik';
 import { string } from "zod";
+import { api } from "../utils/api";
+function combine(str1: string, str2: string) {
+  return str1 + ", " + str2;
+}
 
 interface Values { 
   firstName:   string;
@@ -73,7 +77,12 @@ const Signup: NextPage = () => {
             onSubmit = {(values: Values, { setSubmitting }: FormikHelpers<Values>
               ) => {
                 setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
+                  const user = api.user.createUser.useQuery({
+                    email: values.email, firstName: values.firstName, lastName: values.lastName, phoneNumber: values.phoneNumber,
+                    password: values.password, homeAddress: combine(values.homeAddress, combine(values.city, combine(values.state, values.zip))), 
+                    cardNumber: values.cardNumber, billAddress: combine(values.billAddress, combine(values.billCity, combine(values.billState, values.billZip))),
+                    cvv: values.cvv, state: "ACTIVE",
+                  });
                   setSubmitting(false);
                 }, 500);
               }}
