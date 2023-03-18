@@ -8,6 +8,8 @@ import { Formik, Field, Form } from "formik";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import bcrypt from "bcryptjs"
+
 function combine(str1: string, str2: string) {
   return str1 + ", " + str2;
 }
@@ -43,12 +45,14 @@ const Signup: NextPage = () => {
     values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(values.password, saltRounds);
     const result = await signupMutation.mutateAsync({
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
-      password: values.password,
+      password: hashedPassword,
       homeAddress: combine(
         values.homeAddress,
         combine(values.city, combine(values.state, values.zip))
