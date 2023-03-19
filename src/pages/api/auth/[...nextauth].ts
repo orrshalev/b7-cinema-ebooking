@@ -29,10 +29,10 @@ const authOptions: NextAuthOptions = {
         if (user == null) {
           throw new Error('invalidc credentials')
         }
-        if (user.confirmed == false) {
-          throw new Error('verification')
-        }
         if (await bcrypt.compare(password, user.password) === true) {
+          if (user.confirmed == false) {
+            throw new Error('verification')
+          }
           return {
             email: email, 
             name: user.firstName + " " + user.lastName,
