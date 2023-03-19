@@ -1,11 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { user } from "@userfront/core";
 
-const pwdemail: NextPage = () => {
+interface EmailOptions {
+  to: string;
+  subject: string;
+  text: string;
+}
+
+const Pwdemail: NextPage = () => {
+  const [userEmail, setUserEmail] = useState({ email: "" });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('../api/sendConfirmationEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userEmail.email),
+      });
+      console.log(userEmail)
+      const data = await response.json();
+      return
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -23,16 +52,24 @@ const pwdemail: NextPage = () => {
             Please enter your email address associated with your account
           </h4>
           <input
-            className=" mb-10 w-full rounded-md border-solid bg-white px-4 py-2 tracking-wide text-dark-red transition-colors  duration-200 focus:bg-white"
-            type="text"
+            value={userEmail.email}
+            onChange={({ target }) =>
+              setUserEmail({ ...userEmail, email: target.value })
+            }
+            type="email"
             placeholder="Enter Email Address"
+            className=" mb-10 w-full rounded-md border-solid bg-white px-4 py-2 tracking-wide text-dark-red transition-colors  duration-200 focus:bg-white"
+            required
           />
-          <Link
-            href="/forgotpwdverification"
-            className="focus:outline-solid w-full transform rounded-md bg-dark-red px-4 py-2 text-center tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-light-coral"
-          >
-            Send Verification Code
-          </Link>
+          <button
+            onClick={onSubmit}>
+            <Link
+              href="/forgotpwdverification"
+              className="focus:outline-solid w-full transform rounded-md bg-dark-red px-4 py-2 text-center tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-light-coral"
+            >
+              Send Verification Code
+            </Link>
+          </button>
         </div>
       </main>
       <Footer />
@@ -40,4 +77,4 @@ const pwdemail: NextPage = () => {
   );
 };
 
-export default pwdemail;
+export default Pwdemail;
