@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -34,8 +31,25 @@ export const userRouter = createTRPCRouter({
           billAddress: input.billAddress,
           cvv: input.cvv,
           state: input.state,
+          confirmed: false,
+          confirmCode: (Math.random() + 1).toString(36).substring(6),
         },
       });
       return user;
+    }),
+  confirmUser: publicProcedure
+    .input(z.object({ email: z.string(), confirmCode: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user && user.confirmCode == input.confirmCode) {
+        await ctx.prisma.user.update({
+          where: { email: input.email },
+          data: { confirmed: true },
+        });
+        return true;
+      }
+      return false;
     }),
 });

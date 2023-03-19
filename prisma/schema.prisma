@@ -32,17 +32,19 @@ model Movie {
     reviews   String[]
 }
 
-model User{
-    id          String     @id @default(auto()) @map("_id") @db.ObjectId
-    email       String
+model User {
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
+    email       String  @unique
     firstName   String
     lastName    String
-    phoneNumber String  
+    phoneNumber String
     password    String
     homeAddress String?
     cardNumber  String?
     billAddress String?
-    cvv         String? 
-    state       String    @default("ACTIVE")
-    isAdmin     Boolean   @default(false)
+    cvv         String?
+    state       String  @default("ACTIVE")
+    confirmed   Boolean
+    confirmCode String
+    isAdmin     Boolean @default(false)
 }

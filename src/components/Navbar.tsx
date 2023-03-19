@@ -60,6 +60,15 @@ const Navbar = () => {
                 <>
             <li>
               <Link
+                id="profileLink"
+                href="/my-account"
+                className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
+              >
+                Profile
+              </Link>
+              </li>
+            <li>
+              <Link
                 onClick={() => signOut()}
                 id="logoutlink"
                 href="#"
