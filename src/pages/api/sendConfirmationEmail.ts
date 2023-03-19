@@ -22,8 +22,8 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'eilenej12345',
-          pass: 'vcgalleqzmphzogt',
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
   
