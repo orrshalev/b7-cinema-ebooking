@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Navigate } from 'react-router-dom';
 import type { NextPage } from "next";
 import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { states, months, days } from "../utils/consts";
-import Link from "next/link";
-import { Formik, Field, Form, FormikHelpers, validateYupSchema } from 'formik';
-import { string } from "zod";
-import { api } from "../utils/api";
+import Navbar from "~/components/Navbar";
+import Footer from "~/components/Footer";
+import { states } from "~/utils/consts";
+import { Formik, Field, Form } from "formik";
+import type { FormikHelpers } from "formik";
+import { useRouter } from "next/router";
+import { api } from "~/utils/api";
+import bcrypt from "bcryptjs"
+
 function combine(str1: string, str2: string) {
   return str1 + ", " + str2;
 }
@@ -20,9 +21,9 @@ interface Values {
   phoneNumber: string;
   password: string;
   homeAddress: string;
-  homeCity: string;
-  homeState: string;
-  homeZip: string;
+  city: string;
+  state: string;
+  zip: string;
   cardNumber: string;
   billAddress: string;
   billCity: string;
@@ -30,44 +31,47 @@ interface Values {
   billZip: string;
   cardType: string;
   billMonth: string;
-  billYear: string;
+  billDay: string;
   cvv: string;
 }
 
-
-
 const Signup: NextPage = () => {
   const signupMutation = api.user.createUser.useMutation();
+  const router = useRouter();
+  // IMPORTANT: should be false by default
+  const USE_DEFAULT_VALUES = true;
 
-  const handleSignup = async (values, { setSubmitting }) => {
+  const handleSignup = async (
+    values: Values,
+    { setSubmitting }: FormikHelpers<Values>
+  ) => {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(values.password, saltRounds);
     const result = await signupMutation.mutateAsync({
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
-      password: values.password,
-      homeAddress: values.homeAddress,
-      homeCity: values.homeCity,
-      homeState: values.homeState,
-      homeZip: values.homeZip,
+      password: hashedPassword,
+      homeAddress: combine(
+        values.homeAddress,
+        combine(values.city, combine(values.state, values.zip))
+      ),
       cardNumber: values.cardNumber,
-      billAddress: values.billAddress,
-      billCity: values.billCity,
-      billState: values.billState,
-      billZip: values.billZip,
-      cardType: values.cardType,
-      billMonth: values.billMonth,
-      billYear: values.billYear,
+      billAddress: combine(
+        values.billAddress,
+        combine(values.billCity, combine(values.billState, values.billZip))
+      ),
       cvv: values.cvv,
       state: "ACTIVE",
     });
 
     setSubmitting(false);
 
-    if (result.error) {
-      alert(result.error.message);
+    if (signupMutation.error) {
+      alert(signupMutation.error.message);
     } else {
-      alert('Signup successful!');
+      await router.push("/signup/confirmation?email=" + values.email);
     }
   };
 
@@ -88,26 +92,49 @@ const Signup: NextPage = () => {
           </h1>
           <p className="pb-5 text-center text-xs text-red-500">* Required</p>
           <Formik
-            initialValues={{
-              firstName: "",
-              lastName: "",
-              email: "",
-              phoneNumber: "",
-              password: "",
-              homeAddress: "",
-              homeCity: "",
-              homeState: "",
-              homeZip: "",
-              cardNumber: "",
-              billAddress: "",
-              billCity: "",
-              billState: "",
-              billZip: "",
-              cardType: "",
-              billMonth: "",
-              billYear: "",
-              cvv: "",
-            }}
+            initialValues={
+              USE_DEFAULT_VALUES
+                ? {
+                    firstName: "Orr",
+                    lastName: "Shalev",
+                    email: "ore.shovel@gmail.com",
+                    phoneNumber: "555-332-4213",
+                    password: "NotAGoodPassword",
+                    homeAddress: "5000 Camoo Road",
+                    state: "Alabama",
+                    city: "Jerusalem",
+                    zip: "30055",
+                    cardNumber: "",
+                    billAddress: "",
+                    billCity: "",
+                    billState: "",
+                    billZip: "",
+                    cardType: "",
+                    billMonth: "",
+                    billDay: "",
+                    cvv: "",
+                  }
+                : {
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    password: "",
+                    homeAddress: "",
+                    state: "Alabama",
+                    city: "",
+                    zip: "",
+                    cardNumber: "",
+                    billAddress: "",
+                    billCity: "",
+                    billState: "",
+                    billZip: "",
+                    cardType: "",
+                    billMonth: "",
+                    billDay: "",
+                    cvv: "",
+                  }
+            }
             onSubmit={handleSignup}
           >
             <Form className="my-auto w-full max-w-lg">
@@ -210,7 +237,7 @@ const Signup: NextPage = () => {
                 <div className="w-full px-3">
                   <label
                     htmlFor="grid-home-address"
-                    className="mb-2 block text-xs font-bold uppercase tracking-wide   "
+                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                   >
                     Home Address
                   </label>
@@ -234,7 +261,7 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-city"
                     type="text"
-                    name="homeCity"
+                    name="city"
                     pattern="^[A-Za-z]{1,50}$"
                     placeholder="Albuquerque"
                   />
@@ -251,59 +278,11 @@ const Signup: NextPage = () => {
                       as="select"
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-state"
-                      name="homeState"
+                      name="state"
                     >
-                      <option value="AL">Alabama</option>
-                      <option value="AK">Alaska</option>
-                      <option value="AZ">Arizona</option>
-                      <option value="AR">Arkansas</option>
-                      <option value="CA">California</option>
-                      <option value="CO">Colorado</option>
-                      <option value="CT">Connecticut</option>
-                      <option value="DE">Delaware</option>
-                      <option value="DC">District Of Columbia</option>
-                      <option value="FL">Florida</option>
-                      <option value="GA">Georgia</option>
-                      <option value="HI">Hawaii</option>
-                      <option value="ID">Idaho</option>
-                      <option value="IL">Illinois</option>
-                      <option value="IN">Indiana</option>
-                      <option value="IA">Iowa</option>
-                      <option value="KS">Kansas</option>
-                      <option value="KY">Kentucky</option>
-                      <option value="LA">Louisiana</option>
-                      <option value="ME">Maine</option>
-                      <option value="MD">Maryland</option>
-                      <option value="MA">Massachusetts</option>
-                      <option value="MI">Michigan</option>
-                      <option value="MN">Minnesota</option>
-                      <option value="MS">Mississippi</option>
-                      <option value="MO">Missouri</option>
-                      <option value="MT">Montana</option>
-                      <option value="NE">Nebraska</option>
-                      <option value="NV">Nevada</option>
-                      <option value="NH">New Hampshire</option>
-                      <option value="NJ">New Jersey</option>
-                      <option value="NM">New Mexico</option>
-                      <option value="NY">New York</option>
-                      <option value="NC">North Carolina</option>
-                      <option value="ND">North Dakota</option>
-                      <option value="OH">Ohio</option>
-                      <option value="OK">Oklahoma</option>
-                      <option value="OR">Oregon</option>
-                      <option value="PA">Pennsylvania</option>
-                      <option value="RI">Rhode Island</option>
-                      <option value="SC">South Carolina</option>
-                      <option value="SD">South Dakota</option>
-                      <option value="TN">Tennessee</option>
-                      <option value="TX">Texas</option>
-                      <option value="UT">Utah</option>
-                      <option value="VT">Vermont</option>
-                      <option value="VA">Virginia</option>
-                      <option value="WA">Washington</option>
-                      <option value="WV">West Virginia</option>
-                      <option value="WI">Wisconsin</option>
-                      <option value="WY">Wyoming</option>
+                      {states.map((state) => (
+                        <option key={state}>{state}</option>
+                      ))}
                     </Field>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg
@@ -327,7 +306,7 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-zip"
                     type="text"
-                    name="homeZip"
+                    name="zip"
                     pattern=".{4,5}[0-9]"
                     placeholder="90210"
                   />
@@ -419,57 +398,9 @@ const Signup: NextPage = () => {
                           name="billState"
                           required
                         >
-                          <option value="AL">Alabama</option>
-                          <option value="AK">Alaska</option>
-                          <option value="AZ">Arizona</option>
-                          <option value="AR">Arkansas</option>
-                          <option value="CA">California</option>
-                          <option value="CO">Colorado</option>
-                          <option value="CT">Connecticut</option>
-                          <option value="DE">Delaware</option>
-                          <option value="DC">District Of Columbia</option>
-                          <option value="FL">Florida</option>
-                          <option value="GA">Georgia</option>
-                          <option value="HI">Hawaii</option>
-                          <option value="ID">Idaho</option>
-                          <option value="IL">Illinois</option>
-                          <option value="IN">Indiana</option>
-                          <option value="IA">Iowa</option>
-                          <option value="KS">Kansas</option>
-                          <option value="KY">Kentucky</option>
-                          <option value="LA">Louisiana</option>
-                          <option value="ME">Maine</option>
-                          <option value="MD">Maryland</option>
-                          <option value="MA">Massachusetts</option>
-                          <option value="MI">Michigan</option>
-                          <option value="MN">Minnesota</option>
-                          <option value="MS">Mississippi</option>
-                          <option value="MO">Missouri</option>
-                          <option value="MT">Montana</option>
-                          <option value="NE">Nebraska</option>
-                          <option value="NV">Nevada</option>
-                          <option value="NH">New Hampshire</option>
-                          <option value="NJ">New Jersey</option>
-                          <option value="NM">New Mexico</option>
-                          <option value="NY">New York</option>
-                          <option value="NC">North Carolina</option>
-                          <option value="ND">North Dakota</option>
-                          <option value="OH">Ohio</option>
-                          <option value="OK">Oklahoma</option>
-                          <option value="OR">Oregon</option>
-                          <option value="PA">Pennsylvania</option>
-                          <option value="RI">Rhode Island</option>
-                          <option value="SC">South Carolina</option>
-                          <option value="SD">South Dakota</option>
-                          <option value="TN">Tennessee</option>
-                          <option value="TX">Texas</option>
-                          <option value="UT">Utah</option>
-                          <option value="VT">Vermont</option>
-                          <option value="VA">Virginia</option>
-                          <option value="WA">Washington</option>
-                          <option value="WV">West Virginia</option>
-                          <option value="WI">Wisconsin</option>
-                          <option value="WY">Wyoming</option>
+                          {states.map((state) => (
+                            <option key={state}>{state}</option>
+                          ))}
                         </Field>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                           <svg
@@ -563,15 +494,15 @@ const Signup: NextPage = () => {
                         htmlFor="grid-month"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       >
-                        Year<span className="text-red-500">*</span>
+                        Day<span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <Field
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="grid-month"
-                          name="billYear"
-                          placeholder="2023"
-                          pattern="(\d\d\d\d])"
+                          name="billDay"
+                          placeholder="31"
+                          pattern="([0-2]\d|3[0-1])"
                           required
                         />
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -621,7 +552,5 @@ const Signup: NextPage = () => {
     </>
   );
 };
-
-
 
 export default Signup;
