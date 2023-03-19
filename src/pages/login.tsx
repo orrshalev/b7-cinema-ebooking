@@ -14,17 +14,15 @@ const Login: NextPage = (props): JSX.Element => {
     signIn("credentials", {
       email: userInfo.email,
       password: userInfo.password,
-      redirect: false,
-    })
-      .then((response) => {
-        // Access the status field of the response object
-        if (response?.error == null) alert("Login Success!");
-        else alert("Invalid credentials. Please try again.");
-      })
-      .catch((error) => {
-        // Handle any errors that occurred during authentication
-        alert(error);
-      });
+      redirect: false
+    }).then((response) => {
+      // Access the status field of the response object
+      if (response?.error == null) alert("Login Success!");
+      else alert("Invalid credentials. Please try again.")
+    }).catch((error) => {
+      // Handle any errors that occurred during authentication
+      alert(error)
+    });
   };
   return (
     <>

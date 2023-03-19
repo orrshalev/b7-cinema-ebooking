@@ -19,27 +19,40 @@ const authOptions: NextAuthOptions = {
         if (!credentials) {
           throw new Error("No credentials provided");
         }
-        const { email, password } = credentials;
+        const {email, password} = credentials as {
+          email: string;
+          password: string;
+        };
+
         const user = await prisma.user.findFirst({ where: { email: email } });
 
         if (user == null) {
-          throw new Error("Incorrect credentials");
+          throw new Error('Incorrect credentials')
+        } 
+        if (await bcrypt.compare(password, user.password) === true) {
+          return {
+            email: email, 
+            name: user.firstName + " " + user.lastName,
+            isAdmin: user.isAdmin
         }
-        // Added because encryption not happening on client side yet
-        if (user.password == password) {
-          return { email: email, name: user.firstName + " " + user.lastName };
+      } else {
+          throw new Error('Incorrect credentials')
         }
-        if ((await bcrypt.compare(password, user.password)) === true) {
-          return { email: email, name: user.firstName + " " + user.lastName };
-        } else {
-          throw new Error("Incorrect credentials");
-        }
-      },
-    }),
+      }
+    })
   ],
   pages: {
-    signIn: "../../login",
+    signIn: '../../login'
   },
-};
+  callbacks: {
+    jwt(params) {
+      if (params.user?.isAdmin) {
+        params.token.isAdmin = params.user.isAdmin;
+      }
+      return params.token
+    }
+  }
+}
+
 
 export default NextAuth(authOptions);
