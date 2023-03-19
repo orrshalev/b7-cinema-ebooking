@@ -18,7 +18,8 @@ const Login: NextPage = (props): JSX.Element => {
     }).then((response) => {
       // Access the status field of the response object
       if (response?.error == null) alert("Login Success!");
-      else alert("Invalid credentials. Please try again.")
+      else if(response?.error == "verification") alert("Please check your inbox and verify your account.")
+      else {alert("Invalid credentials. Please try again.")}
     }).catch((error) => {
       // Handle any errors that occurred during authentication
       alert(error)

@@ -24,11 +24,14 @@ const authOptions: NextAuthOptions = {
           password: string;
         };
 
-        const user = await prisma.user.findFirst({ where: { email: email } });
-
+        const user = await prisma.user.findFirst({ where: { email: email }});
+        console.log(user)
         if (user == null) {
-          throw new Error('Incorrect credentials')
-        } 
+          throw new Error('invalidc credentials')
+        }
+        if (user.confirmed == false) {
+          throw new Error('verification')
+        }
         if (await bcrypt.compare(password, user.password) === true) {
           return {
             email: email, 
@@ -36,7 +39,7 @@ const authOptions: NextAuthOptions = {
             isAdmin: user.isAdmin
         }
       } else {
-          throw new Error('Incorrect credentials')
+          throw new Error('invalidc credentials')
         }
       }
     })
