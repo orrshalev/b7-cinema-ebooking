@@ -89,6 +89,7 @@ export const userRouter = createTRPCRouter({
       }
       return user;
     }),
+    ///////////////////////////////////////////////////////////////////////
   confirmUser: publicProcedure
     .input(z.object({ email: z.string(), confirmCode: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -104,4 +105,30 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
+    ///////////////////////////////////////////////////////////////////////
+    // so how this works is that you must provide ID, every other field is optional (leave blank)
+    // if any other field is provided, it will update that field
+  updateUser: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        email: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        phoneNumber: z.string(),
+        password: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      for (const [key, value] of Object.entries(input)) {
+        if (value != "" && !(key === "id")) {
+          await ctx.prisma.user.update({
+            where: { id: input.id },
+            data: { [key]: value },
+          });
+        }
+      }
+      return true;
+    }),
+    
 });
