@@ -31,7 +31,7 @@ interface Values {
   billZip: string;
   cardType: string;
   billMonth: string;
-  billDay: string;
+  billYear: string;
   cvv: string;
 }
 
@@ -53,15 +53,18 @@ const Signup: NextPage = () => {
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
       password: hashedPassword,
-      homeAddress: combine(
-        values.homeAddress,
-        combine(values.city, combine(values.state, values.zip))
-      ),
+      homeAddress: values.homeAddress,
+      homeCity: values.city, 
+      homeState: values.state, 
+      homeZip: values.zip,
       cardNumber: values.cardNumber,
-      billAddress: combine(
-        values.billAddress,
-        combine(values.billCity, combine(values.billState, values.billZip))
-      ),
+      cardType: values.cardType,
+      billAddress: values.billAddress,
+      billCity: values.billCity,
+      billState: values.billState, 
+      billZip: values.billZip,
+      billMonth: values.billMonth,
+      billYear: values.billYear,
       cvv: values.cvv,
       state: "ACTIVE",
     });
@@ -111,7 +114,7 @@ const Signup: NextPage = () => {
                     billZip: "",
                     cardType: "",
                     billMonth: "",
-                    billDay: "",
+                    billYear: "",
                     cvv: "",
                   }
                 : {
@@ -131,7 +134,7 @@ const Signup: NextPage = () => {
                     billZip: "",
                     cardType: "",
                     billMonth: "",
-                    billDay: "",
+                    billYear: "",
                     cvv: "",
                   }
             }
@@ -463,7 +466,7 @@ const Signup: NextPage = () => {
                     </div>
                     <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
                       <label
-                        htmlFor="grid-month"
+                        htmlFor="grid-year"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       >
                         Month<span className="text-red-500">*</span>
@@ -471,7 +474,7 @@ const Signup: NextPage = () => {
                       <div className="relative">
                         <Field
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                          id="grid-month"
+                          id="grid-year"
                           name="billMonth"
                           placeholder="12"
                           pattern="([1-9]|1[012])"
@@ -491,18 +494,18 @@ const Signup: NextPage = () => {
                     </div>
                     <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
                       <label
-                        htmlFor="grid-month"
+                        htmlFor="grid-year"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                       >
-                        Day<span className="text-red-500">*</span>
+                        Year<span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <Field
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                          id="grid-month"
-                          name="billDay"
-                          placeholder="31"
-                          pattern="([0-2]\d|3[0-1])"
+                          id="grid-year"
+                          name="billYear"
+                          placeholder="2023"
+                          pattern="(\d\d\d\d)"
                           required
                         />
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
