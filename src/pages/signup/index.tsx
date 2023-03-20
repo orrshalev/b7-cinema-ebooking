@@ -42,25 +42,9 @@ const Signup: NextPage = () => {
   // IMPORTANT: should be false by default
   const USE_DEFAULT_VALUES = true;
 
-  const handleSignup = async (
-    values: Values,
+  const handleSignup = async ( values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
-    try {
-      const response = await fetch('../api/sendConfirmationEmailRegistration', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email, code: '11111'}),
-      });
-      console.log(email)
-      const data = await response.json() as JSON;
-      return
-      console.log(data)
-    } catch (error) {
-      console.error(error);
-    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(values.password, saltRounds);
     const result = await signupMutation.mutateAsync({

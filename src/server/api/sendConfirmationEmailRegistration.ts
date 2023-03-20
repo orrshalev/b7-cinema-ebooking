@@ -4,7 +4,7 @@ import { NextApiResponse } from "next";
 import { string } from 'zod';
 
 
-async function sendConfirmationEmailRegister(req: NextApiRequest, res: NextApiResponse) {
+async function sendConfirmationEmailRegistration(req: NextApiRequest, res: NextApiResponse)  {
     if (req.method === 'POST') {
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -42,4 +42,4 @@ async function sendConfirmationEmailRegister(req: NextApiRequest, res: NextApiRe
     }
   }
 
-  export default sendConfirmationEmailRegister;
+  export default sendConfirmationEmailRegistration;

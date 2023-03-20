@@ -87,6 +87,20 @@ export const userRouter = createTRPCRouter({
           },
         });
       }
+      try {
+        const response = await fetch('../sendConfirmationEmailRegistration', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({email: user.email, code: user.confirmCode}),
+        });
+        const data = await response.json() as JSON;   
+        return
+        console.log(data)
+      } catch (error) {
+        console.error(error);
+      }
       return user;
     }),
   confirmUser: publicProcedure
