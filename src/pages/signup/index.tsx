@@ -36,6 +36,7 @@ interface Values {
 }
 
 const Signup: NextPage = () => {
+  const email = 'djgonzalez0209@gmail.com'
   const signupMutation = api.user.createUser.useMutation();
   const router = useRouter();
   // IMPORTANT: should be false by default
@@ -45,6 +46,21 @@ const Signup: NextPage = () => {
     values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
+    try {
+      const response = await fetch('../api/sendConfirmationEmailRegistration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: email, code: '11111'}),
+      });
+      console.log(email)
+      const data = await response.json() as JSON;
+      return
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(values.password, saltRounds);
     const result = await signupMutation.mutateAsync({
@@ -68,13 +84,15 @@ const Signup: NextPage = () => {
       cvv: values.cvv,
       state: "ACTIVE",
     });
-
     try {
-      const response = await fetch('../api/sendConfirmationEmailRegistration', {
+      const response = await fetch('../api/sendConfirmationEmail', {
         method: 'POST',
-        body: JSON.stringify({email: email, code: '11111'}),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(result.email),
       });
-      console.log(email)
+      console.log(result.email)
       const data = await response.json() as JSON;
       return
       console.log(data)
