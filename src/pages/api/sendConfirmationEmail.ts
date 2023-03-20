@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { NextApiRequest } from "next";
 import { NextApiResponse } from "next";
+import { string } from 'zod';
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -27,7 +28,7 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
   
       const mailConfigurations = {
         from: 'eilenej12345@gmail.com',
-        to: req.body,
+        to: req.body as string,
         subject: "Cinema E-Booking: Change Your Password",
         text: "Here is the code to change your password: " + code + "\nDO NOT share this code with anyone.",
       };

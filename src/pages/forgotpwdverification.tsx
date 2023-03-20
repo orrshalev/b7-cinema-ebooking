@@ -5,10 +5,10 @@ import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
 
-const pwdEmailVerify: NextPage = () => {
+const PwdEmailVerify: NextPage = () => {
   const [code, setCode] = useState({ code: "" });
 
-  const onSubmit = async (e) => {
+  const onSubmit = () => {
     // if (localStorage.getItem("pwCode") == code.code) alert("SUCCESS!");
     // else alert("BAD");
   };
@@ -51,4 +51,4 @@ const pwdEmailVerify: NextPage = () => {
   );
 };
 
-export default pwdEmailVerify;
+export default PwdEmailVerify;

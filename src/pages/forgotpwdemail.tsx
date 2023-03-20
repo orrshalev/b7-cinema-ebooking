@@ -15,7 +15,7 @@ interface mailConfigurations {
 const Pwdemail: NextPage = () => {
   const [userEmail, setUserEmail] = useState({ email: "" });
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: Event) => {
     e.preventDefault();
     
     try {
@@ -27,7 +27,7 @@ const Pwdemail: NextPage = () => {
         body: JSON.stringify(userEmail.email),
       });
       console.log(userEmail)
-      const data = await response.json();
+      const data = await response.json() as JSON;
       return
       console.log(data)
     } catch (error) {
