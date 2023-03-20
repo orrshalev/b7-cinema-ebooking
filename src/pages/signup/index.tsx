@@ -84,21 +84,6 @@ const Signup: NextPage = () => {
       cvv: values.cvv,
       state: "ACTIVE",
     });
-    try {
-      const response = await fetch('../api/sendConfirmationEmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(result.email),
-      });
-      console.log(result.email)
-      const data = await response.json() as JSON;
-      return
-      console.log(data)
-    } catch (error) {
-      console.error(error);
-    }
     setSubmitting(false);
 
     if (signupMutation.error) {
