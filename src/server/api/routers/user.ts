@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -104,4 +108,14 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
+  getUser: publicProcedure
+  .input(z.object({email: z.string()}))
+  .query(async ({ input, ctx }) => {
+    const user = await ctx.prisma.user.findFirst({
+      where: {
+        email:input.email
+      },
+    });
+    return user;
+  }),
 });
