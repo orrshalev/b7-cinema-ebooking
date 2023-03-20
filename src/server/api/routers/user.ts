@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+import nodemailer from 'nodemailer';
+
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
     .input(
@@ -88,16 +90,28 @@ export const userRouter = createTRPCRouter({
         });
       }
       try {
-        const response = await fetch('../sendConfirmationEmailRegistration', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'eilenej12345',
+            pass: 'vcgalleqzmphzogt', 
           },
-          body: JSON.stringify({email: user.email, code: user.confirmCode}),
         });
-        const data = await response.json() as JSON;   
-        return
-        console.log(data)
+    
+        const mailConfigurations = {
+          from: 'eilenej12345@gmail.com',
+          to: user.email,
+          subject: "Cinema E-Booking: Register Confirmation",
+          text: "Here is the code to register your account: " + user.confirmCode + "\nDO NOT share this code with anyone.",
+        };
+  
+        // TO DO: store verification code
+  
+      //   if (typeof(Storage) !== "undefined") 
+      //   localStorage.setItem("pwCode", code)
+      //   console.log(localStorage.getItem("pwCode"))
+    
+        await transporter.sendMail(mailConfigurations);
       } catch (error) {
         console.error(error);
       }

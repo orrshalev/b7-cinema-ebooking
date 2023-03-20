@@ -34,6 +34,7 @@ const Confirmation: NextPage = () => {
       } else if (!confirmed) {
         alert("Something went wrong! Try again.");
       } else {
+        alert("Confirmed!");
         await router.push("/login");
       }
     }
