@@ -9,8 +9,8 @@ const pwdEmailVerify: NextPage = () => {
   const [code, setCode] = useState({ code: "" });
 
   const onSubmit = async (e) => {
-    if (localStorage.getItem("pwCode") == code.code) alert("SUCCESS!");
-    else alert("BAD");
+    // if (localStorage.getItem("pwCode") == code.code) alert("SUCCESS!");
+    // else alert("BAD");
   };
 
   return (

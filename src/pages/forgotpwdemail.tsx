@@ -6,7 +6,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { user } from "@userfront/core";
 
-interface EmailOptions {
+interface mailConfigurations {
   to: string;
   subject: string;
   text: string;

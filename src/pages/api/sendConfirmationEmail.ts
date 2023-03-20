@@ -14,8 +14,6 @@ function generateString(length: number) {
     return result;
 }
 
-console.log(generateString(5));
-
 async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) {
     const code = generateString(6)
     if (req.method === 'POST') {
@@ -27,17 +25,21 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
         },
       });
   
-      const mailOptions = {
+      const mailConfigurations = {
         from: 'eilenej12345@gmail.com',
         to: req.body,
         subject: "Cinema E-Booking: Change Your Password",
         text: "Here is the code to change your password: " + code + "\nDO NOT share this code with anyone.",
       };
 
-      localStorage.setItem("pwCode", code)
+      // TO DO: store verification code
+
+    //   if (typeof(Storage) !== "undefined") 
+    //   localStorage.setItem("pwCode", code)
+    //   console.log(localStorage.getItem("pwCode"))
   
       try {
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailConfigurations);
         console.error(res.status);
         res.status(200).json({ success: true });
       } catch (error) {
