@@ -69,6 +69,18 @@ const Signup: NextPage = () => {
       state: "ACTIVE",
     });
 
+    try {
+      const response = await fetch('../api/sendConfirmationEmailRegistration', {
+        method: 'POST',
+        body: JSON.stringify({email: email, code: '11111'}),
+      });
+      console.log(email)
+      const data = await response.json() as JSON;
+      return
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
     setSubmitting(false);
 
     if (signupMutation.error) {
