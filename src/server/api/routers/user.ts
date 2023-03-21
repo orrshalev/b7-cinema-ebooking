@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 import nodemailer from 'nodemailer';
+import { exit } from "process";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -30,6 +31,11 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const test = await ctx.prisma.user.count({where: {email: input.email}})
+      if( test > 0) {
+        return null;
+      }
+      else {
       const user = await ctx.prisma.user.create({
         data: {
           email: input.email,
@@ -116,7 +122,7 @@ export const userRouter = createTRPCRouter({
         console.error(error);
       }
       return user;
-    }),
+}}),
   confirmUser: publicProcedure
     .input(z.object({ email: z.string(), confirmCode: z.string() }))
     .mutation(async ({ input, ctx }) => {

@@ -69,12 +69,15 @@ const Signup: NextPage = () => {
       state: "ACTIVE",
     });
     setSubmitting(false);
-
+    if( result == null ) {
+      alert("Email already exists!");
+    } else{
     if (signupMutation.error) {
       alert(signupMutation.error.message);
     } else {
       await router.push("/signup/confirmation?email=" + values.email);
     }
+  }
   };
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -264,7 +267,7 @@ const Signup: NextPage = () => {
                     id="grid-city"
                     type="text"
                     name="city"
-                    pattern="^[A-Za-z]{1,50}$"
+                    pattern="[a-zA-Z0-9 ]+"
                     placeholder="Albuquerque"
                   />
                 </div>
@@ -380,7 +383,7 @@ const Signup: NextPage = () => {
                         id="grid-city"
                         type="text"
                         name="billCity"
-                        pattern="^[A-Za-z]{1,50}$"
+                        pattern="[a-zA-Z0-9 ]+"
                         placeholder="Albuquerque"
                         required
                       />
