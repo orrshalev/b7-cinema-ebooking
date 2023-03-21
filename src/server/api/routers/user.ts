@@ -23,7 +23,6 @@ export const userRouter = createTRPCRouter({
         cardType: z.string(),
         billMonth: z.string(),
         billYear: z.string(),
-        cvv: z.string(),
         state: z.string(),
       })
     )
@@ -68,13 +67,12 @@ export const userRouter = createTRPCRouter({
             cardNumber: input.cardNumber,
             firstName: input.firstName,
             lastName: input.lastName,
-            address: input.billAddress,
+            // address: input.billAddress,
             city: input.billCity,
             state: input.billState,
             zip: input.billZip,
             expMonth: input.billMonth,
             expYear: input.billYear,
-            cvv: input.cvv,
             user: { connect: { id: user.id } },
           },
         });
