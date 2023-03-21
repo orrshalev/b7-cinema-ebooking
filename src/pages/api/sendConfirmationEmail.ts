@@ -35,13 +35,16 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
         text: "Here is the code to change your password: " + code + "\nDO NOT share this code with anyone.",
       };
       const user = await prisma.user.findFirst({ where: {email: req.body as string}})
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { changePwCode: code}
-      })
   
       try {
+        if (user == null) {
+          res.status(404).json({ error: 'User does not exist' });
+          return
+        }
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { changePwCode: code}
+        })
         await transporter.sendMail(mailConfigurations);
         console.error(res.status);
         res.status(200).json({ success: true });

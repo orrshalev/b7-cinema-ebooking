@@ -19,8 +19,6 @@ const Pwdemail: NextPage = () => {
 
   const onSubmit = async (e: Event) => {
     e.preventDefault();
-    
-    try {
       const response = await fetch('../api/sendConfirmationEmail', {
         method: 'POST',
         headers: {
@@ -28,13 +26,10 @@ const Pwdemail: NextPage = () => {
         },
         body: JSON.stringify(userEmail.email),
       });
-      // console.log(userEmail)
-      const data = await response.json() as JSON;
+    if (response.status == 200) {
       await router.push("/forgotpwdverification?email=" + userEmail.email);
-      return
-      console.log(data)
-    } catch (error) {
-      console.error(error);
+    } else {
+      alert("Email is not registered. Please sign up for an account!")
     }
   };
 
@@ -65,13 +60,10 @@ const Pwdemail: NextPage = () => {
             required
           />
           <button
-            onClick={onSubmit}>
-            <Link
-              href="/forgotpwdverification"
-              className="focus:outline-solid w-full transform rounded-md bg-dark-red px-4 py-2 text-center tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-light-coral"
+            onClick={onSubmit}
+            className="focus:outline-solid w-full transform rounded-md bg-dark-red px-4 py-2 text-center tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-light-coral"
             >
-              Send Verification Code
-            </Link>
+            Send Verification Code
           </button>
         </div>
       </main>
