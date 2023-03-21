@@ -2,11 +2,12 @@ import nodemailer from 'nodemailer';
 import { NextApiRequest } from "next";
 import { NextApiResponse } from "next";
 import { string } from 'zod';
+import { prisma } from '~/server/db';
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 function generateString(length: number) {
-    let result = ' ';
+    let result = '';
     const charactersLength = characters.length;
     for ( let i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -17,6 +18,7 @@ function generateString(length: number) {
 
 async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) {
     const code = generateString(6)
+
     if (req.method === 'POST') {
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -32,12 +34,12 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
         subject: "Cinema E-Booking: Change Your Password",
         text: "Here is the code to change your password: " + code + "\nDO NOT share this code with anyone.",
       };
+      const user = await prisma.user.findFirst({ where: {email: req.body as string}})
 
-      // TO DO: store verification code
-
-    //   if (typeof(Storage) !== "undefined") 
-    //   localStorage.setItem("pwCode", code)
-    //   console.log(localStorage.getItem("pwCode"))
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { changePwCode: code}
+      })
   
       try {
         await transporter.sendMail(mailConfigurations);

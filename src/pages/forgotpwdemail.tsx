@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { user } from "@userfront/core";
+import router, { useRouter } from "next/router";
 
 interface mailConfigurations {
   to: string;
@@ -14,6 +15,7 @@ interface mailConfigurations {
 
 const Pwdemail: NextPage = () => {
   const [userEmail, setUserEmail] = useState({ email: "" });
+  const router = useRouter();
 
   const onSubmit = async (e: Event) => {
     e.preventDefault();
@@ -26,8 +28,9 @@ const Pwdemail: NextPage = () => {
         },
         body: JSON.stringify(userEmail.email),
       });
-      console.log(userEmail)
+      // console.log(userEmail)
       const data = await response.json() as JSON;
+      await router.push("/forgotpwdverification?email=" + userEmail.email);
       return
       console.log(data)
     } catch (error) {

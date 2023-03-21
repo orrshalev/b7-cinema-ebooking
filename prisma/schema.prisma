@@ -44,5 +44,6 @@ model User{
     billAddress String?
     cvv         String? 
     state       String    @default("ACTIVE")
-    admin       Boolean    @default(false) 
+    admin       Boolean    @default(false)
+    changePwCode String
 }
