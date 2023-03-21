@@ -20,12 +20,12 @@ interface Values {
   email: string;
   phoneNumber: string;
   password: string;
-  homeAddress: string;
+  homeStreet: string;
   city: string;
   state: string;
   zip: string;
   cardNumber: string;
-  billAddress: string;
+  billStreet: string;
   billCity: string;
   billState: string;
   billZip: string;
@@ -53,19 +53,18 @@ const Signup: NextPage = () => {
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
       password: hashedPassword,
-      homeAddress: values.homeAddress,
+      homeStreet: values.homeStreet,
       homeCity: values.city, 
       homeState: values.state, 
       homeZip: values.zip,
       cardNumber: values.cardNumber,
       cardType: values.cardType,
-      billAddress: values.billAddress,
+      billStreet: values.billStreet,
       billCity: values.billCity,
       billState: values.billState, 
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
-      cvv: values.cvv,
       state: "ACTIVE",
     });
     setSubmitting(false);
@@ -105,12 +104,12 @@ const Signup: NextPage = () => {
                     email: "ore.shovel@gmail.com",
                     phoneNumber: "555-332-4213",
                     password: "NotAGoodPassword",
-                    homeAddress: "5000 Camoo Road",
+                    homeStreet: "5000 Camoo Road",
                     state: "Alabama",
                     city: "Jerusalem",
                     zip: "30055",
                     cardNumber: "",
-                    billAddress: "",
+                    billStreet: "",
                     billCity: "",
                     billState: "",
                     billZip: "",
@@ -125,12 +124,12 @@ const Signup: NextPage = () => {
                     email: "",
                     phoneNumber: "",
                     password: "",
-                    homeAddress: "",
+                    homeStreet: "",
                     state: "Alabama",
                     city: "",
                     zip: "",
                     cardNumber: "",
-                    billAddress: "",
+                    billStreet: "",
                     billCity: "",
                     billState: "",
                     billZip: "",
@@ -250,7 +249,7 @@ const Signup: NextPage = () => {
                     className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-home-address"
                     type="text"
-                    name="homeAddress"
+                    name="homeStreet"
                   />
                 </div>
               </div>
@@ -365,7 +364,7 @@ const Signup: NextPage = () => {
                         className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-shipping-address"
                         type="text"
-                        name="billAddress"
+                        name="billStreet"
                         required
                       />
                     </div>

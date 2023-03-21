@@ -9,18 +9,6 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import type { Session } from "next-auth";
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  homeAddress: string;
-  city: string;
-  state: string;
-  zip: string;
-}
-
 const NotLoggedIn = () => (
   <div className="my-auto flex w-full flex-col items-center gap-10 rounded-md bg-white py-20 px-3 shadow-md lg:max-w-xl">
     <h1 className="text-center text-3xl font-semibold text-dark-red">
@@ -44,18 +32,34 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
 
   const currentUser = loggedInUser.data;
-  const [user, setUser] = useState(currentUser);
+  const loggedInUserAddress = api.address.getAddress.useQuery({userID: currentUser?.id});
+  const currentAddress  =loggedInUserAddress.data;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [user, setUser] = useState(currentUser);
+  const [homeAddress, setHomeAddress] = useState(currentAddress)
+
+  const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (user) {
       setUser((prevUser) => ({ ...prevUser, [name]: value }));
     }
   };
 
+  const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (homeAddress) {
+      setHomeAddress((prevAddress) => ({...prevAddress, [name]: value}));
+    }
+
+  }
+
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
+
+  useEffect(() => {
+    setHomeAddress(currentAddress)
+  }, [currentAddress])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +84,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
               name="firstName"
               placeholder="First Name"
               value={user.firstName}
-              onChange={handleChange}
+              onChange={handleChangeUser}
             />
           </div>
           <div className="mb-4">
@@ -97,7 +101,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
               name="lastName"
               placeholder="Last Name"
               value={user.lastName}
-              onChange={handleChange}
+              onChange={handleChangeUser}
             />
           </div>
           <div className="mb-4">
@@ -114,7 +118,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
               name="email"
               placeholder="Email"
               value={user.email}
-              onChange={handleChange}
+              onChange={handleChangeUser}
             />
           </div>
           <div className="mb-4">
@@ -131,7 +135,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
               name="phoneNumber"
               placeholder="xxx-xxx-xxxx"
               value={user.phoneNumber}
-              onChange={handleChange}
+              onChange={handleChangeUser}
             />
           </div>
           <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
@@ -151,7 +155,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="password"
                 name="password"
                 placeholder="Old Password"
-                onChange={handleChange}
+                onChange={handleChangeUser}
               />
             </div>
             <div className="mb-4">
@@ -161,7 +165,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="password"
                 name="password"
                 placeholder="New Password"
-                onChange={handleChange}
+                onChange={handleChangeUser}
               />
             </div>
             <div className="">
@@ -181,10 +185,10 @@ const EditProfile = ({ data }: EditProfileProps) => {
               className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
               id="homeAddress"
               type="text"
-              name="homeAddress"
+              name="street"
               placeholder="123 Alphabet Street"
-              value={user.homeAddress}
-              onChange={handleChange}
+              value={homeAddress?.street ?? ""}
+              onChange={handleChangeAddress}
             />
           </div>
           <div className="mb-4">
@@ -200,8 +204,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
               type="text"
               name="city"
               placeholder="Anytown"
-              value={user.city}
-              onChange={handleChange}
+              value={homeAddress?.city ?? ""}
+              onChange={handleChangeAddress}
             />
           </div>
           <div className="mb-4">
@@ -241,8 +245,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
               type="text"
               name="zip"
               placeholder="12345"
-              value={user.zip}
-              onChange={handleChange}
+              value={homeAddress?.zip ?? ""}
+              onChange={handleChangeUser}
             />
           </div>
           <div className="mb-4 flex flex-col">

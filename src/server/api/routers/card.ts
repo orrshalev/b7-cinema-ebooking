@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const movieRouter = createTRPCRouter({
+export const cardRouter = createTRPCRouter({
   //RETURNS A LIST OF CARDS
   //INPUT: USER ID
   getCards: publicProcedure

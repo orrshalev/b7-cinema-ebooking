@@ -18,12 +18,12 @@ export const userRouter = createTRPCRouter({
         lastName: z.string(),
         phoneNumber: z.string(),
         password: z.string(),
-        homeAddress: z.string(),
+        homeStreet: z.string(),
         homeCity: z.string(),
         homeState: z.string(),
         homeZip: z.string(),
         cardNumber: z.string(),
-        billAddress: z.string(),
+        billStreet: z.string(),
         billCity: z.string(),
         billState: z.string(),
         billZip: z.string(),
@@ -53,19 +53,19 @@ export const userRouter = createTRPCRouter({
             confirmCode: (Math.random() + 1).toString(36).substring(6),
           },
         });
-        if (input.homeAddress) {
+        if (input.homeStreet) {
           const address = await ctx.prisma.address.create({
             data: {
               firstName: input.firstName,
               lastName: input.lastName,
-              address: input.homeAddress,
+              street: input.homeStreet,
               city: input.homeCity,
               state: input.homeState,
               zip: input.homeZip,
               user: { connect: { id: user.id } },
             },
           });
-          const addAdddress = await ctx.prisma.user.update({
+          const addAddress = await ctx.prisma.user.update({
             where: {
               id: user.id,
             },

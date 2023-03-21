@@ -2,13 +2,13 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const movieRouter = createTRPCRouter({
+export const addressRouter = createTRPCRouter({
   getAddress: publicProcedure
     .input(
       z.object({ userID: z.string() })
     )
     .query(async ({ input, ctx }) => {
-      const addressList = await ctx.prisma.address.findMany({ 
+      const addressList = await ctx.prisma.address.findFirst({ 
         where: {
             userId: input.userID,
         }
