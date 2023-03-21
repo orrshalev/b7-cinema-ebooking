@@ -41,7 +41,6 @@ const PwdEmailVerify: NextPage = () => {
     }
   };
 
-  // jennyngo1925@gmail.com
   return (
     <>
       <Head>

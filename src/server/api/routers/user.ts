@@ -126,4 +126,20 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
+    
+    updatePw: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string()}))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user) {
+        await ctx.prisma.user.update({
+          where: { id: user.id },
+          data: { password: input.password },
+        });
+        return true;
+      }
+      return false;
+    }),
 });
