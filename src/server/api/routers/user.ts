@@ -152,4 +152,118 @@ export const userRouter = createTRPCRouter({
     });
     return user;
   }),
+  updateUser: publicProcedure
+    .input(
+      z.object({
+      email: z.string(),
+      firstName: z.string(),
+      lastName: z.string(),
+      phoneNumber: z.string(),
+      homeAddress: z.string(),
+      homeCity: z.string(),
+      homeState: z.string(),
+      homeZip: z.string(),
+      cardNumber: z.string(),
+      billAddress: z.string(),
+      billCity: z.string(),
+      billState: z.string(),
+      billZip: z.string(),
+      cardType: z.string(),
+      billMonth: z.string(),
+      billYear: z.string(),
+      cvv: z.string(),
+      state: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+
+    const user = await ctx.prisma.user.update({where: {email: input.email}, data: {
+          email: input.email,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phoneNumber: input.phoneNumber,
+          state: input.state,
+    }
+    });
+    const test = await ctx.prisma.address.count({where: {userId: user.id}})
+      if( test == 0) {
+        if (input.homeAddress) {
+          const address = await ctx.prisma.address.create({
+            data: {
+              firstName: input.firstName,
+              lastName: input.lastName,
+              address: input.homeAddress,
+              city: input.homeCity,
+              state: input.homeState,
+              zip: input.homeZip,
+              user: { connect: { id: user.id } },
+            },
+        });
+        const addAddress = await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            homeAddress: { connect: { id: address.id } },
+          },
+        });
+      }
+    }
+    else {
+      const address = await ctx.prisma.address.update({where: {userId: user.id},
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          address: input.homeAddress,
+          city: input.homeCity,
+          state: input.homeState,
+          zip: input.homeZip,
+        },
+      });
+    }
+    const card = await ctx.prisma.address.count({where: {userId: user.id}})
+    if( card == 0) {
+      if (input.cardNumber) {
+        const card = await ctx.prisma.card.create({
+          data: {
+            cardNumber: input.cardNumber,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            address: input.billAddress,
+            city: input.billCity,
+            state: input.billState,
+            zip: input.billZip,
+            expMonth: input.billMonth,
+            expYear: input.billYear,
+            cvv: input.cvv,
+            user: { connect: { id: user.id } },
+          },
+        });
+        const addAddress = await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            homeAddress: { connect: { id: card.id } },
+          },
+        });
+      }
+      } else {
+        const card = await ctx.prisma.card.update({where: {userId: user.id},
+          data: {
+            cardNumber: input.cardNumber,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            address: input.billAddress,
+            city: input.billCity,
+            state: input.billState,
+            zip: input.billZip,
+            expMonth: input.billMonth,
+            expYear: input.billYear,
+            cvv: input.cvv,
+          },
+        });
+      }
+    return user;
+  }),
 });
