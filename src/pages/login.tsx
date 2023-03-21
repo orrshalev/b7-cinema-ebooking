@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const Login: NextPage = (props): JSX.Element => {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
@@ -16,12 +16,10 @@ const Login: NextPage = (props): JSX.Element => {
       password: userInfo.password,
       redirect: false
     }).then((response) => {
-      // Access the status field of the response object
       if (response?.error == null) alert("Login Success!");
       else if(response?.error == "verification") alert("Please check your inbox and verify your account.")
       else {alert("Invalid credentials. Please try again.")}
     }).catch((error) => {
-      // Handle any errors that occurred during authentication
       alert(error)
     });
   };
