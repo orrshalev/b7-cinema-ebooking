@@ -36,13 +36,13 @@ interface Values {
 }
 
 const Signup: NextPage = () => {
+  const email = 'djgonzalez0209@gmail.com'
   const signupMutation = api.user.createUser.useMutation();
   const router = useRouter();
   // IMPORTANT: should be false by default
   const USE_DEFAULT_VALUES = true;
 
-  const handleSignup = async (
-    values: Values,
+  const handleSignup = async ( values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
     const saltRounds = 10;
@@ -68,14 +68,16 @@ const Signup: NextPage = () => {
       cvv: values.cvv,
       state: "ACTIVE",
     });
-
     setSubmitting(false);
-
+    if( result == null ) {
+      alert("Email already exists!");
+    } else{
     if (signupMutation.error) {
       alert(signupMutation.error.message);
     } else {
       await router.push("/signup/confirmation?email=" + values.email);
     }
+  }
   };
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -265,7 +267,7 @@ const Signup: NextPage = () => {
                     id="grid-city"
                     type="text"
                     name="city"
-                    pattern="^[A-Za-z]{1,50}$"
+                    pattern="[a-zA-Z0-9 ]+"
                     placeholder="Albuquerque"
                   />
                 </div>
@@ -381,7 +383,7 @@ const Signup: NextPage = () => {
                         id="grid-city"
                         type="text"
                         name="billCity"
-                        pattern="^[A-Za-z]{1,50}$"
+                        pattern="[a-zA-Z0-9 ]+"
                         placeholder="Albuquerque"
                         required
                       />
