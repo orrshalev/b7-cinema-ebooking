@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import type { Session } from "next-auth";
+import bcrypt from "bcryptjs";
 
 const NotLoggedIn = () => (
   <div className="my-auto flex w-full flex-col items-center gap-10 rounded-md bg-white py-20 px-3 shadow-md lg:max-w-xl">
@@ -32,11 +33,13 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
 
   const currentUser = loggedInUser.data;
-  const loggedInUserAddress = api.address.getAddress.useQuery({userID: currentUser?.id});
-  const currentAddress  =loggedInUserAddress.data;
+  const loggedInUserAddress = api.address.getAddress.useQuery({
+    userID: currentUser?.id,
+  });
+  const currentAddress = loggedInUserAddress.data;
 
   const [user, setUser] = useState(currentUser);
-  const [homeAddress, setHomeAddress] = useState(currentAddress)
+  const [homeAddress, setHomeAddress] = useState(currentAddress);
 
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,21 +51,41 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (homeAddress) {
-      setHomeAddress((prevAddress) => ({...prevAddress, [name]: value}));
+      setHomeAddress((prevAddress) => ({ ...prevAddress, [name]: value }));
     }
-
-  }
+  };
 
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
 
-  useEffect(() => {
-    setHomeAddress(currentAddress)
-  }, [currentAddress])
+  const changePwdMutation = api.user.updateUserPwd.useMutation();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    setHomeAddress(currentAddress);
+  }, [currentAddress]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const oldPw = document.getElementById("oldPassword")?.value as string;
+    const newPw = document.getElementById("newPassword")?.value as string;
+    const hasNewPw = await bcrypt.hash(newPw, 10);
+    // console.log(user.password)
+    // console.log(oldPw)
+    // console.log(newPw)
+    if ((await bcrypt.compare(oldPw, user.password)) === true) {
+      const a = await changePwdMutation.mutateAsync({
+        id: user.id,
+        email: user.email,
+        password: hasNewPw,
+      });
+      if (a === true) alert("Password changed successfully");
+      console.log(a);
+    } else {
+      alert("Old password was incorrect.");
+      // jennyngo1925@gmail.com
+      // randompwd
+    }
     console.log(user);
   };
   if (user) {
@@ -151,9 +174,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
             <div className="mb-4">
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="password"
+                id="oldPassword"
                 type="password"
-                name="password"
+                name="oldPassword"
                 placeholder="Old Password"
                 onChange={handleChangeUser}
               />
@@ -161,9 +184,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
             <div className="mb-4">
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="password"
+                id="newPassword"
                 type="password"
-                name="password"
+                name="newPassword"
                 placeholder="New Password"
                 onChange={handleChangeUser}
               />

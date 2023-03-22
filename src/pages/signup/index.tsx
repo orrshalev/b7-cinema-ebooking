@@ -47,6 +47,7 @@ const Signup: NextPage = () => {
   ) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(values.password, saltRounds);
+    const hashedCardNumber = await bcrypt.hash(values.cardNumber, saltRounds);
     const result = await signupMutation.mutateAsync({
       email: values.email,
       firstName: values.firstName,
@@ -57,7 +58,7 @@ const Signup: NextPage = () => {
       homeCity: values.city, 
       homeState: values.state, 
       homeZip: values.zip,
-      cardNumber: values.cardNumber,
+      cardNumber: hashedCardNumber,
       cardType: values.cardType,
       billStreet: values.billStreet,
       billCity: values.billCity,
