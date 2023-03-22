@@ -80,7 +80,7 @@ export const userRouter = createTRPCRouter({
               cardNumber: input.cardNumber,
               firstName: input.firstName,
               lastName: input.lastName,
-              // address: input.billAddress,
+              street: input.billAddress,
               city: input.billCity,
               state: input.billState,
               zip: input.billZip,
@@ -235,18 +235,17 @@ export const userRouter = createTRPCRouter({
         if (user != null) {
         const test = await ctx.prisma.card.count({where: {cardNumber: input.cardNumber}});
         if (test == 1) {
-        const card = await ctx.prisma.card.update({where: {userId: user.id},
+        const card = await ctx.prisma.card.update({where: {cardNumber: input.cardNumber},
           data: {
             cardNumber: input.cardNumber,
             firstName: user.firstName,
             lastName: user.lastName,
-            address: input.billAddress,
+            street: input.billAddress,
             city: input.billCity,
             state: input.billState,
             zip: input.billZip,
             expMonth: input.billMonth,
             expYear: input.billYear,
-            cvv: input.cvv,
           },
         });
         return card
@@ -257,13 +256,12 @@ export const userRouter = createTRPCRouter({
             cardNumber: input.cardNumber,
             firstName: user.firstName,
             lastName: user.lastName,
-            address: input.billAddress,
+            street: input.billAddress,
             city: input.billCity,
             state: input.billState,
             zip: input.billZip,
             expMonth: input.billMonth,
             expYear: input.billYear,
-            cvv: input.cvv,
             user: { connect: { id: user.id } },
           },
         });
