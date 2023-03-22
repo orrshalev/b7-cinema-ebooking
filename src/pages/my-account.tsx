@@ -62,6 +62,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  }
+
+  const changePwd = async () => {
     const oldPw = document.getElementById("oldPassword")?.value as string
     const newPw = document.getElementById("newPassword")?.value as string
     const hasNewPw = await bcrypt.hash(newPw, 10);
@@ -183,7 +186,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
               />
             </div>
             <div className="">
-              <button className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
+              <button 
+              onClick = {changePwd}
+              className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
                 Change Password
               </button>
             </div>
