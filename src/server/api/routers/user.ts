@@ -184,7 +184,6 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
       });
-      // return user;
       if (user.isAdmin == true) {
         return true;
       }
