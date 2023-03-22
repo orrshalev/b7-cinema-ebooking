@@ -11,7 +11,7 @@ const Login: NextPage = (props): JSX.Element => {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({status: 100})
-  const onSubmit = async (e: Event) => {
+  const onSubmit = (e: Event) => {
     e.preventDefault();
 
     signIn("credentials", {
