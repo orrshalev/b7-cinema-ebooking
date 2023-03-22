@@ -11,7 +11,7 @@ const Login: NextPage = (props): JSX.Element => {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({status: 100})
-  const onSubmit = (e: Event) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     signIn("credentials", {
@@ -44,7 +44,7 @@ const Login: NextPage = (props): JSX.Element => {
           <h1 className="text-center text-3xl font-semibold text-dark-red">
             Sign in
           </h1>
-          <form onSubmit={onSubmit} className="mt-6">
+          <form onSubmit={handleSubmit} className="mt-6">
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Email
