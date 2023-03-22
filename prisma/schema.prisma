@@ -45,6 +45,8 @@ model User {
     confirmed   Boolean
     confirmCode String
     isAdmin     Boolean  @default(false)
+    changePwCode String
+    agreeToPromo Boolean     @default(false)
 }
 
 model Address {
