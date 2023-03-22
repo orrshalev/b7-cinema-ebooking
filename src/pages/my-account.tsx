@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import type { Session } from "next-auth";
+import bcrypt from "bcryptjs"
 
 interface User {
   firstName: string;
@@ -56,9 +57,27 @@ const EditProfile = ({ data }: EditProfileProps) => {
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
+  
+  const changePwdMutation = api.user.updateUserPwd.useMutation();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const oldPw = document.getElementById("oldPassword")?.value as string
+    const newPw = document.getElementById("newPassword")?.value as string
+    const hasNewPw = await bcrypt.hash(newPw, 10);
+    console.log(user.password)
+    console.log("hello")
+    console.log(oldPw)
+    console.log(newPw)
+    if (await bcrypt.compare(oldPw, user.password) === true) {
+      const a = await changePwdMutation.mutateAsync({ id: user.id, email: user.email, password: hasNewPw })
+      if (a === true) alert("Password changed successfully")
+      console.log(a)
+    } else {
+      alert("Old password was incorrect.")
+      // passworddd
+      // ilovetacos
+    }
     console.log(user);
   };
   if (user) {
@@ -147,9 +166,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
             <div className="mb-4">
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="password"
+                id="oldPassword"
                 type="password"
-                name="password"
+                name="oldPassword"
                 placeholder="Old Password"
                 onChange={handleChange}
               />
@@ -157,9 +176,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
             <div className="mb-4">
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="password"
+                id="newPassword"
                 type="password"
-                name="password"
+                name="newPassword"
                 placeholder="New Password"
                 onChange={handleChange}
               />
