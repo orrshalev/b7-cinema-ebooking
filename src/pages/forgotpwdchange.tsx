@@ -60,7 +60,7 @@ const Changepwd: NextPage = () => {
             <Field
               name="code"
               className=" mb-10 w-full rounded-md border-solid bg-white px-4 py-2 tracking-wide text-dark-red transition-colors  duration-200 focus:bg-white"
-              type="text"
+              type="password"
               placeholder="Enter New Password"
             />
             <button
