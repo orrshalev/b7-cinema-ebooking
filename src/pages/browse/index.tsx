@@ -10,7 +10,6 @@ import type { Movie } from "../../types/Movie";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AdminBrowse from "./admin";
-import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 
 type MoviePreviewCardProps = {

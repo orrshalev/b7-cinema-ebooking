@@ -6,6 +6,8 @@ import Image from "next/image";
 import Head from "next/head";
 import type { Movie } from "../types/Movie";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 //import type { Ticket } from "../types/ticket";
 
@@ -51,13 +53,25 @@ function Counter({ initialValue }: CounterProps) {
   );
 }
 
-const ticketCheckout: NextPage = () => {
+const TicketCheckout: NextPage = () => {
   //   const [ticket, setTicket] = useState<Ticket>({
   //     movieTitle: "",
   //     showtime: "",
   //     seat: "",
   //     price: 0,
   //   });
+  
+  const router = useRouter();
+  const { data } = useSession();
+
+  const onSubmit = async () => {
+    if (!data?.user) {
+      alert("Please log in to purchase.");
+      await router.push("/login");
+    } else {
+      await router.push("/seatCheckout");
+    }
+  };
 
   return (
     <>
@@ -159,12 +173,13 @@ const ticketCheckout: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-              <Link
-                href="/seatCheckout"
+            <button
+              type="submit"
+              onClick={onSubmit}
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
               >
                 CONFIRM TICKETS
-              </Link>
+            </button>
             </div>
           </div>
         </div>
@@ -174,4 +189,4 @@ const ticketCheckout: NextPage = () => {
   );
 };
 
-export default ticketCheckout;
+export default TicketCheckout;
