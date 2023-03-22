@@ -163,16 +163,6 @@ export const userRouter = createTRPCRouter({
       homeCity: z.string(),
       homeState: z.string(),
       homeZip: z.string(),
-      cardNumber: z.string(),
-      billAddress: z.string(),
-      billCity: z.string(),
-      billState: z.string(),
-      billZip: z.string(),
-      cardType: z.string(),
-      billMonth: z.string(),
-      billYear: z.string(),
-      cvv: z.string(),
-      state: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -182,7 +172,6 @@ export const userRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
-          state: input.state,
     }
     });
     const test = await ctx.prisma.address.count({where: {userId: user.id}})
@@ -221,14 +210,49 @@ export const userRouter = createTRPCRouter({
         },
       });
     }
-    const card = await ctx.prisma.address.count({where: {userId: user.id}})
-    if( card == 0) {
-      if (input.cardNumber) {
+    return user;
+  }),
+  updateCard: publicProcedure
+    .input(z.object({ email: z.string(), 
+      cardNumber: z.string(), 
+      billAddress: z.string(), 
+      billCity: z.string(), 
+      billState: z.string(), 
+      billZip: z.string(), 
+      cardType: z.string(), 
+      billMonth: z.string(), 
+      billYear: z.string(), cvv: z.string()}))
+      .mutation(async ({ input, ctx }) => {
+        const user = await ctx.prisma.user.findFirst({
+          where: {
+            email: input.email,
+          },
+        });
+        if (user != null) {
+        const test = await ctx.prisma.card.count({where: {cardNumber: input.cardNumber}});
+        if (test == 1) {
+        const card = await ctx.prisma.card.update({where: {userId: user.id},
+          data: {
+            cardNumber: input.cardNumber,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            address: input.billAddress,
+            city: input.billCity,
+            state: input.billState,
+            zip: input.billZip,
+            expMonth: input.billMonth,
+            expYear: input.billYear,
+            cvv: input.cvv,
+          },
+        });
+        return card
+      }
+      else {
         const card = await ctx.prisma.card.create({
           data: {
             cardNumber: input.cardNumber,
-            firstName: input.firstName,
-            lastName: input.lastName,
+            firstName: user.firstName,
+            lastName: user.lastName,
             address: input.billAddress,
             city: input.billCity,
             state: input.billState,
@@ -239,31 +263,34 @@ export const userRouter = createTRPCRouter({
             user: { connect: { id: user.id } },
           },
         });
-        const addAddress = await ctx.prisma.user.update({
+        const addCard = await ctx.prisma.user.update({
           where: {
             id: user.id,
           },
           data: {
-            homeAddress: { connect: { id: card.id } },
+            card: { connect: { id: card.id } },
           },
         });
+        return card;
       }
-      } else {
-        const card = await ctx.prisma.card.update({where: {userId: user.id},
-          data: {
-            cardNumber: input.cardNumber,
-            firstName: input.firstName,
-            lastName: input.lastName,
-            address: input.billAddress,
-            city: input.billCity,
-            state: input.billState,
-            zip: input.billZip,
-            expMonth: input.billMonth,
-            expYear: input.billYear,
-            cvv: input.cvv,
-          },
-        });
-      }
-    return user;
+    }
+  }),
+  getallCards: publicProcedure
+  .input(z.object({email: z.string()}))
+  .query(async ({ input, ctx }) => {
+    const user = await ctx.prisma.user.findFirst({
+      where: {
+        email:input.email
+      },
+    });
+    if (user == null) {
+      return null;
+    }
+    const cards = await ctx.prisma.card.findMany({
+      where: {
+        userId: user.id
+      },
+    });
+    return cards;
   }),
 });
