@@ -9,6 +9,9 @@ import TrailerModal from "../../components/TrailerModal";
 import type { Movie } from "../../types/Movie";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import AdminBrowse from "./admin";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -47,6 +50,8 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 };
 
 const Browse: NextPage = () => {
+  const { data } = useSession();
+  const isAdmin = api.user.isAdmin.useQuery({email: "jennyngo1925@gmail.com"})
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
@@ -117,7 +122,9 @@ const Browse: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-
+      {isAdmin.data == true ? (
+      <AdminBrowse></AdminBrowse>
+      ): (
       <main className="my-10 flex min-h-screen flex-col items-center">
         <div className="flex w-3/5 flex-col gap-5">
           <h1 className="font-firasans text-4xl font-bold text-dark-red">
@@ -191,6 +198,7 @@ const Browse: NextPage = () => {
               </div>
             </div>
           </>
+          
         ))}
 
         <TrailerModal
@@ -200,7 +208,7 @@ const Browse: NextPage = () => {
           url={"https://www.youtube.com/embed/VONRQMx78YI"}
         />
       </main>
-
+      )}
       <Footer />
     </>
   );

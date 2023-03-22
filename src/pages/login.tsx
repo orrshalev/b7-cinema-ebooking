@@ -4,11 +4,14 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Login: NextPage = (props): JSX.Element => {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const [status, setStatus] = useState({status: 100})
+  const onSubmit = async (e: Event) => {
     e.preventDefault();
 
     signIn("credentials", {
@@ -16,11 +19,15 @@ const Login: NextPage = (props): JSX.Element => {
       password: userInfo.password,
       redirect: false
     }).then((response) => {
-      // Access the status field of the response object
-      if (response?.error == null) alert("Login Success!");
-      else alert("Invalid credentials. Please try again.")
+      if (response?.error == null) {
+        alert("Login Success!");
+        setStatus({...status, status: 200})
+      } else if(response?.error == "verification") {
+        alert("Please check your inbox and verify your account.")
+      } else {
+        alert("Invalid credentials. Please try again.")
+      }
     }).catch((error) => {
-      // Handle any errors that occurred during authentication
       alert(error)
     });
   };
@@ -37,7 +44,7 @@ const Login: NextPage = (props): JSX.Element => {
           <h1 className="text-center text-3xl font-semibold text-dark-red">
             Sign in
           </h1>
-          <form onSubmit={handleSubmit} className="mt-6">
+          <form onSubmit={onSubmit} className="mt-6">
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Email

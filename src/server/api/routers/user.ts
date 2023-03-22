@@ -1,13 +1,12 @@
 import { z } from "zod";
+import { exit } from "process";
+import nodemailer from 'nodemailer';
 
 import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-
-import nodemailer from 'nodemailer';
-import { exit } from "process";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -114,12 +113,6 @@ export const userRouter = createTRPCRouter({
           subject: "Cinema E-Booking: Register Confirmation",
           text: "Here is the code to register your account: " + user.confirmCode + "\nDO NOT share this code with anyone.",
         };
-  
-        // TO DO: store verification code
-  
-      //   if (typeof(Storage) !== "undefined") 
-      //   localStorage.setItem("pwCode", code)
-      //   console.log(localStorage.getItem("pwCode"))
     
         await transporter.sendMail(mailConfigurations);
       } catch (error) {
@@ -152,4 +145,50 @@ export const userRouter = createTRPCRouter({
     });
     return user;
   }),
-});
+
+  confirmUserPwd: publicProcedure
+    .input(z.object({ email: z.string(), changePwCode: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user && user.changePwCode == input.changePwCode) {
+        await ctx.prisma.user.update({
+          where: { id: user.id },
+          data: { changePwCode: "" },
+        });
+        return true;
+      }
+      return false;
+    }),
+    
+    updatePw: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string()}))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user) {
+        await ctx.prisma.user.update({
+          where: { id: user.id },
+          data: { password: input.password },
+        });
+        return true;
+      }
+      return false;
+    }),
+
+    isAdmin: publicProcedure
+    .input(z.object({ email: z.string()}))
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      // return user;
+      if (user.isAdmin == true) {
+        return true;
+      }
+      return false;
+    }),
+
+  });
