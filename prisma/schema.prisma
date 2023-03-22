@@ -46,4 +46,5 @@ model User{
     state       String    @default("ACTIVE")
     isAdmin      Boolean    @default(false)
     changePwCode String
+    promotions  Boolean     @default(false)
 }
