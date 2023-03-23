@@ -474,7 +474,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
               </div>
 
               <div className="-mx-3 mb-10 flex flex-wrap">
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-[28%]">
                   <label
                     htmlFor="cardType"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -500,7 +500,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-[20%]">
                   <label
                     htmlFor="billMonth"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -508,17 +508,17 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     Month<span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <select
+                    <input
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="billMonth"
-                    >
-                      {months.map((month) => {
-                        return <option key={month}>{month}</option>;
-                      })}
-                    </select>
+                      name="billMonth"
+                      placeholder="12"
+                      pattern="([1-9]|1[012])"
+                      required
+                    />
                   </div>
                 </div>
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-[25%]">
                   <label
                     htmlFor="billYear"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -526,17 +526,17 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     Year<span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <select
+                    <input
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="billYear"
-                    >
-                      {days.map((day) => {
-                        return <option key={day}>{day}</option>;
-                      })}
-                    </select>
+                      name="billYear"
+                      placeholder="2023"
+                      pattern="(\d\d\d\d)"
+                      required
+                    />
                   </div>
                 </div>
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
                   <label
                     htmlFor="grid-cvv"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
