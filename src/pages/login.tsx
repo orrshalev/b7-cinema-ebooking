@@ -10,26 +10,28 @@ import { useRouter } from "next/router";
 const Login: NextPage = (props): JSX.Element => {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
-  const [status, setStatus] = useState({status: 100})
+  const [status, setStatus] = useState({ status: 100 });
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     signIn("credentials", {
       email: userInfo.email,
       password: userInfo.password,
-      redirect: false
-    }).then((response) => {
-      if (response?.error == null) {
-        alert("Login Success!");
-        setStatus({...status, status: 200})
-      } else if(response?.error == "verification") {
-        alert("Please check your inbox and verify your account.")
-      } else {
-        alert("Invalid credentials. Please try again.")
-      }
-    }).catch((error) => {
-      alert(error)
-    });
+      redirect: false,
+    })
+      .then((response) => {
+        if (response?.error == null) {
+          alert("Login Success!");
+          setStatus({ ...status, status: 200 });
+        } else if (response?.error == "verification") {
+          alert("Please check your inbox and verify your account.");
+        } else {
+          alert("Invalid credentials. Please try again.");
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
   return (
     <>
@@ -78,9 +80,29 @@ const Login: NextPage = (props): JSX.Element => {
               />
               <div className="text-danger"></div>
             </div>
-            <Link href="/forgotpwdemail" className="text-xs text-dark-red hover:underline">
+            <Link
+              href="/forgotpwdemail"
+              className="text-xs text-dark-red hover:underline"
+            >
               Forget Password?
             </Link>
+
+            <div className="mb-4 flex flex-col">
+              <div className="my-5 w-full">
+                <input
+                  id="rememberMe-checkbox"
+                  type="checkbox"
+                  name="rememberMe"
+                  className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                />
+                <label
+                  htmlFor="rememberMe-checkbox"
+                  className="ml-2 text-sm font-medium text-gray-700"
+                >
+                  Remember me
+                </label>
+              </div>
+            </div>
             <div className="mt-6">
               <button className="w-full transform rounded-md bg-dark-red px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none">
                 Login

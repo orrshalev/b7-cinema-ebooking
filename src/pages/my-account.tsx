@@ -9,7 +9,7 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import type { Session } from "next-auth";
 import { Formik, Field, Form } from "formik";
-import { Address } from "@prisma/client";
+import { type Address } from "@prisma/client";
 import type { FormikHelpers } from "formik";
 import bcrypt from "bcryptjs";
 import { type Card } from "@prisma/client";
@@ -48,8 +48,19 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const currentAddress = loggedInUserAddress.data;
   const currentCards = userCards.data;
 
+  const noAddress = {
+    id: "",
+    userId: "",
+    firstName: "",
+    lastName: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+  } satisfies Address;
+
   const [user, setUser] = useState(currentUser);
-  const [homeAddress, setHomeAddress] = useState(currentAddress);
+  const [homeAddress, setHomeAddress] = useState(noAddress);
   const [homeState, setHomeState] = useState("Alabama");
   const [cards, setCards] = useState<Card[]>([]);
   const [promo, setPromo] = useState(false);
@@ -61,7 +72,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
       cardNumber: document.getElementById("cardNumber")?.value as string,
       firstName: user?.firstName,
       lastName: user?.lastName,
-      billAddress: document.getElementById("billStreet")?.value as string,
+      billStreet: document.getElementById("billStreet")?.value as string,
       billCity: document.getElementById("billCity")?.value as string,
       billState: document.getElementById("billState")?.value as string,
       billZip: document.getElementById("billZip")?.value as string,
@@ -115,7 +126,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
   }, [currentAddress]);
 
   const handleChangeInfo = async () => {
-    if (!user || !homeAddress) return;
+    if (!user) return;
     await userUpdater.mutateAsync({
       firstName: user.firstName,
       lastName: user.lastName,
@@ -123,7 +134,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
       phoneNumber: user.phoneNumber,
       homeStreet: homeAddress.street,
       homeCity: homeAddress.city,
-      homeState: homeAddress.state,
+      homeState: homeState,
       homeZip: homeAddress.zip,
       agreeToPromo: promo,
     });
@@ -135,8 +146,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const oldPw = document.getElementById("oldPassword")?.value as string
-    const newPw = document.getElementById("newPassword")?.value as string
+    const oldPw = document.getElementById("oldPassword")?.value as string;
+    const newPw = document.getElementById("newPassword")?.value as string;
     const hasNewPw = await bcrypt.hash(newPw, 10);
     // console.log(user.password)
     // console.log(oldPw)
@@ -295,7 +306,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
             Save Changes
           </button>
         </form>
-        
+
         <form onSubmit={handleChangePassword}>
           <div className="mb-4">
             <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
@@ -505,18 +516,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                         return <option key={month}>{month}</option>;
                       })}
                     </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg
-                        className="h-4 w-4 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </div>
                   </div>
                 </div>
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
                   <label
                     htmlFor="billYear"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -532,18 +534,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                         return <option key={day}>{day}</option>;
                       })}
                     </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg
-                        className="h-4 w-4 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </div>
                   </div>
                 </div>
-                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
                   <label
                     htmlFor="grid-cvv"
                     className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
