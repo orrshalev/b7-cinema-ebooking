@@ -52,6 +52,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const [homeAddress, setHomeAddress] = useState(currentAddress);
   const [homeState, setHomeState] = useState("Alabama");
   const [cards, setCards] = useState<Card[]>([]);
+  const [promo, setPromo] = useState(false);
   const showPaymentForm = cards.length < 3;
 
   const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,9 +92,16 @@ const EditProfile = ({ data }: EditProfileProps) => {
     }
   };
 
+  const handleChangePromo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPromo(e.target.checked);
+  };
+
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
+  useEffect(() => {
+    setPromo(currentUser?.agreeToPromo);
+  }, [currentUser?.agreeToPromo]);
 
   useEffect(() => {
     currentCards ? setCards(currentCards) : setCards([]);
@@ -117,6 +125,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
       homeCity: homeAddress.city,
       homeState: homeAddress.state,
       homeZip: homeAddress.zip,
+      agreeToPromo: promo,
     });
   };
 
@@ -256,6 +265,23 @@ const EditProfile = ({ data }: EditProfileProps) => {
               onChange={handleChangeAddress}
             />
           </div>
+          <div className="mb-4 flex flex-col">
+            <div className="w-full md:mb-0">
+              <input
+                id="promo-checkbox"
+                type="checkbox"
+                defaultChecked={user.agreeToPromo}
+                onChange={handleChangePromo}
+                className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+              />
+              <label
+                htmlFor="promo-checkbox"
+                className="ml-2 text-sm font-medium text-gray-700"
+              >
+                Subscribe for promotions
+              </label>
+            </div>
+          </div>
 
           <button
             className="focus:shadow-outline my-4 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -299,37 +325,10 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   Change Password
                 </button>
               </div>
-          <div className="mb-4 flex flex-col">
-            <div className="w-full md:mb-0 md:w-1/3">
-                <input
-                  id="promo-checkbox"
-                  type="checkbox"
-                  value=""
-                  className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
-                />
-                <label
-                  htmlFor="promo-checkbox"
-                  className="ml-2 text-sm font-medium text-gray-700"
-                >
-                  Subscribe for promotions
-                </label><br/><br/>
-              <label
-                htmlFor="payment-checkbox"
-                className="text-sm font-medium text-gray-700"
-              >
-                Add payment info
-              </label>{" "}
-              <br />
-              <input
-                id="payment-checkbox"
-                type="checkbox"
-                value=""
-                className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
-                onChange={() => setShowPaymentForm((prev) => !prev)}
-              />
             </div>
           </div>
         </form>
+
         <p className="mb-5 font-bold text-gray-700">Cards</p>
         <div className="my-4">
           {cards.map((card) => (

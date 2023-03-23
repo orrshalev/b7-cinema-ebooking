@@ -1,15 +1,12 @@
 import { z } from "zod";
 import { exit } from "process";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-
-import nodemailer from "nodemailer";
-import { exit } from "process";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -169,6 +166,7 @@ export const userRouter = createTRPCRouter({
         homeCity: z.string(),
         homeState: z.string(),
         homeZip: z.string(),
+        agreeToPromo: z.boolean(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -178,6 +176,7 @@ export const userRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
+          agreeToPromo: input.agreeToPromo,
         },
       });
       const test = await ctx.prisma.address.count({
@@ -298,23 +297,26 @@ export const userRouter = createTRPCRouter({
       });
       if (user == null) {
         return null;
-
+      }
       try {
         const transporter = nodemailer.createTransport({
-          service: 'gmail',
+          service: "gmail",
           auth: {
-            user: 'eilenej12345',
-            pass: 'vcgalleqzmphzogt', 
+            user: "eilenej12345",
+            pass: "vcgalleqzmphzogt",
           },
         });
-    
+
         const mailConfigurations = {
-          from: 'eilenej12345@gmail.com',
+          from: "eilenej12345@gmail.com",
           to: user.email,
           subject: "Cinema E-Booking: Register Confirmation",
-          text: "Here is the code to register your account: " + user.confirmCode + "\nDO NOT share this code with anyone.",
+          text:
+            "Here is the code to register your account: " +
+            user.confirmCode +
+            "\nDO NOT share this code with anyone.",
         };
-    
+
         await transporter.sendMail(mailConfigurations);
       } catch (error) {
         console.error(error);
@@ -349,15 +351,15 @@ export const userRouter = createTRPCRouter({
     }),
 
   getUser: publicProcedure
-  .input(z.object({email: z.string()}))
-  .query(async ({ input, ctx }) => {
-    const user = await ctx.prisma.user.findFirst({
-      where: {
-        email:input.email
-      },
-    });
-    return user;
-  }),
+    .input(z.object({ email: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: input.email,
+        },
+      });
+      return user;
+    }),
 
   confirmUserPwd: publicProcedure
     .input(z.object({ email: z.string(), changePwCode: z.string() }))
@@ -374,9 +376,9 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
-    
-    updatePw: publicProcedure
-    .input(z.object({ email: z.string(), password: z.string()}))
+
+  updatePw: publicProcedure
+    .input(z.object({ email: z.string(), password: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
@@ -391,8 +393,8 @@ export const userRouter = createTRPCRouter({
       return false;
     }),
 
-    isAdmin: publicProcedure
-    .input(z.object({ email: z.string()}))
+  isAdmin: publicProcedure
+    .input(z.object({ email: z.string() }))
     .query(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
@@ -402,5 +404,4 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
-
-  });
+});

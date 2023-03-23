@@ -21,9 +21,9 @@ interface Values {
   phoneNumber: string;
   password: string;
   homeStreet: string;
-  city: string;
-  state: string;
-  zip: string;
+  homeCity: string;
+  homeState: string;
+  homeZip: string;
   cardNumber: string;
   billStreet: string;
   billCity: string;
@@ -39,8 +39,6 @@ const Signup: NextPage = () => {
   const email = "djgonzalez0209@gmail.com";
   const signupMutation = api.user.createUser.useMutation();
   const router = useRouter();
-  // IMPORTANT: should be false by default
-  const USE_DEFAULT_VALUES = true;
 
   const handleSignup = async (
     values: Values,
@@ -56,9 +54,9 @@ const Signup: NextPage = () => {
       phoneNumber: values.phoneNumber,
       password: hashedPassword,
       homeStreet: values.homeStreet,
-      homeCity: values.city,
-      homeState: values.state,
-      homeZip: values.zip,
+      homeCity: values.homeCity,
+      homeState: values.homeState,
+      homeZip: values.homeZip,
       cardNumber: hashedCardNumber,
       cardType: values.cardType,
       billStreet: values.billStreet,
@@ -98,49 +96,26 @@ const Signup: NextPage = () => {
           </h1>
           <p className="pb-5 text-center text-xs text-red-500">* Required</p>
           <Formik
-            initialValues={
-              USE_DEFAULT_VALUES
-                ? {
-                    firstName: "Orr",
-                    lastName: "Shalev",
-                    email: "ore.shovel@gmail.com",
-                    phoneNumber: "555-332-4213",
-                    password: "NotAGoodPassword",
-                    homeStreet: "5000 Camoo Road",
-                    state: "Alabama",
-                    city: "Jerusalem",
-                    zip: "30055",
-                    cardNumber: "",
-                    billStreet: "",
-                    billCity: "",
-                    billState: "",
-                    billZip: "",
-                    cardType: "",
-                    billMonth: "",
-                    billYear: "",
-                    cvv: "",
-                  }
-                : {
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNumber: "",
-                    password: "",
-                    homeStreet: "",
-                    state: "Alabama",
-                    city: "",
-                    zip: "",
-                    cardNumber: "",
-                    billStreet: "",
-                    billCity: "",
-                    billState: "",
-                    billZip: "",
-                    cardType: "",
-                    billMonth: "",
-                    billYear: "",
-                    cvv: "",
-                  }
-            }
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              phoneNumber: "",
+              password: "",
+              homeStreet: "",
+              homeState: "Alabama",
+              homeCity: "",
+              homeZip: "",
+              cardNumber: "",
+              billStreet: "",
+              billCity: "",
+              billState: "",
+              billZip: "",
+              cardType: "",
+              billMonth: "",
+              billYear: "",
+              cvv: "",
+            }}
             onSubmit={handleSignup}
           >
             <Form className="my-auto w-full max-w-lg">
@@ -267,7 +242,7 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-city"
                     type="text"
-                    name="city"
+                    name="homeCity"
                     pattern="[a-zA-Z0-9 ]+"
                     placeholder="Albuquerque"
                   />
@@ -284,7 +259,7 @@ const Signup: NextPage = () => {
                       as="select"
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-state"
-                      name="state"
+                      name="homeState"
                     >
                       {states.map((state) => (
                         <option key={state}>{state}</option>
@@ -312,7 +287,7 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-zip"
                     type="text"
-                    name="zip"
+                    name="homeZip"
                     pattern=".{4,5}[0-9]"
                     placeholder="90210"
                   />
