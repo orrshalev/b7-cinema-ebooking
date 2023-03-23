@@ -17,8 +17,7 @@ const Pwdemail: NextPage = () => {
   const [userEmail, setUserEmail] = useState({ email: "" });
   const router = useRouter();
 
-  const onSubmit = async (e: Event) => {
-    e.preventDefault();
+  const onSubmit = async () => {
       const response = await fetch('../api/sendConfirmationEmail', {
         method: 'POST',
         headers: {

@@ -8,7 +8,7 @@ import { Formik, Field, Form } from "formik";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 function combine(str1: string, str2: string) {
   return str1 + ", " + str2;
@@ -20,29 +20,28 @@ interface Values {
   email: string;
   phoneNumber: string;
   password: string;
-  homeAddress: string;
-  city: string;
-  state: string;
-  zip: string;
+  homeStreet: string;
+  homeCity: string;
+  homeState: string;
+  homeZip: string;
   cardNumber: string;
-  billAddress: string;
+  billStreet: string;
   billCity: string;
   billState: string;
   billZip: string;
   cardType: string;
   billMonth: string;
   billYear: string;
-  cvv: string;
+  agreeToPromo: boolean;
 }
 
 const Signup: NextPage = () => {
-  const email = 'djgonzalez0209@gmail.com'
+  const email = "djgonzalez0209@gmail.com";
   const signupMutation = api.user.createUser.useMutation();
   const router = useRouter();
-  // IMPORTANT: should be false by default
-  const USE_DEFAULT_VALUES = true;
 
-  const handleSignup = async ( values: Values,
+  const handleSignup = async (
+    values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
     const saltRounds = 10;
@@ -54,31 +53,31 @@ const Signup: NextPage = () => {
       lastName: values.lastName,
       phoneNumber: values.phoneNumber,
       password: hashedPassword,
-      homeAddress: values.homeAddress,
-      homeCity: values.city, 
-      homeState: values.state, 
-      homeZip: values.zip,
+      homeStreet: values.homeStreet,
+      homeCity: values.homeCity,
+      homeState: values.homeState,
+      homeZip: values.homeZip,
       cardNumber: hashedCardNumber,
       cardType: values.cardType,
-      billAddress: values.billAddress,
+      billStreet: values.billStreet,
       billCity: values.billCity,
-      billState: values.billState, 
+      billState: values.billState,
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
-      cvv: values.cvv,
+      agreeToPromo: values.agreeToPromo,
       state: "ACTIVE",
     });
     setSubmitting(false);
-    if( result == null ) {
+    if (result == null) {
       alert("Email already exists!");
-    } else{
-    if (signupMutation.error) {
-      alert(signupMutation.error.message);
     } else {
-      await router.push("/signup/confirmation?email=" + values.email);
+      if (signupMutation.error) {
+        alert(signupMutation.error.message);
+      } else {
+        await router.push("/signup/confirmation?email=" + values.email);
+      }
     }
-  }
   };
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -98,49 +97,26 @@ const Signup: NextPage = () => {
           </h1>
           <p className="pb-5 text-center text-xs text-red-500">* Required</p>
           <Formik
-            initialValues={
-              USE_DEFAULT_VALUES
-                ? {
-                    firstName: "Orr",
-                    lastName: "Shalev",
-                    email: "ore.shovel@gmail.com",
-                    phoneNumber: "555-332-4213",
-                    password: "NotAGoodPassword",
-                    homeAddress: "5000 Camoo Road",
-                    state: "Alabama",
-                    city: "Jerusalem",
-                    zip: "30055",
-                    cardNumber: "",
-                    billAddress: "",
-                    billCity: "",
-                    billState: "",
-                    billZip: "",
-                    cardType: "",
-                    billMonth: "",
-                    billYear: "",
-                    cvv: "",
-                  }
-                : {
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phoneNumber: "",
-                    password: "",
-                    homeAddress: "",
-                    state: "Alabama",
-                    city: "",
-                    zip: "",
-                    cardNumber: "",
-                    billAddress: "",
-                    billCity: "",
-                    billState: "",
-                    billZip: "",
-                    cardType: "",
-                    billMonth: "",
-                    billYear: "",
-                    cvv: "",
-                  }
-            }
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              phoneNumber: "",
+              password: "",
+              homeStreet: "",
+              homeState: "Alabama",
+              homeCity: "",
+              homeZip: "",
+              cardNumber: "",
+              billStreet: "",
+              billCity: "",
+              billState: "",
+              billZip: "",
+              cardType: "",
+              billMonth: "",
+              billYear: "",
+              agreeToPromo: false,
+            }}
             onSubmit={handleSignup}
           >
             <Form className="my-auto w-full max-w-lg">
@@ -212,7 +188,7 @@ const Signup: NextPage = () => {
                     type="tel"
                     name="phoneNumber"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    placeholder="111-1111-1111"
+                    placeholder="111-111-1111"
                     required
                   />
                 </div>
@@ -251,7 +227,7 @@ const Signup: NextPage = () => {
                     className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-home-address"
                     type="text"
-                    name="homeAddress"
+                    name="homeStreet"
                   />
                 </div>
               </div>
@@ -267,7 +243,7 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-city"
                     type="text"
-                    name="city"
+                    name="homeCity"
                     pattern="[a-zA-Z0-9 ]+"
                     placeholder="Albuquerque"
                   />
@@ -284,7 +260,7 @@ const Signup: NextPage = () => {
                       as="select"
                       className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                       id="grid-state"
-                      name="state"
+                      name="homeState"
                     >
                       {states.map((state) => (
                         <option key={state}>{state}</option>
@@ -312,10 +288,26 @@ const Signup: NextPage = () => {
                     className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="grid-zip"
                     type="text"
-                    name="zip"
+                    name="homeZip"
                     pattern=".{4,5}[0-9]"
                     placeholder="90210"
                   />
+                </div>
+              </div>
+              <div className="mb-4 flex flex-col">
+                <div className="mx-3 my-5 w-full">
+                  <Field
+                    id="promo-checkbox"
+                    type="checkbox"
+                    name="agreeToPromo"
+                    className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                  />
+                  <label
+                    htmlFor="promo-checkbox"
+                    className="ml-2 text-sm font-medium text-gray-700"
+                  >
+                    Subscribe for promotions
+                  </label>
                 </div>
               </div>
               <div className="mt-6 w-full px-3 md:mb-0 md:w-1/3">
@@ -366,7 +358,7 @@ const Signup: NextPage = () => {
                         className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                         id="grid-shipping-address"
                         type="text"
-                        name="billAddress"
+                        name="billStreet"
                         required
                       />
                     </div>

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const movieRouter = createTRPCRouter({
+export const cardRouter = createTRPCRouter({
   //RETURNS A LIST OF CARDS
   //INPUT: USER ID
   getCards: publicProcedure
@@ -49,7 +49,6 @@ export const movieRouter = createTRPCRouter({
         cardType: z.string(),
         billMonth: z.string(),
         billYear: z.string(),
-        cvv: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -58,13 +57,12 @@ export const movieRouter = createTRPCRouter({
           cardNumber: input.cardNumber,
           firstName: input.firstName,
           lastName: input.lastName,
-          address: input.billAddress,
+          street: input.billAddress,
           city: input.billCity,
           state: input.billState,
           zip: input.billZip,
           expMonth: input.billMonth,
           expYear: input.billYear,
-          cvv: input.cvv,
           user: { connect: { id: input.userID } },
         },
       });

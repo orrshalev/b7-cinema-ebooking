@@ -33,24 +33,20 @@ model Movie {
 }
 
 model User {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    email       String   @unique
-    firstName   String
-    lastName    String
-    phoneNumber String
-    password    String
-    homeAddress Address?
-    card        Card[]
-    state       String   @default("ACTIVE")
-    confirmed   Boolean
-    confirmCode String
-    isAdmin     Boolean  @default(false)
-<<<<<<< HEAD
-    changePwCode String
-=======
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    email        String   @unique
+    firstName    String
+    lastName     String
+    phoneNumber  String
+    password     String
+    homeAddress  Address?
+    card         Card[]
+    state        String   @default("ACTIVE")
+    confirmed    Boolean
+    confirmCode  String
+    isAdmin      Boolean  @default(false)
     changePwCode String?
->>>>>>> backend/feature/updateUser
-    agreeToPromo Boolean     @default(false)
+    agreeToPromo Boolean  @default(false)
 }
 
 model Address {
@@ -59,7 +55,7 @@ model Address {
     userId    String @unique @db.ObjectId
     firstName String
     lastName  String
-    address   String
+    street    String
     city      String
     state     String
     zip       String
