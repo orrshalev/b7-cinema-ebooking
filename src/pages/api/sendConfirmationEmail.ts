@@ -29,7 +29,7 @@ async function sendConfirmationEmail(req: NextApiRequest, res: NextApiResponse) 
       });
   
       const mailConfigurations = {
-        from: 'eilenej12345@gmail.com',
+        from: process.env.EMAIL_USER,
         to: req.body as string,
         subject: "Cinema E-Booking: Change Your Password",
         text: "Here is the code to change your password: " + code + "\nDO NOT share this code with anyone.",
