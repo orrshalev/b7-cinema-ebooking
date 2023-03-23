@@ -4,10 +4,13 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Login: NextPage = (props): JSX.Element => {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
+  const [status, setStatus] = useState({status: 100})
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
@@ -16,11 +19,15 @@ const Login: NextPage = (props): JSX.Element => {
       password: userInfo.password,
       redirect: false
     }).then((response) => {
-      // Access the status field of the response object
-      if (response?.error == null) alert("Login Success!");
-      else alert("Invalid credentials. Please try again.")
+      if (response?.error == null) {
+        alert("Login Success!");
+        setStatus({...status, status: 200})
+      } else if(response?.error == "verification") {
+        alert("Please check your inbox and verify your account.")
+      } else {
+        alert("Invalid credentials. Please try again.")
+      }
     }).catch((error) => {
-      // Handle any errors that occurred during authentication
       alert(error)
     });
   };
@@ -71,9 +78,9 @@ const Login: NextPage = (props): JSX.Element => {
               />
               <div className="text-danger"></div>
             </div>
-            <a href="#" className="text-xs text-dark-red hover:underline">
+            <Link href="/forgotpwdemail" className="text-xs text-dark-red hover:underline">
               Forget Password?
-            </a>
+            </Link>
             <div className="mt-6">
               <button className="w-full transform rounded-md bg-dark-red px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none">
                 Login

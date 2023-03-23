@@ -120,7 +120,7 @@ const AdminBrowse: NextPage = () => {
         <meta name="description" content="Buy your tickets today!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <main className="my-10 flex min-h-screen flex-col items-center">
         <div className="flex w-3/5 flex-col gap-5">
@@ -276,7 +276,7 @@ const AdminBrowse: NextPage = () => {
         />
       </main>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -12,7 +12,7 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: "credentials",
       credentials: {
-        email: { label: "email", type: "email", placeholder: "me@email.com" },
+        email: { label: "email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -24,19 +24,22 @@ const authOptions: NextAuthOptions = {
           password: string;
         };
 
-        const user = await prisma.user.findFirst({ where: { email: email } });
-
+        const user = await prisma.user.findFirst({ where: { email: email }});
+        console.log(user)
         if (user == null) {
-          throw new Error('Incorrect credentials')
-        } 
+          throw new Error('invalid credentials')
+        }
         if (await bcrypt.compare(password, user.password) === true) {
+          if (user.confirmed == false) {
+            throw new Error('verification')
+          }
           return {
             email: email, 
             name: user.firstName + " " + user.lastName,
             isAdmin: user.isAdmin
         }
       } else {
-          throw new Error('Incorrect credentials')
+          throw new Error('invalid credentials')
         }
       }
     })
