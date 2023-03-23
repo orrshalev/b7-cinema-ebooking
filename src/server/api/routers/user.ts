@@ -225,7 +225,7 @@ export const userRouter = createTRPCRouter({
       billZip: z.string(), 
       cardType: z.string(), 
       billMonth: z.string(), 
-      billYear: z.string(), cvv: z.string()}))
+      billYear: z.string()}))
       .mutation(async ({ input, ctx }) => {
         const user = await ctx.prisma.user.findFirst({
           where: {

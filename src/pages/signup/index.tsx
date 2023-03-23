@@ -66,7 +66,6 @@ const Signup: NextPage = () => {
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
-      cvv: values.cvv,
       state: "ACTIVE",
     });
     setSubmitting(false);
