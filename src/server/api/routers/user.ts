@@ -117,12 +117,6 @@ export const userRouter = createTRPCRouter({
               "\nDO NOT share this code with anyone.",
           };
 
-          // TO DO: store verification code
-
-          //   if (typeof(Storage) !== "undefined")
-          //   localStorage.setItem("pwCode", code)
-          //   console.log(localStorage.getItem("pwCode"))
-
           await transporter.sendMail(mailConfigurations);
         } catch (error) {
           console.error(error);
@@ -130,7 +124,6 @@ export const userRouter = createTRPCRouter({
         return user;
       }
     }),
-  ///////////////////////////////////////////////////////////////////////
   confirmUser: publicProcedure
     .input(z.object({ email: z.string(), confirmCode: z.string() }))
     .mutation(async ({ input, ctx }) => {
