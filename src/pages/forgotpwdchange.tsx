@@ -61,7 +61,9 @@ const Changepwd: NextPage = () => {
               name="code"
               className=" mb-10 w-full rounded-md border-solid bg-white px-4 py-2 tracking-wide text-dark-red transition-colors  duration-200 focus:bg-white"
               type="password"
+              pattern=".{8,}"
               placeholder="Enter New Password"
+              required
             />
             <button
               type="submit"

@@ -228,7 +228,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="password"
                 name="oldPassword"
                 placeholder="Old Password"
-                onChange={handleChange}
+                onChange={handleChangeUser}
               />
             </div>
             <div className="mb-4">
@@ -238,7 +238,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="password"
                 name="newPassword"
                 placeholder="New Password"
-                onChange={handleChange}
+                onChange={handleChangeUser}
               />
             </div>
             <div className="">
@@ -352,6 +352,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   id="oldPassword"
                   type="password"
                   name="oldPassword"
+                  pattern=".{8,}"
                   placeholder="Old Password"
                 />
               </div>
@@ -361,8 +362,13 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   id="newPassword"
                   type="password"
                   name="newPassword"
+                  pattern=".{8,}"
                   placeholder="New Password"
+                  required
                 />
+                <p className="text-xs italic text-gray-600">
+                  Must be at least 8 characters long
+                </p>
               </div>
               <div className="">
                 <button className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
