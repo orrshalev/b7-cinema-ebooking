@@ -46,8 +46,8 @@ const Signup: NextPage = () => {
   ) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(values.password, saltRounds);
-    const buf = Buffer.from(values.cardNumber, 'utf8')
-    const encodedCardNumber = buf.toString('base64')
+    const buf = Buffer.from(values.cardNumber, "utf8");
+    const encodedCardNumber = buf.toString("base64");
     const result = await signupMutation.mutateAsync({
       email: values.email,
       firstName: values.firstName,
@@ -476,19 +476,9 @@ const Signup: NextPage = () => {
                           pattern="([1-9]|1[012])"
                           required
                         />
-
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg
-                            className="h-4 w-4 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                          </svg>
-                        </div>
                       </div>
                     </div>
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
                       <label
                         htmlFor="grid-year"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -504,18 +494,9 @@ const Signup: NextPage = () => {
                           pattern="(\d\d\d\d)"
                           required
                         />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg
-                            className="h-4 w-4 fill-current"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                          </svg>
-                        </div>
                       </div>
                     </div>
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
                       <label
                         htmlFor="grid-cvv"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"

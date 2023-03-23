@@ -17,12 +17,12 @@ export const userRouter = createTRPCRouter({
         lastName: z.string(),
         phoneNumber: z.string(),
         password: z.string(),
-        homeAddress: z.string().optional(),
+        homeStreet: z.string().optional(),
         homeCity: z.string().optional(),
         homeState: z.string().optional(),
         homeZip: z.string().optional(),
         cardNumber: z.string().optional(),
-        billAddress: z.string().optional(),
+        billStreet: z.string().optional(),
         billCity: z.string().optional(),
         billState: z.string().optional(),
         billZip: z.string().optional(),
@@ -81,7 +81,7 @@ export const userRouter = createTRPCRouter({
               cardNumber: input.cardNumber,
               firstName: input.firstName,
               lastName: input.lastName,
-              street: input.billAddress,
+              street: input.billStreet,
               city: input.billCity,
               state: input.billState,
               zip: input.billZip,
@@ -157,10 +157,10 @@ export const userRouter = createTRPCRouter({
         firstName: z.string(),
         lastName: z.string(),
         phoneNumber: z.string(),
-        homeStreet: z.string(),
-        homeCity: z.string(),
-        homeState: z.string(),
-        homeZip: z.string(),
+        homeStreet: z.string().optional(),
+        homeCity: z.string().optional(),
+        homeState: z.string().optional(),
+        homeZip: z.string().optional(),
         agreeToPromo: z.boolean(),
       })
     )
@@ -215,23 +215,29 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
   updateCard: publicProcedure
-    .input(z.object({ email: z.string(), 
-      cardNumber: z.string(), 
-      billAddress: z.string(), 
-      billCity: z.string(), 
-      billState: z.string(), 
-      billZip: z.string(), 
-      cardType: z.string(), 
-      billMonth: z.string(), 
-      billYear: z.string()}))
-      .mutation(async ({ input, ctx }) => {
-        const user = await ctx.prisma.user.findFirst({
-          where: {
-            email: input.email,
-          },
+    .input(
+      z.object({
+        email: z.string(),
+        cardNumber: z.string(),
+        billAddress: z.string(),
+        billCity: z.string(),
+        billState: z.string(),
+        billZip: z.string(),
+        cardType: z.string(),
+        billMonth: z.string(),
+        billYear: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: input.email,
+        },
+      });
+      if (user != null) {
+        const test = await ctx.prisma.card.count({
+          where: { cardNumber: input.cardNumber },
         });
-        if (user != null) {
-        const test = await ctx.prisma.card.count({where: {cardNumber: input.cardNumber}});
         if (test == 1) {
           const card = await ctx.prisma.card.update({
             where: { cardNumber: input.cardNumber },
