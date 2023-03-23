@@ -330,7 +330,6 @@ export const userRouter = createTRPCRouter({
       });
       return cards;
     }),
->>>>>>> eed1f7e4e7cbf9b0c82a7860cc86d3ea081b0310
 
   updateUserPwd: publicProcedure
     .input(
