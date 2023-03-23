@@ -129,11 +129,11 @@ const EditProfile = ({ data }: EditProfileProps) => {
     });
   };
 
-  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  }
+  // const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  // }
 
-  const changePwd = async (e: Event) => {
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const oldPw = document.getElementById("oldPassword")?.value as string
     const newPw = document.getElementById("newPassword")?.value as string
@@ -209,48 +209,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
               value={user.phoneNumber}
               onChange={handleChangeUser}
             />
-          </div>
-          <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
-            <div className="justify-center pt-3">
-              <label
-                className="mb-2 block font-bold text-gray-700"
-                htmlFor="password"
-              >
-                Change Password
-              </label>
-            </div>
-            <div></div>
-            <div className="mb-4">
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="oldPassword"
-                type="password"
-                name="oldPassword"
-                placeholder="Old Password"
-                onChange={handleChangeUser}
-              />
-            </div>
-            <div className="mb-4">
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                id="newPassword"
-                type="password"
-                name="newPassword"
-                placeholder="New Password"
-                pattern=".{8,}"
-                onChange={handleChangeUser}
-              />
-              <p className="text-xs italic text-gray-600">
-                Must be at least 8 characters long
-              </p>
-            </div>
-            <div className="">
-              <button 
-              onClick={changePwd}
-              className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
-                Change Password
-              </button>
-            </div>
           </div>
           <div className="mb-4">
             <label
@@ -336,6 +294,51 @@ const EditProfile = ({ data }: EditProfileProps) => {
           >
             Save Changes
           </button>
+        </form>
+        
+        <form onSubmit={handleChangePassword}>
+          <div className="mb-4">
+            <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
+              <div className="justify-center pt-3">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor="password"
+                >
+                  Change Password
+                </label>
+              </div>
+              <div></div>
+              <div className="mb-4">
+                <input
+                  className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                  id="oldPassword"
+                  type="password"
+                  name="oldPassword"
+                  pattern=".{8,}"
+                  placeholder="Old Password"
+                />
+              </div>
+              <div className="mb-4">
+                <input
+                  className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                  id="newPassword"
+                  type="password"
+                  name="newPassword"
+                  pattern=".{8,}"
+                  placeholder="New Password"
+                  required
+                />
+                <p className="text-xs italic text-gray-600">
+                  Must be at least 8 characters long
+                </p>
+              </div>
+              <div className="">
+                <button className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
 
         <p className="mb-5 font-bold text-gray-700">Cards</p>
