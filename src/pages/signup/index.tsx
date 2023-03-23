@@ -65,7 +65,10 @@ const Signup: NextPage = () => {
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
+<<<<<<< HEAD
       agreeToPromo: values.agreeToPromo,
+=======
+>>>>>>> backend/feature/updateUser
       state: "ACTIVE",
     });
     setSubmitting(false);

@@ -17,18 +17,18 @@ export const userRouter = createTRPCRouter({
         lastName: z.string(),
         phoneNumber: z.string(),
         password: z.string(),
-        homeStreet: z.string(),
-        homeCity: z.string(),
-        homeState: z.string(),
-        homeZip: z.string(),
-        cardNumber: z.string(),
-        billStreet: z.string(),
-        billCity: z.string(),
-        billState: z.string(),
-        billZip: z.string(),
-        cardType: z.string(),
-        billMonth: z.string(),
-        billYear: z.string(),
+        homeAddress: z.string().optional(),
+        homeCity: z.string().optional(),
+        homeState: z.string().optional(),
+        homeZip: z.string().optional(),
+        cardNumber: z.string().optional(),
+        billAddress: z.string().optional(),
+        billCity: z.string().optional(),
+        billState: z.string().optional(),
+        billZip: z.string().optional(),
+        cardType: z.string().optional(),
+        billMonth: z.string().optional(),
+        billYear: z.string().optional(),
         state: z.string(),
         agreeToPromo: z.boolean(),
       })
@@ -118,12 +118,6 @@ export const userRouter = createTRPCRouter({
               "\nDO NOT share this code with anyone.",
           };
 
-          // TO DO: store verification code
-
-          //   if (typeof(Storage) !== "undefined")
-          //   localStorage.setItem("pwCode", code)
-          //   console.log(localStorage.getItem("pwCode"))
-
           await transporter.sendMail(mailConfigurations);
         } catch (error) {
           console.error(error);
@@ -131,7 +125,6 @@ export const userRouter = createTRPCRouter({
         return user;
       }
     }),
-  ///////////////////////////////////////////////////////////////////////
   confirmUser: publicProcedure
     .input(z.object({ email: z.string(), confirmCode: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -222,30 +215,23 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
   updateCard: publicProcedure
-    .input(
-      z.object({
-        email: z.string(),
-        cardNumber: z.string(),
-        billAddress: z.string(),
-        billCity: z.string(),
-        billState: z.string(),
-        billZip: z.string(),
-        cardType: z.string(),
-        billMonth: z.string(),
-        billYear: z.string(),
-        cvv: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const user = await ctx.prisma.user.findFirst({
-        where: {
-          email: input.email,
-        },
-      });
-      if (user != null) {
-        const test = await ctx.prisma.card.count({
-          where: { cardNumber: input.cardNumber },
+    .input(z.object({ email: z.string(), 
+      cardNumber: z.string(), 
+      billAddress: z.string(), 
+      billCity: z.string(), 
+      billState: z.string(), 
+      billZip: z.string(), 
+      cardType: z.string(), 
+      billMonth: z.string(), 
+      billYear: z.string()}))
+      .mutation(async ({ input, ctx }) => {
+        const user = await ctx.prisma.user.findFirst({
+          where: {
+            email: input.email,
+          },
         });
+        if (user != null) {
+        const test = await ctx.prisma.card.count({where: {cardNumber: input.cardNumber}});
         if (test == 1) {
           const card = await ctx.prisma.card.update({
             where: { cardNumber: input.cardNumber },
