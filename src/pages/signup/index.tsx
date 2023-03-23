@@ -32,7 +32,7 @@ interface Values {
   cardType: string;
   billMonth: string;
   billYear: string;
-  cvv: string;
+  agreeToPromo: boolean;
 }
 
 const Signup: NextPage = () => {
@@ -65,6 +65,7 @@ const Signup: NextPage = () => {
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
+      agreeToPromo: values.agreeToPromo,
       state: "ACTIVE",
     });
     setSubmitting(false);
@@ -114,7 +115,7 @@ const Signup: NextPage = () => {
               cardType: "",
               billMonth: "",
               billYear: "",
-              cvv: "",
+              agreeToPromo: false,
             }}
             onSubmit={handleSignup}
           >
@@ -187,7 +188,7 @@ const Signup: NextPage = () => {
                     type="tel"
                     name="phoneNumber"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    placeholder="111-1111-1111"
+                    placeholder="111-111-1111"
                     required
                   />
                 </div>
@@ -291,6 +292,22 @@ const Signup: NextPage = () => {
                     pattern=".{4,5}[0-9]"
                     placeholder="90210"
                   />
+                </div>
+              </div>
+              <div className="mb-4 flex flex-col">
+                <div className="mx-3 my-5 w-full">
+                  <Field
+                    id="promo-checkbox"
+                    type="checkbox"
+                    name="agreeToPromo"
+                    className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                  />
+                  <label
+                    htmlFor="promo-checkbox"
+                    className="ml-2 text-sm font-medium text-gray-700"
+                  >
+                    Subscribe for promotions
+                  </label>
                 </div>
               </div>
               <div className="mt-6 w-full px-3 md:mb-0 md:w-1/3">

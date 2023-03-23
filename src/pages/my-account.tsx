@@ -131,8 +131,11 @@ const EditProfile = ({ data }: EditProfileProps) => {
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const oldPw = document.getElementById("oldPassword")?.value as string;
-    const newPw = document.getElementById("newPassword")?.value as string;
+  }
+
+  const changePwd = async () => {
+    const oldPw = document.getElementById("oldPassword")?.value as string
+    const newPw = document.getElementById("newPassword")?.value as string
     const hasNewPw = await bcrypt.hash(newPw, 10);
     // console.log(user.password)
     // console.log(oldPw)
@@ -208,8 +211,49 @@ const EditProfile = ({ data }: EditProfileProps) => {
               onChange={handleChangeUser}
             />
           </div>
+          <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
+            <div className="justify-center pt-3">
+              <label
+                className="mb-2 block font-bold text-gray-700"
+                htmlFor="password"
+              >
+                Change Password
+              </label>
+            </div>
+            <div></div>
+            <div className="mb-4">
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                id="oldPassword"
+                type="password"
+                name="oldPassword"
+                placeholder="Old Password"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                id="newPassword"
+                type="password"
+                name="newPassword"
+                placeholder="New Password"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="">
+              <button 
+              onClick = {changePwd}
+              className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
+                Change Password
+              </button>
+            </div>
+          </div>
           <div className="mb-4">
-            <label className="mb-2 block font-bold text-gray-700">
+            <label
+              className="mb-2 block font-bold text-gray-700"
+              htmlFor="homeAddress"
+            >
               Home Address
             </label>
             <input
