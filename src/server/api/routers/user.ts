@@ -30,6 +30,7 @@ export const userRouter = createTRPCRouter({
         billMonth: z.string(),
         billYear: z.string(),
         state: z.string(),
+        agreeToPromo: z.boolean(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -47,6 +48,7 @@ export const userRouter = createTRPCRouter({
             phoneNumber: input.phoneNumber,
             password: input.password,
             // homeAddress: {connect: { id: address.id }},
+            agreeToPromo: input.agreeToPromo,
             state: input.state,
             confirmed: false,
             confirmCode: (Math.random() + 1).toString(36).substring(6),
