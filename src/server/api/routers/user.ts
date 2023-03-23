@@ -103,13 +103,13 @@ export const userRouter = createTRPCRouter({
           const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-              user: "eilenej12345",
-              pass: "vcgalleqzmphzogt",
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
             },
           });
 
           const mailConfigurations = {
-            from: "eilenej12345@gmail.com",
+            from: process.env.EMAIL_USER,
             to: user.email,
             subject: "Cinema E-Booking: Register Confirmation",
             text:
@@ -290,13 +290,13 @@ export const userRouter = createTRPCRouter({
         const transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
-            user: "eilenej12345",
-            pass: "vcgalleqzmphzogt",
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
           },
         });
 
         const mailConfigurations = {
-          from: "eilenej12345@gmail.com",
+          from: process.env.EMAIL_USER,
           to: user.email,
           subject: "Cinema E-Booking: Register Confirmation",
           text:
