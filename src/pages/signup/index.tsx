@@ -187,7 +187,7 @@ const Signup: NextPage = () => {
                     type="tel"
                     name="phoneNumber"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    placeholder="111-1111-1111"
+                    placeholder="111-111-1111"
                     required
                   />
                 </div>
