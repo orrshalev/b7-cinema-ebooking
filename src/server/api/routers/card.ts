@@ -49,7 +49,6 @@ export const cardRouter = createTRPCRouter({
         cardType: z.string(),
         billMonth: z.string(),
         billYear: z.string(),
-        cvv: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -58,13 +57,12 @@ export const cardRouter = createTRPCRouter({
           cardNumber: input.cardNumber,
           firstName: input.firstName,
           lastName: input.lastName,
-          address: input.billAddress,
+          street: input.billAddress,
           city: input.billCity,
           state: input.billState,
           zip: input.billZip,
           expMonth: input.billMonth,
           expYear: input.billYear,
-          cvv: input.cvv,
           user: { connect: { id: input.userID } },
         },
       });

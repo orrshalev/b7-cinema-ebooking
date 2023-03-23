@@ -8,7 +8,7 @@ import { Formik, Field, Form } from "formik";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 function combine(str1: string, str2: string) {
   return str1 + ", " + str2;
@@ -36,13 +36,14 @@ interface Values {
 }
 
 const Signup: NextPage = () => {
-  const email = 'djgonzalez0209@gmail.com'
+  const email = "djgonzalez0209@gmail.com";
   const signupMutation = api.user.createUser.useMutation();
   const router = useRouter();
   // IMPORTANT: should be false by default
   const USE_DEFAULT_VALUES = true;
 
-  const handleSignup = async ( values: Values,
+  const handleSignup = async (
+    values: Values,
     { setSubmitting }: FormikHelpers<Values>
   ) => {
     const saltRounds = 10;
@@ -55,29 +56,29 @@ const Signup: NextPage = () => {
       phoneNumber: values.phoneNumber,
       password: hashedPassword,
       homeStreet: values.homeStreet,
-      homeCity: values.city, 
-      homeState: values.state, 
+      homeCity: values.city,
+      homeState: values.state,
       homeZip: values.zip,
       cardNumber: hashedCardNumber,
       cardType: values.cardType,
       billStreet: values.billStreet,
       billCity: values.billCity,
-      billState: values.billState, 
+      billState: values.billState,
       billZip: values.billZip,
       billMonth: values.billMonth,
       billYear: values.billYear,
       state: "ACTIVE",
     });
     setSubmitting(false);
-    if( result == null ) {
+    if (result == null) {
       alert("Email already exists!");
-    } else{
-    if (signupMutation.error) {
-      alert(signupMutation.error.message);
     } else {
-      await router.push("/signup/confirmation?email=" + values.email);
+      if (signupMutation.error) {
+        alert(signupMutation.error.message);
+      } else {
+        await router.push("/signup/confirmation?email=" + values.email);
+      }
     }
-  }
   };
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
