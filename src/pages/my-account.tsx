@@ -133,7 +133,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
     e.preventDefault();
   }
 
-  const changePwd = async () => {
+  const changePwd = async (e: Event) => {
+    e.preventDefault();
     const oldPw = document.getElementById("oldPassword")?.value as string
     const newPw = document.getElementById("newPassword")?.value as string
     const hasNewPw = await bcrypt.hash(newPw, 10);
@@ -150,8 +151,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
       console.log(a);
     } else {
       alert("Old password was incorrect.");
-      // jennyngo1925@gmail.com
-      // randompwd
     }
     console.log(user);
   };
@@ -238,12 +237,16 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="password"
                 name="newPassword"
                 placeholder="New Password"
+                pattern=".{8,}"
                 onChange={handleChangeUser}
               />
+              <p className="text-xs italic text-gray-600">
+                Must be at least 8 characters long
+              </p>
             </div>
             <div className="">
               <button 
-              onClick = {changePwd}
+              onClick={changePwd}
               className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
                 Change Password
               </button>
@@ -333,50 +336,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
           >
             Save Changes
           </button>
-        </form>
-        <form onSubmit={handleChangePassword}>
-          <div className="mb-4">
-            <div className="mb-4 grid grid-cols-2 grid-rows-3 gap-2">
-              <div className="justify-center pt-3">
-                <label
-                  className="mb-2 block font-bold text-gray-700"
-                  htmlFor="password"
-                >
-                  Change Password
-                </label>
-              </div>
-              <div></div>
-              <div className="mb-4">
-                <input
-                  className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                  id="oldPassword"
-                  type="password"
-                  name="oldPassword"
-                  pattern=".{8,}"
-                  placeholder="Old Password"
-                />
-              </div>
-              <div className="mb-4">
-                <input
-                  className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 focus:outline-none"
-                  id="newPassword"
-                  type="password"
-                  name="newPassword"
-                  pattern=".{8,}"
-                  placeholder="New Password"
-                  required
-                />
-                <p className="text-xs italic text-gray-600">
-                  Must be at least 8 characters long
-                </p>
-              </div>
-              <div className="">
-                <button className="focus:shadow-outline rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-700 focus:outline-none">
-                  Change Password
-                </button>
-              </div>
-            </div>
-          </div>
         </form>
 
         <p className="mb-5 font-bold text-gray-700">Cards</p>
