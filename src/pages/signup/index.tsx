@@ -432,7 +432,7 @@ const Signup: NextPage = () => {
                   </div>
 
                   <div className="-mx-3 mb-10 flex flex-wrap">
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
                       <label
                         htmlFor="grid-payment-type"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -460,7 +460,7 @@ const Signup: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
                       <label
                         htmlFor="grid-year"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -488,7 +488,7 @@ const Signup: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
                       <label
                         htmlFor="grid-year"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
@@ -497,7 +497,7 @@ const Signup: NextPage = () => {
                       </label>
                       <div className="relative">
                         <Field
-                          className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                          className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="grid-year"
                           name="billYear"
                           placeholder="2023"
@@ -515,7 +515,7 @@ const Signup: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
+                    <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
                       <label
                         htmlFor="grid-cvv"
                         className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
