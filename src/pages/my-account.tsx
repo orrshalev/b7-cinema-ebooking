@@ -355,12 +355,12 @@ const EditProfile = ({ data }: EditProfileProps) => {
         <p className="mb-5 font-bold text-gray-700">Cards</p>
         <div className="my-4">
           {cards.map((card) => (
-            <form key={card.cardNumber} className="-mx-3 mb-10 flex flex-wrap">
+            <form key={Buffer.from(card.cardNumber, "base64").toString("utf8")} className="-mx-3 mb-10 flex flex-wrap">
               <div className="mb-6 w-full px-3 md:mb-0 md:w-2/3">
                 <input
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   type="text"
-                  value={card.cardNumber}
+                  value={Buffer.from(card.cardNumber, "base64").toString("utf8")}
                   readOnly
                 />
               </div>
