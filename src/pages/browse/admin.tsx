@@ -11,6 +11,7 @@ import type { Movie } from "../../types/Movie";
 import EditMovieModal from "../../scenes/modals/EditMovieModal";
 import AddPromotionModal from "../../scenes/modals/AddPromotionModal";
 import AddMovieModal from "../../scenes/modals/AddMovieModal";
+import { api } from "~/utils/api";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -111,7 +112,22 @@ const AdminBrowse: NextPage = () => {
       rating: "G",
       length: 93,
     } satisfies Movie,
+    {
+      id: "5",
+      title: "hellolskdjflksjd",
+      poster: "https://i.imgur.com/w3R1CSY.jpg",
+      showtimes: Array.from(
+        { length: 10 },
+        (_, i) => new Date(2021, 10, 10, 10 + i, 0)
+      ),
+      trailerURL: "https://www.youtube.com/embed/hVKgY1ilx0Y",
+      genres: ["Horror"],
+      rating: "X",
+      length: 111,
+    } satisfies Movie,
   ];
+
+  const removeMovieMutation = api.movie.removeMovie.useMutation();
 
   return (
     <>
@@ -188,6 +204,9 @@ const AdminBrowse: NextPage = () => {
                   </button>
 
                   <button
+                    onClick = {async () => {
+                      await removeMovieMutation.mutateAsync({title: movie.title})
+                    }}
                     className={`h-10 w-[90%] rounded-md bg-dark-red transition duration-200 ease-in-out hover:bg-light-red`}
                   >
                     Remove Movie
