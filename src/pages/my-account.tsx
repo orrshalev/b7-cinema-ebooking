@@ -69,7 +69,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
     await cardAdder.mutateAsync({
       userID: currentUser?.id,
-      cardNumber: document.getElementById("cardNumber")?.value as string,
+      cardNumber: Buffer.from(document.getElementById("cardNumber")?.value as string, 'utf8').toString('base64'),
       firstName: user?.firstName,
       lastName: user?.lastName,
       billStreet: document.getElementById("billStreet")?.value as string,

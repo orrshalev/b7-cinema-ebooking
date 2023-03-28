@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AdminBrowse from "./admin";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -50,10 +51,20 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 
 const Browse: NextPage = () => {
   const { data } = useSession();
+  const router = useRouter();
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
   const [day, setDay] = useState<(typeof daysNames)[number]>("Sunday");
+
+  const onSubmit = async () => {
+    if (!data?.user) {
+      alert("Please log in to purchase.");
+      await router.push("/login")
+    } else {
+      await router.push("/ticketCheckout")
+    }
+  }
 
   const movies = [
     {
@@ -177,8 +188,8 @@ const Browse: NextPage = () => {
                   </p>
                   <div className="flex flex-wrap">
                     {movie.showtimes.map((showtime) => (
-                      <Link href="/ticketCheckout" key={showtime.toString()}>
-                        <button className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red">
+                      // <Link href="/ticketCheckout" key={showtime.toString()} id="timeButton">
+                        <button onClick={onSubmit} key={showtime.toString()} className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red">
                           {`${
                             showtime.getHours() % 12 === 0
                               ? 12
@@ -189,7 +200,7 @@ const Browse: NextPage = () => {
                             .padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}
                         </button>
-                      </Link>
+                      // </Link>
                     ))}
                   </div>
                 </div>
