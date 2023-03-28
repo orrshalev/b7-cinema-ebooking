@@ -26,5 +26,10 @@ export const movieRouter = createTRPCRouter({
           },
         })
       }
+    }),  
+    getAllMovies: publicProcedure
+    .query(async ({ ctx }) => {
+      const allMovies = await ctx.prisma.movie.findMany();
+      return allMovies;
     }),
 });
