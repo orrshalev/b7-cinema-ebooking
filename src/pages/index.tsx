@@ -65,6 +65,7 @@ const Home: NextPage = () => {
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
+  console.log("hello", comingSoonMoviesData.length)
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
