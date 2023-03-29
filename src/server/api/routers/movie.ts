@@ -11,4 +11,39 @@ export const movieRouter = createTRPCRouter({
       const moviesList = await ctx.prisma.movie.findMany({ take: input.limit });
       return moviesList;
     }),
+    addmovie: publicProcedure.input(
+      z.object({
+        title: z.string(),
+        synopsis: z.string(),
+        rating: z.string(),
+        genres: z.array(z.string()),
+        showtimes: z.array(z.string()),
+        poster: z.string(),
+        trailer: z.string(),
+        length: z.number(),
+        cast: z.array(z.string()),
+        directors: z.array(z.string()),
+        producers : z.array(z.string()),
+        reviews : z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const movie = await ctx.prisma.movie.create({
+        data: {
+          title: input.title,
+          synopsis: input.synopsis,
+          rating: input.rating,
+          genres: input.genres,
+          showtimes: input.showtimes,
+          poster: input.poster,
+          trailer: input.trailer,
+          length: input.length,
+          cast: input.cast,
+          directors: input.directors,
+          producers: input.producers,
+          reviews: input.reviews,
+        },
+      });
+      return movie;
+    }),
 });
