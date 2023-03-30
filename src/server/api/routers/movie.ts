@@ -43,9 +43,8 @@ export const movieRouter = createTRPCRouter({
         rating: z.string(),
         genres: z.array(z.string()),
         // showtimes: z.array(z.date()),
-        // poster: z.string(),
-        trailer: z.string(),
         poster: z.string(),
+        trailer: z.string(),
         length: z.number(),
         // cast: z.array(z.string()),
         // directors: z.array(z.string()),
@@ -59,8 +58,9 @@ export const movieRouter = createTRPCRouter({
           title: input.beforeTitle,
         },
       });
+      if (movie) {
       await ctx.prisma.movie.update({
-        where: { id: movie.id },
+        where: { id: movie?.id },
         data: {
           title: input.afterTitle,
           // synopsis: input.synopsis,
@@ -69,7 +69,7 @@ export const movieRouter = createTRPCRouter({
           // showtimes: input.showtimes,
           // poster: input.poster,
           trailer: input.trailer,
-          poster: z.string(),
+          poster: input.poster,
           length: input.length,
           // cast: input.cast,
           // directors: input.directors,
@@ -77,5 +77,6 @@ export const movieRouter = createTRPCRouter({
           // reviews: input.reviews
         },
       });
+    }
     })
 });

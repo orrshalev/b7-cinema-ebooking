@@ -137,23 +137,37 @@ const AdminBrowse: NextPage = () => {
   const updateMovieMutation = api.movie.updateMovie.useMutation();
   const removeMovieMutation = api.movie.removeMovie.useMutation();
 
+  // const handleChangeMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   if (movie) {
+  //     setMovie((prevMovie) => ({ ...prevMovie, [name]: value }));
+  //   }
+  // };
+
+  
+  // const [movieInfo, setMovieInfo] = useState();
+
   const handleUpdateMovie = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     await updateMovieMutation.mutateAsync({
-      beforeTitle: movie.title,
+      beforeTitle: movie?.title as string,
       afterTitle: document.getElementById("title")?.value as string,
       // synopsis: document.getElementById("synopsis")?.value as string,
       rating: document.getElementById("rating")?.value as string,
-      genres: document.getElementById("genres")?.value as string,
+      genres: "Horror,Comedy,Thriller".split(","),
+      // document.getElementById("genres")?.value as string[]
       // showtimes: document.getElementById("showtimes")?.value as string,
-      // poster: document.getElementById("poster")?.value as string,
+      poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
-      poster: document.getElementById("thumbnail")?.value as string,
-      length: document.getElementById("length")?.value as string,
+      length: parseInt(document.getElementById("length")?.value),
       // cast: document.getElementById("cast")?.value as string,
       // directors: document.getElementById("directors")?.value as string,
       // producers: document.getElementById("producers")?.value as string,
       // reviews: document.getElementById("reviews")?.value as string,
     });
+    console.log(movie?.title)
+    console.log(document.getElementById("length")?.value)
+    console.log("hello")
     closeModal();
   };
 
@@ -392,7 +406,7 @@ const AdminBrowse: NextPage = () => {
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="genre"
                           type="text"
-                          defaultValue={movie.genres}
+                          defaultValue={movie?.genres}
                         />
                       </div>
                     </div>
@@ -407,8 +421,11 @@ const AdminBrowse: NextPage = () => {
                         <input
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="length"
-                          type="text"
-                          defaultValue={movie.length}
+                          type="number"
+                          defaultValue={movie?.length}
+                          // onChange={({ target }) =>
+                          //   setMovieInfo({ ...movieInfo, length: target.value })
+                          // }
                         />
                       </div>
                       <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">
@@ -422,7 +439,7 @@ const AdminBrowse: NextPage = () => {
                           <select
                             className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                             id="rating"
-                            defaultValue={movie.rating}
+                            defaultValue={movie?.rating}
                           >
                             <option>G</option>
                             <option>PG</option>
@@ -452,7 +469,7 @@ const AdminBrowse: NextPage = () => {
                         </label>
                         <input
                           className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                          id="thumbnail"
+                          id="poster"
                           type="text"
                           defaultValue={movie?.poster}
                         />
@@ -470,7 +487,7 @@ const AdminBrowse: NextPage = () => {
                           className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="trailer"
                           type="text"
-                          defaultValue={movie.trailerURL}
+                          defaultValue={movie?.trailer}
                         />
                       </div>
                     </div>
