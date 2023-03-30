@@ -136,6 +136,7 @@ const AdminBrowse: NextPage = () => {
   const [movie, setMovie] = useState(movies[0])
   const updateMovieMutation = api.movie.updateMovie.useMutation();
   const removeMovieMutation = api.movie.removeMovie.useMutation();
+  const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
 
   // const handleChangeMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.target;
@@ -171,6 +172,15 @@ const AdminBrowse: NextPage = () => {
     closeModal();
   };
 
+  const deleteTimeHandler = async () => {
+    const index = movie.showtimes.indexOf(showtime)
+    movie.showtimes.splice(index, 1)
+    await deleteShowTimeMutation.mutateAsync({
+      title: movie.title,
+      showtimes: movie.showtimes
+    });
+    console.log(movie.showtimes)
+  }
   function closeModal() {
     setIsOpen(false)
   }
@@ -273,12 +283,13 @@ const AdminBrowse: NextPage = () => {
                   </p>
                   <div className="flex flex-wrap gap-3">
                     {movie.showtimes.map((showtime) => (
-                      <Link
-                        href="/ticketCheckout"
+                      <div
                         key={showtime.toString()}
                         className="relative"
                       >
                         <button
+                          onClick={()=> location.href = '/ticketCheckout'}
+                          id="timeButton"
                           className="mx-1 my-1 justify-center gap-1 
                         rounded-md bg-dark-red px-2 py-1 font-firasans text-lg
                         transition ease-in-out hover:bg-light-red "
@@ -295,11 +306,13 @@ const AdminBrowse: NextPage = () => {
                         </button>
 
                         <button
+                          onClick={deleteTimeHandler}
+                          id="deleteTimeButton"
                           className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-center text-lg font-bold transition duration-200 ease-in-out hover:scale-125 hover:bg-red-500`}
                         >
                           -
                         </button>
-                      </Link>
+                      </div>
                     ))}
                     <form>
                       <input
@@ -328,11 +341,6 @@ const AdminBrowse: NextPage = () => {
           setOpen={setTrailerModalOpen}
           // Need to change url to be dynamic
           url="https://www.youtube.com/embed/VONRQMx78YI"
-        />
-        {/* <EditMovieModal
-          open={editModalOpen}
-          setOpen={setEditModalOpen}
-          movie={movies[0]!}
         /> */}
         <AddPromotionModal
           open={promotionModalOpen}

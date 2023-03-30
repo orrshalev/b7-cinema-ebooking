@@ -39,13 +39,12 @@ export const movieRouter = createTRPCRouter({
       z.object({
         beforeTitle: z.string(),
         afterTitle: z.string(),
-        // synopsis: z.string(),
         rating: z.string(),
         genres: z.array(z.string()),
-        // showtimes: z.array(z.date()),
         poster: z.string(),
         trailer: z.string(),
         length: z.number(),
+        // synopsis: z.string(),
         // cast: z.array(z.string()),
         // directors: z.array(z.string()),
         // producers: z.array(z.string()),
@@ -58,25 +57,40 @@ export const movieRouter = createTRPCRouter({
           title: input.beforeTitle,
         },
       });
-      if (movie) {
       await ctx.prisma.movie.update({
         where: { id: movie?.id },
         data: {
           title: input.afterTitle,
-          // synopsis: input.synopsis,
           rating: input.rating,
           genres: input.genres,
-          // showtimes: input.showtimes,
-          // poster: input.poster,
           trailer: input.trailer,
           poster: input.poster,
           length: input.length,
+          // synopsis: input.synopsis,
           // cast: input.cast,
           // directors: input.directors,
           // producers: input.producers,
           // reviews: input.reviews
         },
       });
-    }
-    })
+    }),
+
+    deleteShowTime: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        showtimes: z.array(z.date())
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const movie = await ctx.prisma.movie.findFirst({
+        where: {
+          title: input.title,
+        },
+      });
+      await ctx.prisma.movie.update({
+        where: { id: movie?.id },
+        data: { showtimes: input.showtimes }
+      });
+    }),
 });
