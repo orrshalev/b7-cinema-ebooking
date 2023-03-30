@@ -136,7 +136,7 @@ const AdminBrowse: NextPage = () => {
   const [movie, setMovie] = useState(movies[0])
   const updateMovieMutation = api.movie.updateMovie.useMutation();
   const removeMovieMutation = api.movie.removeMovie.useMutation();
-  const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
+  const updateShowTimeMutation = api.movie.updateShowTime.useMutation();
 
   // const handleChangeMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.target;
@@ -153,14 +153,12 @@ const AdminBrowse: NextPage = () => {
     await updateMovieMutation.mutateAsync({
       beforeTitle: movie?.title as string,
       afterTitle: document.getElementById("title")?.value as string,
-      // synopsis: document.getElementById("synopsis")?.value as string,
       rating: document.getElementById("rating")?.value as string,
       genres: "Horror,Comedy,Thriller".split(","),
-      // document.getElementById("genres")?.value as string[]
-      // showtimes: document.getElementById("showtimes")?.value as string,
       poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
       length: parseInt(document.getElementById("length")?.value),
+      // synopsis: document.getElementById("synopsis")?.value as string,
       // cast: document.getElementById("cast")?.value as string,
       // directors: document.getElementById("directors")?.value as string,
       // producers: document.getElementById("producers")?.value as string,
@@ -172,15 +170,17 @@ const AdminBrowse: NextPage = () => {
     closeModal();
   };
 
-  const deleteTimeHandler = async () => {
-    const index = movie.showtimes.indexOf(showtime)
-    movie.showtimes.splice(index, 1)
-    await deleteShowTimeMutation.mutateAsync({
-      title: movie.title,
-      showtimes: movie.showtimes
+  const addTimeHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newShowtime = new Date("2012-05-25T" + document.getElementById("time")?.value as string + ":00.000+00:00")
+    movie?.showtimes.push(newShowtime)
+    await updateShowTimeMutation.mutateAsync({
+      title: movie?.title,
+      showtimes: movie?.showtimes
     });
-    console.log(movie.showtimes)
+    console.log(newShowtime)    
   }
+  
   function closeModal() {
     setIsOpen(false)
   }
@@ -306,7 +306,15 @@ const AdminBrowse: NextPage = () => {
                         </button>
 
                         <button
-                          onClick={deleteTimeHandler}
+                          onClick={async () => {
+                            const index = movie.showtimes.indexOf(showtime)
+                            movie.showtimes.splice(index, 1)
+                            await updateShowTimeMutation.mutateAsync({
+                              title: movie.title,
+                              showtimes: movie.showtimes
+                            });
+                            console.log(movie.showtimes)
+                          }}
                           id="deleteTimeButton"
                           className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-center text-lg font-bold transition duration-200 ease-in-out hover:scale-125 hover:bg-red-500`}
                         >
@@ -314,7 +322,8 @@ const AdminBrowse: NextPage = () => {
                         </button>
                       </div>
                     ))}
-                    <form>
+                    <form 
+                    onSubmit={addTimeHandler}>
                       <input
                         type="time"
                         name="time"
@@ -322,6 +331,7 @@ const AdminBrowse: NextPage = () => {
                         className="mx-1 my-1 h-[85%] w-[120] rounded-md bg-gray-100 px-3 text-center text-black"
                       />
                       <button
+                        type="submit"
                         className="mx-3 my-1 w-[80px] justify-center
                         gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans
                         text-lg transition ease-in-out hover:bg-light-red"

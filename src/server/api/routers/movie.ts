@@ -75,7 +75,7 @@ export const movieRouter = createTRPCRouter({
       });
     }),
 
-    deleteShowTime: publicProcedure
+    updateShowTime: publicProcedure
     .input(
       z.object({
         title: z.string(),
