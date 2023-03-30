@@ -136,7 +136,8 @@ const AdminBrowse: NextPage = () => {
   const [movie, setMovie] = useState(movies[0])
   const updateMovieMutation = api.movie.updateMovie.useMutation();
   const removeMovieMutation = api.movie.removeMovie.useMutation();
-  const updateShowTimeMutation = api.movie.updateShowTime.useMutation();
+  const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
+  const addShowTimeMutation = api.movie.addShowTime.useMutation();
 
   // const handleChangeMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.target;
@@ -172,13 +173,24 @@ const AdminBrowse: NextPage = () => {
 
   const addTimeHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newShowtime = new Date("2012-05-25T" + document.getElementById("time")?.value as string + ":00.000+00:00")
-    movie?.showtimes.push(newShowtime)
-    await updateShowTimeMutation.mutateAsync({
-      title: movie?.title,
-      showtimes: movie?.showtimes
+    let dup = false;
+    const newShowtime = new Date("2023-05-25T" + document.getElementById("time")?.value as string + ":00.000+00:00")
+    movie?.showtimes.forEach(function (value: Date) {
+      if (!(newShowtime > value) && !(newShowtime < value)) {
+        alert ("You cannot schedule 2 movies at the same time.")
+        dup = true;
+      }
     });
-    console.log(newShowtime)    
+    if (!dup) {
+      await addShowTimeMutation.mutateAsync({
+        title: movie?.title,
+        newShowtime: newShowtime as Date
+      });
+    }
+    console.log(movie?.showtimes)
+    console.log("time input", document.getElementById("time")?.value)
+    console.log("new date", newShowtime)
+    console.log(movie.title)
   }
   
   function closeModal() {
@@ -309,11 +321,11 @@ const AdminBrowse: NextPage = () => {
                           onClick={async () => {
                             const index = movie.showtimes.indexOf(showtime)
                             movie.showtimes.splice(index, 1)
-                            await updateShowTimeMutation.mutateAsync({
+                            await deleteShowTimeMutation.mutateAsync({
                               title: movie.title,
                               showtimes: movie.showtimes
                             });
-                            console.log(movie.showtimes)
+                            console.log("movie.showtimes:", movie.showtimes)
                           }}
                           id="deleteTimeButton"
                           className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-center text-lg font-bold transition duration-200 ease-in-out hover:scale-125 hover:bg-red-500`}
@@ -323,7 +335,46 @@ const AdminBrowse: NextPage = () => {
                       </div>
                     ))}
                     <form 
-                    onSubmit={addTimeHandler}>
+                    onSubmit={
+                      async (e: React.FormEvent<HTMLFormElement>) => {
+                      // e.preventDefault();
+                      let dup = false;
+                      const inputs = document.querySelectorAll('input[type="time"]');
+                      console.log(inputs)
+                      // inputs.forEach((input) => {
+                      //   console.log("input", input.value);
+                      // });
+                      let timeVal = null;
+                      let validTime = false;
+                      for (let i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value) {
+                          console.log(inputs[i].value);
+                          timeVal = inputs[i].value;
+                          validTime = true;
+                        }
+                      }
+                      if (!validTime) alert("Please schedule a valid time.")
+                      const newShowtime = new Date("2023-05-25T" + timeVal + ":00.000-04:00")
+                      movie?.showtimes.forEach(function (value: Date) {
+                        if (!(newShowtime > value) && !(newShowtime < value)) {
+                          dup = true;
+                        }
+                      });
+                      if (dup) alert ("You cannot schedule 2 movies at the same time.")
+                      else {
+                        if (!(await addShowTimeMutation.mutateAsync({
+                          title: movie?.title,
+                          newShowtime: newShowtime as Date
+                        }))) alert ("You cannot schedule 2 movies at the same time...")
+                      }
+                      console.log(movie?.showtimes)
+                      console.log("time input", document.getElementById("time")?.value)
+                      // console.log("2023-05-25T11:04:00.000+00:00")
+                      console.log("new date", newShowtime)
+                      console.log(movie.title)
+                      // document.getElementById("time")?.value.innerHTML = ""
+                    }}
+                    >
                       <input
                         type="time"
                         name="time"
@@ -441,9 +492,6 @@ const AdminBrowse: NextPage = () => {
                           id="length"
                           type="number"
                           defaultValue={movie?.length}
-                          // onChange={({ target }) =>
-                          //   setMovieInfo({ ...movieInfo, length: target.value })
-                          // }
                         />
                       </div>
                       <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">

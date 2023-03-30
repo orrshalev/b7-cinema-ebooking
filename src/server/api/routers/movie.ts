@@ -75,7 +75,7 @@ export const movieRouter = createTRPCRouter({
       });
     }),
 
-    updateShowTime: publicProcedure
+    deleteShowTime: publicProcedure
     .input(
       z.object({
         title: z.string(),
@@ -92,5 +92,39 @@ export const movieRouter = createTRPCRouter({
         where: { id: movie?.id },
         data: { showtimes: input.showtimes }
       });
+    }),
+
+    addShowTime: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        newShowtime: z.date()
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const findTime = await ctx.prisma.movie.findFirst({
+        where: {
+          showtimes: {
+            has: input.newShowtime,
+          },
+        },
+      })
+      if (findTime) return false;
+      else {
+        const movie = await ctx.prisma.movie.findFirst({
+          where: {
+            title: input.title,
+          },
+        });
+        await ctx.prisma.movie.update({
+          where: { id: movie?.id },
+          data: { 
+            showtimes: {
+              push: input.newShowtime
+            }
+          }
+        });
+      }
+      return true;
     }),
 });
