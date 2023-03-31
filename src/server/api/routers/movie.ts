@@ -4,12 +4,31 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const movieRouter = createTRPCRouter({
-  getMovies: publicProcedure
+  getUpcomingMovies: publicProcedure
     .input(
-      z.object({ limit: z.number(), comingSoon: z.boolean(), date: z.date() })
+      z.object({ limit: z.number(), comingSoon: z.boolean() })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.movie.findMany({ take: input.limit });
+      const moviesList = await ctx.prisma.movie.findMany({
+          where: {
+            upcoming: input.comingSoon
+          },
+          take: input.limit });
+      return moviesList;
+    }),
+
+    getTodayMovies: publicProcedure
+    .input(
+      z.object({ limit: z.number(), dateRange:z.array(z.date()) })
+    )
+    .query(async ({ input, ctx }) => {
+      const moviesList = await ctx.prisma.movie.findMany({
+          where: {
+            showtimes: {
+              hasSome: input.dateRange,
+            },
+          },
+          take: input.limit });
       return moviesList;
     }),
 

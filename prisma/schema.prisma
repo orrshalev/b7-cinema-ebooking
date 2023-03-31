@@ -20,6 +20,7 @@ model Movie {
     title     String     @unique
     synopsis  String
     // releaseDate DateTime
+    upcoming  Boolean
     rating    String
     genres    String[]
     showtimes DateTime[]

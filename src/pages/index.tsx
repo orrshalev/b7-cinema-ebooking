@@ -50,22 +50,52 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
-const date = new Date("2021-09-01T00:00:00.000Z");
+const dateBegin = new Date("2023-05-24T00:00:00.00");
+const dateEnd = new Date("2023-05-24T23:00:00.00");
+// const dateBegin = new Date("2023-05-25T00:00:00.000-04:00");
+// const dateEnd = new Date("2023-05-25T23:59:59.000-04:00");
+
+const dateRange = [
+  new Date("2023-05-25T00:00:00.00"),
+  new Date("2023-05-25T01:00:00.00"),
+  new Date("2023-05-25T02:00:00.00"),
+  new Date("2023-05-25T03:00:00.00"),
+  new Date("2023-05-25T04:00:00.00"),
+  new Date("2023-05-25T05:00:00.00"),
+  new Date("2023-05-25T06:00:00.00"), 
+  new Date("2023-05-25T07:00:00.00"),
+  new Date("2023-05-25T08:00:00.00"),
+  new Date("2023-05-25T09:00:00.00"),
+  new Date("2023-05-25T10:00:00.00"),
+  new Date("2023-05-25T11:00:00.00"),
+  new Date("2023-05-25T12:00:00.00"),
+  new Date("2023-05-25T13:00:00.00"),
+  new Date("2023-05-25T14:00:00.00"),
+  new Date("2023-05-25T15:00:00.00"),
+  new Date("2023-05-25T16:00:00.00"),
+  new Date("2023-05-25T17:00:00.00"),
+  new Date("2023-05-25T18:00:00.00"),
+  new Date("2023-05-25T19:00:00.00"),
+  new Date("2023-05-25T20:00:00.00"),
+  new Date("2023-05-25T21:00:00.00"),
+  new Date("2023-05-25T22:00:00.00"),
+  new Date("2023-05-25T23:00:00.00"),
+];
 
 const Home: NextPage = () => {
-  const movies = api.movie.getMovies.useQuery({
-    date: date,
+  const movies = api.movie.getTodayMovies.useQuery({
     limit: 4,
-    comingSoon: false,
+    dateRange: dateRange
   });
   const moviesData = movies.data ?? [];
-  const comingSoonMovies = api.movie.getMovies.useQuery({
-    date: date,
+  const comingSoonMovies = api.movie.getUpcomingMovies.useQuery({
     limit: 4,
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
-  console.log("hello", comingSoonMoviesData.length)
+  console.log("today:", moviesData.length)
+  console.log(dateRange)
+  // console.log(moviesData[1]?.showtimes)
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
