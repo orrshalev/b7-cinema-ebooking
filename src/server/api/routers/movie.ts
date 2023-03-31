@@ -19,14 +19,15 @@ export const movieRouter = createTRPCRouter({
 
     getTodayMovies: publicProcedure
     .input(
-      z.object({ limit: z.number(), dateRange:z.array(z.date()) })
+      z.object({ limit: z.number(), range:z.array(z.date()), comingSoon: z.boolean() })
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany({
           where: {
             showtimes: {
-              hasSome: input.dateRange,
+              hasSome: input.range,
             },
+            upcoming: input.comingSoon
           },
           take: input.limit });
       return moviesList;
