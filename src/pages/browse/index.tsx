@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AdminBrowse from "./admin";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -50,65 +51,79 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 
 const Browse: NextPage = () => {
   const { data } = useSession();
+  const router = useRouter();
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
   const [day, setDay] = useState<(typeof daysNames)[number]>("Sunday");
 
-  const movies = [
-    {
-      id: "1",
-      title: "Bee Movie",
-      poster: "https://i.imgur.com/i1rDBqw.jpg",
-      showtimes: Array.from(
-        { length: 10 },
-        (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-      ),
-      trailerURL: "https://www.youtube.com/embed/VONRQMx78YI",
-      genres: ["Comedy"],
-      rating: "PG",
-      length: 125,
-    } satisfies Movie,
-    {
-      id: "2",
-      title: "Rubber",
-      poster: "https://i.imgur.com/w3R1CSY.jpg",
-      showtimes: Array.from(
-        { length: 10 },
-        (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-      ),
-      trailerURL: "https://www.youtube.com/embed/hVKgY1ilx0Y",
-      genres: ["Horror"],
-      rating: "X",
-      length: 111,
-    } satisfies Movie,
-    {
-      id: "3",
-      title: "Mall Cop 2",
-      poster: "https://i.imgur.com/ZF2d8hi.jpg",
-      showtimes: Array.from(
-        { length: 10 },
-        (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-      ),
-      trailerURL: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      genres: ["Comedy"],
-      rating: "PG-13",
-      length: 93,
-    } satisfies Movie,
-    {
-      id: "4",
-      title: "Sonic 3",
-      poster: "https://i.imgur.com/yXSvn3h.png",
-      showtimes: Array.from(
-        { length: 10 },
-        (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-      ),
-      trailerURL: "https://www.youtube.com/embed/DuWEEKeJLMI",
-      genres: ["Action"],
-      rating: "G",
-      length: 93,
-    } satisfies Movie,
-  ];
+  const onSubmit = async () => {
+    if (!data?.user) {
+      alert("Please log in to purchase.");
+      await router.push("/login")
+    } else {
+      await router.push("/ticketCheckout")
+    }
+  }
+
+  const allMovies = api.movie.getAllMovies.useQuery();
+  const movies = allMovies.data ?? [];
+
+
+  // const movies = [
+  //   {
+  //     id: "1",
+  //     title: "Bee Movie",
+  //     poster: "https://i.imgur.com/i1rDBqw.jpg",
+  //     showtimes: Array.from(
+  //       { length: 10 },
+  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
+  //     ),
+  //     trailerURL: "https://www.youtube.com/embed/VONRQMx78YI",
+  //     genres: ["Comedy"],
+  //     rating: "PG",
+  //     length: 125,
+  //   } satisfies Movie,
+  //   {
+  //     id: "2",
+  //     title: "Rubber",
+  //     poster: "https://i.imgur.com/w3R1CSY.jpg",
+  //     showtimes: Array.from(
+  //       { length: 10 },
+  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
+  //     ),
+  //     trailerURL: "https://www.youtube.com/embed/hVKgY1ilx0Y",
+  //     genres: ["Horror"],
+  //     rating: "X",
+  //     length: 111,
+  //   } satisfies Movie,
+  //   {
+  //     id: "3",
+  //     title: "Mall Cop 2",
+  //     poster: "https://i.imgur.com/ZF2d8hi.jpg",
+  //     showtimes: Array.from(
+  //       { length: 10 },
+  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
+  //     ),
+  //     trailerURL: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  //     genres: ["Comedy"],
+  //     rating: "PG-13",
+  //     length: 93,
+  //   } satisfies Movie,
+  //   {
+  //     id: "4",
+  //     title: "Sonic 3",
+  //     poster: "https://i.imgur.com/yXSvn3h.png",
+  //     showtimes: Array.from(
+  //       { length: 10 },
+  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
+  //     ),
+  //     trailerURL: "https://www.youtube.com/embed/DuWEEKeJLMI",
+  //     genres: ["Action"],
+  //     rating: "G",
+  //     length: 93,
+  //   } satisfies Movie,
+  // ];
 
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
 
@@ -177,8 +192,8 @@ const Browse: NextPage = () => {
                   </p>
                   <div className="flex flex-wrap">
                     {movie.showtimes.map((showtime) => (
-                      <Link href="/ticketCheckout" key={showtime.toString()}>
-                        <button className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red">
+                      // <Link href="/ticketCheckout" key={showtime.toString()} id="timeButton">
+                        <button onClick={onSubmit} key={showtime.toString()} className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red">
                           {`${
                             showtime.getHours() % 12 === 0
                               ? 12
@@ -189,7 +204,7 @@ const Browse: NextPage = () => {
                             .padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}
                         </button>
-                      </Link>
+                      // </Link>
                     ))}
                   </div>
                 </div>

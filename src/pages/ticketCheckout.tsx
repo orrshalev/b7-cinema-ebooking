@@ -62,15 +62,9 @@ const TicketCheckout: NextPage = () => {
   //   });
   
   const router = useRouter();
-  const { data } = useSession();
 
   const onSubmit = async () => {
-    if (!data?.user) {
-      alert("Please log in to purchase.");
-      await router.push("/login");
-    } else {
-      await router.push("/seatCheckout");
-    }
+    await router.push("/seatCheckout");
   };
 
   return (

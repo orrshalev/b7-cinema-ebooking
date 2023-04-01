@@ -17,9 +17,10 @@ datasource db {
 // TODO: relaseDate
 model Movie {
     id        String     @id @default(auto()) @map("_id") @db.ObjectId
-    title     String
+    title     String     @unique
     synopsis  String
     // releaseDate DateTime
+    upcoming  Boolean
     rating    String
     genre    String
     showtimes DateTime[]

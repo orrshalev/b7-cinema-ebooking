@@ -8,6 +8,7 @@ import { api } from "../utils/api";
 import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
 import type { Movie } from "@prisma/client";
+import dateRange from "src/pages/lib/dateRange"
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -50,21 +51,33 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
-const date = new Date("2021-09-01T00:00:00.000Z");
+const dateBegin = new Date("2023-05-24T00:00:00.00");
+const dateEnd = new Date("2023-05-24T23:00:00.00");
+
+const dateRangeArr = dateRange;
 
 const Home: NextPage = () => {
-  const movies = api.movie.getMovies.useQuery({
-    date: date,
+  const movies = api.movie.getTodayMovies.useQuery({
     limit: 4,
-    comingSoon: false,
+    range: dateRangeArr,
+    comingSoon: false
   });
   const moviesData = movies.data ?? [];
-  const comingSoonMovies = api.movie.getMovies.useQuery({
-    date: date,
+  const comingSoonMovies = api.movie.getUpcomingMovies.useQuery({
     limit: 4,
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
+  console.log("today:", moviesData.length)
+  const date = new Date()
+const year = date.getFullYear().toString()
+const month = date.getMonth().toString()
+const day = date.getDate().toString()
+const d = year + "\-0" + month + "\-" + day
+  const dateString = new Date(d + "T01:00:00.00")
+  const h = new Date("2023-03-30T01:00:00.00")
+  console.log(dateString)
+  console.log(d)
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
