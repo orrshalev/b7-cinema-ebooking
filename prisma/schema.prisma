@@ -21,14 +21,14 @@ model Movie {
     synopsis  String
     // releaseDate DateTime
     rating    String
-    genres    String[]
+    genre    String
     showtimes DateTime[]
     poster    String
     trailer   String
-    length    Int
-    cast      String[]
-    directors String[]
-    producers String[]
+    length    String
+    cast      String
+    directors String
+    producers String
     reviews   String[]
 }
 
