@@ -105,7 +105,6 @@ const AdminBrowse: NextPage = () => {
     });
     console.log(movie?.title)
     console.log(document.getElementById("length")?.value)
-    console.log("hello")
     closeModal();
   };
 
@@ -428,7 +427,7 @@ const AdminBrowse: NextPage = () => {
                         <input
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="length"
-                          type="number"
+                          type="text"
                           defaultValue={movie?.length}
                         />
                       </div>
