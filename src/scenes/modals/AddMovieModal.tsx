@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { api } from "~/utils/api";
@@ -10,6 +10,7 @@ type AddMovieModalProps = {
 
 const AddMovieModal = (props: AddMovieModalProps) => {
   const movieAdder = api.movie.addmovie.useMutation();
+  const [upcomingSelected, setUpcomingSelected] = useState(false);
 
   const handleAddMovie = async (e: React.FormEvent<HTMLFormElement>) => {
     await movieAdder.mutateAsync({
@@ -24,6 +25,7 @@ const AddMovieModal = (props: AddMovieModalProps) => {
       cast: document.getElementById("grid-cast")?.value as string,
       directors: document.getElementById("grid-directors")?.value as string,
       producers: document.getElementById("grid-producers")?.value as string,
+      upcoming: upcomingSelected,
       reviews: [],
     });
   };
@@ -217,8 +219,27 @@ const AddMovieModal = (props: AddMovieModalProps) => {
                         />
                       </div>
                     </div>
+                    <div className="-mx-3 mb-6 flex flex-wrap">
+                      <div className="w-full px-3">
+                        <label
+                          htmlFor="grid-upcoming"
+                          className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                        >
+                          Upcoming
+                        </label>
+                        <input
+                          onClick={() => setUpcomingSelected((prev) => (!prev))}
+                          className="text-dark-coral-600 focus:ring-dark-coral-500 dark:focus:ring-dark-coral-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                          id="grid-upcoming"
+                          type="checkbox"
+                        />
+                      </div>
+                    </div>
                     <div className="mt-6">
-                      <button onClick={handleAddMovie} className="w-full transform rounded-md bg-dark-red px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none">
+                      <button
+                        onClick={handleAddMovie}
+                        className="w-full transform rounded-md bg-dark-red px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-light-coral focus:bg-light-coral focus:outline-none"
+                      >
                         Add Movie
                       </button>
                     </div>

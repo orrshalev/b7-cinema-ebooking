@@ -40,7 +40,7 @@ const AddPromotionModal = (props: AddPromotionModalProps) => {
               <Dialog.Panel className="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8  sm:max-w-5xl">
                 <div className="my-auto grid w-full rounded-md bg-white p-6 shadow-md lg:max-w-xl">
                   <h1 className="text-dark-red mb-8 text-center text-3xl font-semibold">
-                    {`Promotions for ${props.movie.title}`}
+                    {`Promotions`}
                   </h1>
                   <form className="my-auto w-full max-w-lg">
                     <div className="-mx-3 mb-6 flex flex-wrap items-center">

@@ -77,74 +77,12 @@ const AdminBrowse: NextPage = () => {
   const [addMovieModalOpen, setAddMovieModalOpen] = useState(false);
 
 
-  // const movies = [
-  //   {
-  //     id: "1",
-  //     title: "Bee Movie",
-  //     poster: "https://i.imgur.com/i1rDBqw.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/VONRQMx78YI",
-  //     genres: ["Comedy"],
-  //     rating: "PG",
-  //     length: 125,
-  //   } satisfies Movie,
-  //   {
-  //     id: "2",
-  //     title: "Rubber",
-  //     poster: "https://i.imgur.com/w3R1CSY.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/hVKgY1ilx0Y",
-  //     genres: ["Horror"],
-  //     rating: "X",
-  //     length: 111,
-  //   } satisfies Movie,
-  //   {
-  //     id: "3",
-  //     title: "Mall Cop 2",
-  //     poster: "https://i.imgur.com/ZF2d8hi.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  //     genres: ["Comedy"],
-  //     rating: "PG-13",
-  //     length: 93,
-  //   } satisfies Movie,
-  //   {
-  //     id: "4",
-  //     title: "Sonic 3",
-  //     poster: "https://i.imgur.com/yXSvn3h.png",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/DuWEEKeJLMI",
-  //     genres: ["Action"],
-  //     rating: "G",
-  //     length: 93,
-  //   } satisfies Movie,
-  // ];
-
   const [isOpen, setIsOpen] = useState(false)
   const [movie, setMovie] = useState(movies[0])
   const updateMovieMutation = api.movie.updateMovie.useMutation();
   const removeMovieMutation = api.movie.removeMovie.useMutation();
   const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
   const addShowTimeMutation = api.movie.addShowTime.useMutation();
-
-  // const handleChangeMovie = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   if (movie) {
-  //     setMovie((prevMovie) => ({ ...prevMovie, [name]: value }));
-  //   }
-  // };
 
   
   // const [movieInfo, setMovieInfo] = useState();
@@ -155,10 +93,10 @@ const AdminBrowse: NextPage = () => {
       beforeTitle: movie?.title as string,
       afterTitle: document.getElementById("title")?.value as string,
       rating: document.getElementById("rating")?.value as string,
-      genres: "Horror,Comedy,Thriller".split(","),
+      genre: document.getElementById("genre")?.value as string,
       poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
-      length: parseInt(document.getElementById("length")?.value),
+      length: document.getElementById("length")?.value as string,
       // synopsis: document.getElementById("synopsis")?.value as string,
       // cast: document.getElementById("cast")?.value as string,
       // directors: document.getElementById("directors")?.value as string,
@@ -289,7 +227,7 @@ const AdminBrowse: NextPage = () => {
                     {movie.title}
                   </h1>
                   <p className={`mx-1 my-1 font-firasans text-lg text-black`}>
-                    {`${movie.rating} | ${movie.genres[0]!} | ${
+                    {`${movie.rating} | ${movie.genre} | ${
                       movie.length
                     } min`}
                   </p>
@@ -444,7 +382,7 @@ const AdminBrowse: NextPage = () => {
               <Dialog.Panel className="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8  sm:max-w-5xl">
                 <div className="my-auto grid w-full rounded-md bg-white p-6 shadow-md lg:max-w-xl">
                   <h1 className="mb-8 text-center text-3xl font-semibold text-dark-red">
-                    {`Edit ${movie.title}`}
+                    {`Edit movie`}
                   </h1>
                   <form
                   onSubmit={handleUpdateMovie}
@@ -475,7 +413,7 @@ const AdminBrowse: NextPage = () => {
                           className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                           id="genre"
                           type="text"
-                          defaultValue={movie?.genres}
+                          defaultValue={movie?.genre}
                         />
                       </div>
                     </div>
