@@ -54,7 +54,8 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 const dateBegin = new Date("2023-05-24T00:00:00.00");
 const dateEnd = new Date("2023-05-24T23:00:00.00");
 
-const dateRangeArr = dateRange;
+const dateRangeArr = dateRange("2023-05-26");
+console.log(dateRangeArr)
 
 const Home: NextPage = () => {
   const movies = api.movie.getTodayMovies.useQuery({

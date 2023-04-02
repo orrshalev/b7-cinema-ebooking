@@ -22,7 +22,7 @@ model Movie {
     // releaseDate DateTime
     upcoming  Boolean
     rating    String
-    genre    String
+    genre     String
     showtimes DateTime[]
     poster    String
     trailer   String
