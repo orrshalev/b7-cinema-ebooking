@@ -59,15 +59,6 @@ const AdminBrowse: NextPage = () => {
   const allMovies = api.movie.getAllMovies.useQuery();
   const movies = allMovies.data ?? [];
 
-  // const allMovies = api.movie.getMovies.useQuery({
-  //   date: date,
-  //   limit: 6,
-  //   comingSoon: false,
-  // });
-  // const movies = allMovies.data ?? [];
-
-  // console.log("all movies length:", movies.length)
-
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   const [day, setDay] = useState<(typeof daysNames)[number]>("Sunday");
@@ -97,11 +88,6 @@ const AdminBrowse: NextPage = () => {
       poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
       length: document.getElementById("length")?.value as string,
-      // synopsis: document.getElementById("synopsis")?.value as string,
-      // cast: document.getElementById("cast")?.value as string,
-      // directors: document.getElementById("directors")?.value as string,
-      // producers: document.getElementById("producers")?.value as string,
-      // reviews: document.getElementById("reviews")?.value as string,
     });
     console.log(movie?.title)
     console.log(document.getElementById("length")?.value)
@@ -278,9 +264,6 @@ const AdminBrowse: NextPage = () => {
                       let dup = false;
                       const inputs = document.querySelectorAll('input[type="time"]');
                       console.log(inputs)
-                      // inputs.forEach((input) => {
-                      //   console.log("input", input.value);
-                      // });
                       let timeVal = null;
                       let validTime = false;
                       for (let i = 0; i < inputs.length; i++) {
@@ -306,10 +289,8 @@ const AdminBrowse: NextPage = () => {
                       }
                       console.log(movie?.showtimes)
                       console.log("time input", document.getElementById("time")?.value)
-                      // console.log("2023-05-25T11:04:00.000+00:00")
                       console.log("new date", newShowtime)
                       console.log(movie.title)
-                      // document.getElementById("time")?.value.innerHTML = ""
                     }}
                     >
                       <input
