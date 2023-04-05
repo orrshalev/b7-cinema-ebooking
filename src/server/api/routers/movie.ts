@@ -186,12 +186,15 @@ export const movieRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.movie.findMany({
-        where: {
-          title: input.search
-        },
-      });
-      return moviesList;
+      const moviesList = await ctx.prisma.movie.findMany();
+      let searchResults = [];
+      moviesList.every((movie) => {
+        if (movie.title.toLowerCase() === input.search.toLowerCase()) {
+          searchResults.push(movie)
+          return false;
+        }
+      })
+      return searchResults;
     }),
 
     searchMovieCategory: publicProcedure
