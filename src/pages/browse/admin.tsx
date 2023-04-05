@@ -79,8 +79,6 @@ const AdminBrowse: NextPage = () => {
   
   const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
   const movies = allMovies.data ?? [];
-  // const allMovies = api.movie.getAllMovies.useQuery();
-  // const movies = allMovies.data ?? [];
 
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -142,26 +140,6 @@ const AdminBrowse: NextPage = () => {
                     setDay(dayName)
                     setDayNum(daysNames.indexOf(dayName))
                     console.log(daysNames.indexOf(dayName))
-
-                    // await router.push("/browse?day=" + day);
-                    // if (day == "Sunday") {
-                    //   for (let i=0; i < movies.length; i++){
-                    //     movies[i].showtimes.forEach((showtime: Date) => {
-                    //       let isSunday = false;
-                    //       if (showtime.getDay() == 0) {
-                    //         isSunday = true;
-                    //         console.log(movie.title, showtime, showtime.getDay())
-                    //         console.log(movies)
-                    //       }
-                    //       if (isSunday == false)
-                    //         delete movies[i]
-                    //     })
-                    //     console.log(i)
-                    //   }
-                    //   console.log(movies)
-                    //   console.log(day)
-                    // }
-                    // // window.location.reload();
                   }}
                 >
                   {dayName}
