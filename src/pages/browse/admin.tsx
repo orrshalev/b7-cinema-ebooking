@@ -14,6 +14,7 @@ import AddMovieModal from "../../scenes/modals/AddMovieModal";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -68,23 +69,19 @@ const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
 );
 
 const AdminBrowse: NextPage = () => {
-  const allMovies = api.movie.getAllMovies.useQuery();
-  const movies = allMovies.data ?? [];
-
-  // const allMovies = api.movie.getMovies.useQuery({
-  //   date: date,
-  //   limit: 6,
-  //   comingSoon: false,
-  // });
-  // const movies = allMovies.data ?? [];
-
-  // console.log("all movies length:", movies.length)
 
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   const [day, setDay] = useState<(typeof daysNames)[number]>(
     daysNames[currentWeekDay]!
   );
+  const [dayNum, setDayNum] = useState(currentWeekDay)
+  
+  const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
+  const movies = allMovies.data ?? [];
+  // const allMovies = api.movie.getAllMovies.useQuery();
+  // const movies = allMovies.data ?? [];
+
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [promotionModalOpen, setPromotionModalOpen] = useState(false);
@@ -97,7 +94,6 @@ const AdminBrowse: NextPage = () => {
   const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
   const addShowTimeMutation = api.movie.addShowTime.useMutation();
 
-  // const [movieInfo, setMovieInfo] = useState();
 
   const handleUpdateMovie = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -109,40 +105,10 @@ const AdminBrowse: NextPage = () => {
       poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
       length: document.getElementById("length")?.value as string,
-      // synopsis: document.getElementById("synopsis")?.value as string,
-      // cast: document.getElementById("cast")?.value as string,
-      // directors: document.getElementById("directors")?.value as string,
-      // producers: document.getElementById("producers")?.value as string,
-      // reviews: document.getElementById("reviews")?.value as string,
     });
     console.log(movie?.title);
     console.log(document.getElementById("length")?.value);
     closeModal();
-  };
-
-  const addTimeHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let dup = false;
-    const newShowtime = new Date(
-      (("2023-05-25T" + document.getElementById("time")?.value) as string) +
-        ":00.000+00:00"
-    );
-    movie?.showtimes.forEach(function (value: Date) {
-      if (!(newShowtime > value) && !(newShowtime < value)) {
-        alert("You cannot schedule 2 movies at the same time.");
-        dup = true;
-      }
-    });
-    if (!dup) {
-      await addShowTimeMutation.mutateAsync({
-        title: movie?.title,
-        newShowtime: newShowtime as Date,
-      });
-    }
-    console.log(movie?.showtimes);
-    console.log("time input", document.getElementById("time")?.value);
-    console.log("new date", newShowtime);
-    console.log(movie.title);
   };
 
   function closeModal() {
@@ -172,7 +138,31 @@ const AdminBrowse: NextPage = () => {
                     dayName === day ? "text-dark-red" : ""
                   }`}
                   key={dayName}
-                  onClick={() => setDay(dayName)}
+                  onClick={() => {
+                    setDay(dayName)
+                    setDayNum(daysNames.indexOf(dayName))
+                    console.log(daysNames.indexOf(dayName))
+
+                    // await router.push("/browse?day=" + day);
+                    // if (day == "Sunday") {
+                    //   for (let i=0; i < movies.length; i++){
+                    //     movies[i].showtimes.forEach((showtime: Date) => {
+                    //       let isSunday = false;
+                    //       if (showtime.getDay() == 0) {
+                    //         isSunday = true;
+                    //         console.log(movie.title, showtime, showtime.getDay())
+                    //         console.log(movies)
+                    //       }
+                    //       if (isSunday == false)
+                    //         delete movies[i]
+                    //     })
+                    //     console.log(i)
+                    //   }
+                    //   console.log(movies)
+                    //   console.log(day)
+                    // }
+                    // // window.location.reload();
+                  }}
                 >
                   {dayName}
                 </button>
@@ -286,15 +276,12 @@ const AdminBrowse: NextPage = () => {
                       </div>
                     ))}
                     <form
-                      onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                      onSubmit={ async (e: React.FormEvent<HTMLFormElement>) => {
                         // e.preventDefault();
                         let dup = false;
                         const inputs =
                           document.querySelectorAll('input[type="time"]');
                         console.log(inputs);
-                        // inputs.forEach((input) => {
-                        //   console.log("input", input.value);
-                        // });
                         let timeVal = null;
                         let validTime = false;
                         for (let i = 0; i < inputs.length; i++) {
@@ -308,7 +295,7 @@ const AdminBrowse: NextPage = () => {
                         const newShowtime = new Date(
                           weekDates[daysNames.findIndex((d) => d === day)] +
                             timeVal +
-                            ":00.000-04:00"
+                            ":00.00-04:00"
                         );
                         movie?.showtimes.forEach(function (value: Date) {
                           if (
@@ -330,7 +317,7 @@ const AdminBrowse: NextPage = () => {
                             }))
                           )
                             alert(
-                              "You cannot schedule 2 movies at the same time..."
+                              "You cannot schedule 2 movies at the same time."
                             );
                         }
                         console.log(movie?.showtimes);
@@ -338,10 +325,8 @@ const AdminBrowse: NextPage = () => {
                           "time input",
                           document.getElementById("time")?.value
                         );
-                        // console.log("2023-05-25T11:04:00.000+00:00")
                         console.log("new date", newShowtime);
                         console.log(movie.title);
-                        // document.getElementById("time")?.value.innerHTML = ""
                       }}
                     >
                       <input
