@@ -182,7 +182,7 @@ export const movieRouter = createTRPCRouter({
     searchMovieTitle: publicProcedure
     .input(
       z.object({
-        search: z.string()
+        search: z.string() // has to be correct spelling
       })
     )
     .query(async ({ input, ctx }) => {
@@ -217,17 +217,22 @@ export const movieRouter = createTRPCRouter({
     searchMovieDate: publicProcedure
     .input(
       z.object({
-        search: z.string()
+        searchDate: z.string() // format: YYYY-MM-DD
       })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.movie.findMany({
-        where: {
-          showtimes: {
-            has: input.search
+      const moviesList = await ctx.prisma.movie.findMany();
+      let searchResults = [];
+      moviesList.every((movie) => {
+        movie.showtimes.every((showtime) => {
+          const dateTimeInParts = showtime.toISOString().split( "T" );
+          const dateOnly = dateTimeInParts[0];
+          if (dateOnly === input.searchDate) {
+            searchResults.push(movie)
+            return false;
           }
-        }
+        })
       })
-      return moviesList;
+      return searchResults;
     }),
 });
