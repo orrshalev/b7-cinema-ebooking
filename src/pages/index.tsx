@@ -54,8 +54,8 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 const dateBegin = new Date("2023-05-24T00:00:00.00");
 const dateEnd = new Date("2023-05-24T23:00:00.00");
 
-const dateRangeArr = dateRange("2023-05-26");
-console.log(dateRangeArr)
+const dateRangeArr = dateRange();
+console.log("date range", dateRangeArr[1438])
 
 const Home: NextPage = () => {
   const movies = api.movie.getTodayMovies.useQuery({
@@ -70,15 +70,6 @@ const Home: NextPage = () => {
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
   console.log("today:", moviesData.length)
-  const date = new Date()
-const year = date.getFullYear().toString()
-const month = date.getMonth().toString()
-const day = date.getDate().toString()
-const d = year + "\-0" + month + "\-" + day
-  const dateString = new Date(d + "T01:00:00.00")
-  const h = new Date("2023-03-30T01:00:00.00")
-  console.log(dateString)
-  console.log(d)
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
