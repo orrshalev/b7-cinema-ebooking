@@ -49,26 +49,43 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
+const currentDate = new Date();
+const currentWeekDay = currentDate.getDay();
+const beforeDays = daysNames
+  .filter((_, i) => i < currentWeekDay)
+  .slice(0)
+  .reverse()
+  .map((_, i) => new Date(new Date().setDate(new Date().getDate() - i - 1)))
+  .reverse(); // this is the cleanest code i've ever written
+const afterDays = daysNames
+  .filter((_, i) => i > currentWeekDay)
+  .map((_, i) => new Date(new Date().setDate(new Date().getDate() + i + 1)));
+// I can't believe this is the way to get yesterday's day in javascript
+const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
+  d.toISOString().slice(0, d.toISOString().indexOf("T") + 1)
+);
+
 const Browse: NextPage = () => {
   const { data } = useSession();
   const router = useRouter();
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
-  const [day, setDay] = useState<(typeof daysNames)[number]>("Sunday");
+  const [day, setDay] = useState<(typeof daysNames)[number]>(
+    daysNames[currentWeekDay]!
+  );
 
   const onSubmit = async () => {
     if (!data?.user) {
       alert("Please log in to purchase.");
-      await router.push("/login")
+      await router.push("/login");
     } else {
-      await router.push("/ticketCheckout")
+      await router.push("/ticketCheckout");
     }
-  }
+  };
 
   const allMovies = api.movie.getAllMovies.useQuery();
   const movies = allMovies.data ?? [];
-
 
   // const movies = [
   //   {
@@ -135,65 +152,69 @@ const Browse: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      {api.user.isAdmin.useQuery({email: data?.user.email}).data == true ? (
-      <AdminBrowse></AdminBrowse>
-      ): (
-      <main className="my-10 flex min-h-screen flex-col items-center">
-        <div className="flex w-3/5 flex-col gap-5">
-          <h1 className="font-firasans text-4xl font-bold text-dark-red">
-            Screenings
-          </h1>
-          <div className="flex flex-wrap">
-            {/* TODO: Should add for small screeens a dropdown instead maybe */}
-            <div className="flex flex-wrap justify-between gap-5 font-exo text-lg font-semibold text-black">
-              {daysNames.map((dayName) => (
-                <button
-                  className={`${dayHoverEffect} ${
-                    dayName === day ? "text-dark-red" : ""
-                  }`}
-                  key={dayName}
-                  onClick={() => setDay(dayName)}
-                >
-                  {dayName}
+      {api.user.isAdmin.useQuery({ email: data?.user.email }).data == true ? (
+        <AdminBrowse></AdminBrowse>
+      ) : (
+        <main className="my-10 flex min-h-screen flex-col items-center">
+          <div className="flex w-3/5 flex-col gap-5">
+            <h1 className="font-firasans text-4xl font-bold text-dark-red">
+              Screenings
+            </h1>
+            <div className="flex flex-wrap">
+              {/* TODO: Should add for small screeens a dropdown instead maybe */}
+              <div className="flex flex-wrap justify-between gap-5 font-exo text-lg font-semibold text-black">
+                {daysNames.map((dayName) => (
+                  <button
+                    className={`${dayHoverEffect} ${
+                      dayName === day ? "text-dark-red" : ""
+                    }`}
+                    key={dayName}
+                    onClick={() => setDay(dayName)}
+                  >
+                    {dayName}
+                  </button>
+                ))}
+                <button className="flex justify-between border-2 border-gray-400 px-1 py-1 text-black hover:border-gray-600">
+                  <Image
+                    src="/assets/svg/calendar-icon.svg"
+                    alt="calendar"
+                    width={20}
+                    height={20}
+                  ></Image>
                 </button>
-              ))}
-              <button className="flex justify-between border-2 border-gray-400 px-1 py-1 text-black hover:border-gray-600">
-                <Image
-                  src="/assets/svg/calendar-icon.svg"
-                  alt="calendar"
-                  width={20}
-                  height={20}
-                ></Image>
-              </button>
+              </div>
             </div>
+            {/* Should match today's date when done */}
+            <h2 className="mb-5 font-firasans font-semibold text-dark-red">
+              Today&apos;s date
+            </h2>
           </div>
-          {/* Should match today's date when done */}
-          <h2 className="mb-5 font-firasans font-semibold text-dark-red">
-            Today&apos;s date
-          </h2>
-        </div>
-        {movies.map((movie) => (
-          <>
-            <hr className="h-[0.5rem] w-3/5 rounded-sm bg-dark-red" />
-            <div className={`flex w-full flex-row bg-creme`}>
-              <div className="mx-auto flex w-3/5 flex-wrap gap-5 p-5">
-                <div className="basis-1/5">
-                  <MoviePreviewCard
-                    movie={movie}
-                    setTrailerModalOpen={setTrailerModalOpen}
-                  />
-                </div>
-                <div className={`max-w-[70%]`}>
-                  <h1 className="font-firasans text-4xl font-bold text-light-red">
-                    {movie.title}
-                  </h1>
-                  <p className={`mx-1 my-1 font-firasans text-lg text-black`}>
-                    Adult | Action | 125 min
-                  </p>
-                  <div className="flex flex-wrap">
-                    {movie.showtimes.map((showtime) => (
-                      // <Link href="/ticketCheckout" key={showtime.toString()} id="timeButton">
-                        <button onClick={onSubmit} key={showtime.toString()} className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red">
+          {movies.map((movie) => (
+            <>
+              <hr className="h-[0.5rem] w-3/5 rounded-sm bg-dark-red" />
+              <div className={`flex w-full flex-row bg-creme`}>
+                <div className="mx-auto flex w-3/5 flex-wrap gap-5 p-5">
+                  <div className="basis-1/5">
+                    <MoviePreviewCard
+                      movie={movie}
+                      setTrailerModalOpen={setTrailerModalOpen}
+                    />
+                  </div>
+                  <div className={`max-w-[70%]`}>
+                    <h1 className="font-firasans text-4xl font-bold text-light-red">
+                      {movie.title}
+                    </h1>
+                    <p className={`mx-1 my-1 font-firasans text-lg text-black`}>
+                      Adult | Action | 125 min
+                    </p>
+                    <div className="flex flex-wrap">
+                      {movie.showtimes.map((showtime) => (
+                        // <Link href="/ticketCheckout" key={showtime.toString()} id="timeButton">
+                        <button
+                          onClick={onSubmit}
+                          key={showtime.toString()}
+                          className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red"
+                        >
                           {`${
                             showtime.getHours() % 12 === 0
                               ? 12
@@ -204,23 +225,22 @@ const Browse: NextPage = () => {
                             .padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}
                         </button>
-                      // </Link>
-                    ))}
+                        // </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </>
-          
-        ))}
+            </>
+          ))}
 
-        <TrailerModal
-          open={trailerModalOpen}
-          setOpen={setTrailerModalOpen}
-          // Need to change url to be dynamic
-          url={"https://www.youtube.com/embed/VONRQMx78YI"}
-        />
-      </main>
+          <TrailerModal
+            open={trailerModalOpen}
+            setOpen={setTrailerModalOpen}
+            // Need to change url to be dynamic
+            url={"https://www.youtube.com/embed/VONRQMx78YI"}
+          />
+        </main>
       )}
       <Footer />
     </>
