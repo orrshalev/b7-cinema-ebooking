@@ -8,13 +8,14 @@ export const promotionRouter = createTRPCRouter({
     .input(
         z.object({
             movieID: z.string(),
+            code: z.string(),
             discount: z.number(),
         })
     )
     .mutation(async ({ input, ctx }) => {
         const promotion = await ctx.prisma.promotion.create({
             data: {
-                code: (Math.random() + 1).toString(36).substring(6),
+                code: input.code,
                 discount: input.discount,
                 movie: { connect: { id: input.movieID } },
             },
@@ -29,7 +30,7 @@ export const promotionRouter = createTRPCRouter({
         });
         return promotion;
     }),
-    getPromotion: publicProcedure
+    getPromotions: publicProcedure
     .input(
         z.object({
             email: z.string(),

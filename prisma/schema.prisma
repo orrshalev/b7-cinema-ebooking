@@ -15,7 +15,14 @@ datasource db {
 }
 
 // TODO: relaseDate
-model Movie {
+model Promotion {
+    id        String     @id @default(auto()) @map("_id") @db.ObjectId
+    movie     Movie      @relation(fields: [movieId], references: [id])
+    movieId   String     @db.ObjectId
+    code      String     @unique
+    discount  Float
+}
+model Movie { 
     id        String     @id @default(auto()) @map("_id") @db.ObjectId
     title     String     @unique
     synopsis  String
@@ -31,6 +38,7 @@ model Movie {
     directors String
     producers String
     reviews   String[]
+    promotion Promotion[]
 }
 
 model User {

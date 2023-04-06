@@ -3,6 +3,7 @@ import { movieRouter } from "~/server/api/routers/movie";
 import { userRouter } from "~/server/api/routers/user";
 import { cardRouter } from "~/server/api/routers/card";
 import { addressRouter } from "~/server/api/routers/address";
+import { promotionRouter } from "~/server/api/routers/promotion";
 /**
  * This is the primary router for your server.
  *
