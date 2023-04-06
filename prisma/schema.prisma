@@ -22,7 +22,7 @@ model Movie {
     // releaseDate DateTime
     upcoming  Boolean
     rating    String
-    genre    String
+    genre     String
     showtimes DateTime[]
     poster    String
     trailer   String
@@ -76,4 +76,11 @@ model Card {
     city       String
     state      String
     zip        String
+}
+
+model Promotion {
+    id              String @id @default(auto()) @map("_id") @db.ObjectId
+    associatedMovie String
+    discount        Float
+    code            String
 }
