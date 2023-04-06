@@ -139,7 +139,8 @@ const AdminBrowse: NextPage = () => {
                   onClick={() => {
                     setDay(dayName)
                     setDayNum(daysNames.indexOf(dayName))
-                    console.log(daysNames.indexOf(dayName))
+                    console.log("index of dayName", daysNames.indexOf(dayName))
+                    console.log(movies.showtimes[0])
                   }}
                 >
                   {dayName}
