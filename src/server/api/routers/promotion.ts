@@ -67,7 +67,7 @@ export const promotionRouter = createTRPCRouter({
             movieTitle: z.string(),
         })
     )
-    .mutation(async ({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
         const movie = await ctx.prisma.movie.findFirst({
             where: { title: input.movieTitle },
         });
