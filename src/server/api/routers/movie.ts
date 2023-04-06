@@ -236,7 +236,7 @@ export const movieRouter = createTRPCRouter({
       return searchResults;
     }),
 
-    searchComingSoon: publicProcedure
+    filterComingSoon: publicProcedure
     .input(
       z.object({
         isComingSoon: z.boolean()
