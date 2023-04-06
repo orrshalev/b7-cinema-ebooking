@@ -75,6 +75,8 @@ const Browse: NextPage = () => {
     daysNames[currentWeekDay]!
   );
 
+  const [dayNum, setDayNum] = useState(currentWeekDay)
+
   const onSubmit = async () => {
     if (!data?.user) {
       alert("Please log in to purchase.");
@@ -84,64 +86,8 @@ const Browse: NextPage = () => {
     }
   };
 
-  const allMovies = api.movie.getAllMovies.useQuery();
+  const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
   const movies = allMovies.data ?? [];
-
-  // const movies = [
-  //   {
-  //     id: "1",
-  //     title: "Bee Movie",
-  //     poster: "https://i.imgur.com/i1rDBqw.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/VONRQMx78YI",
-  //     genres: ["Comedy"],
-  //     rating: "PG",
-  //     length: 125,
-  //   } satisfies Movie,
-  //   {
-  //     id: "2",
-  //     title: "Rubber",
-  //     poster: "https://i.imgur.com/w3R1CSY.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/hVKgY1ilx0Y",
-  //     genres: ["Horror"],
-  //     rating: "X",
-  //     length: 111,
-  //   } satisfies Movie,
-  //   {
-  //     id: "3",
-  //     title: "Mall Cop 2",
-  //     poster: "https://i.imgur.com/ZF2d8hi.jpg",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  //     genres: ["Comedy"],
-  //     rating: "PG-13",
-  //     length: 93,
-  //   } satisfies Movie,
-  //   {
-  //     id: "4",
-  //     title: "Sonic 3",
-  //     poster: "https://i.imgur.com/yXSvn3h.png",
-  //     showtimes: Array.from(
-  //       { length: 10 },
-  //       (_, i) => new Date(2021, 10, 10, 10 + i, 0)
-  //     ),
-  //     trailerURL: "https://www.youtube.com/embed/DuWEEKeJLMI",
-  //     genres: ["Action"],
-  //     rating: "G",
-  //     length: 93,
-  //   } satisfies Movie,
-  // ];
-
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
 
   return (
@@ -169,7 +115,11 @@ const Browse: NextPage = () => {
                       dayName === day ? "text-dark-red" : ""
                     }`}
                     key={dayName}
-                    onClick={() => setDay(dayName)}
+                    onClick={() => {
+                      setDay(dayName)
+                      setDayNum(daysNames.indexOf(dayName))
+                      console.log(daysNames.indexOf(dayName))
+                    }}
                   >
                     {dayName}
                   </button>

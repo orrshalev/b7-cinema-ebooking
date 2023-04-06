@@ -70,10 +70,10 @@ const Home: NextPage = () => {
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
   console.log("today:", moviesData.length)
   const date = new Date()
-const year = date.getFullYear().toString()
-const month = date.getMonth().toString()
-const day = date.getDate().toString()
-const d = year + "\-0" + month + "\-" + day
+  const year = date.getFullYear().toString()
+  const month = date.getMonth().toString()
+  const day = date.getDate().toString()
+  const d = year + "\-0" + month + "\-" + day
   const dateString = new Date(d + "T01:00:00.00")
   const h = new Date("2023-03-30T01:00:00.00")
   console.log(dateString)
