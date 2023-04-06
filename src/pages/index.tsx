@@ -55,7 +55,7 @@ const dateBegin = new Date("2023-05-24T00:00:00.00");
 const dateEnd = new Date("2023-05-24T23:00:00.00");
 
 const dateRangeArr = dateRange();
-console.log("date range", dateRangeArr[1438])
+console.log("date range", dateRangeArr[142])
 
 const Home: NextPage = () => {
   const movies = api.movie.getTodayMovies.useQuery({
@@ -69,7 +69,6 @@ const Home: NextPage = () => {
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
-  console.log("today:", moviesData.length)
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
