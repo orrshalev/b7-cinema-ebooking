@@ -13,6 +13,7 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   card: cardRouter,
   address: addressRouter,
+  promotion: promotionRouter,
 });
 
 // export type definition of API
