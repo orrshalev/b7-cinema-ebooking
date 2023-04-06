@@ -116,11 +116,11 @@ const AdminBrowse: NextPage = () => {
     e.preventDefault();
     if (addPromo) {
       await createPromotionMutation.mutateAsync({
-        movieID: movie?.id as string,
-        discount: document.getElementById("discount")?.value as number,
+        movieTitle: movie?.title as string,
+        discount: parseFloat(document.getElementById("discount")?.value as string),
         code: document.getElementById("code")?.value as string,
       });
-      closeModal();
+      closePromoModal();
     }
   };
 
@@ -210,7 +210,7 @@ const AdminBrowse: NextPage = () => {
                     className={`h-10 w-[90%] rounded-md bg-dark-red transition duration-200 ease-in-out hover:bg-light-red`}
                     onClick={() => {
                       setPromoIsOpen(true);
-                      console.log(movie);
+                      setMovie(movie);
                     }}
                   >
                     Promotions

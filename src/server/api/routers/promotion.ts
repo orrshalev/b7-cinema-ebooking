@@ -7,66 +7,74 @@ export const promotionRouter = createTRPCRouter({
     createPromotion: publicProcedure
     .input(
         z.object({
-            movieID: z.string(),
+            movieTitle: z.string(),
             code: z.string(),
             discount: z.number(),
         })
     )
     .mutation(async ({ input, ctx }) => {
+        const movie = await ctx.prisma.movie.findFirst({
+            where : { title: input.movieTitle },
+        });
         const promotion = await ctx.prisma.promotion.create({
             data: {
                 code: input.code,
                 discount: input.discount,
-                movie: { connect: { id: input.movieID } },
+                movie: { connect: { id: movie.id } },
             },
         });
-        const addPromo = await ctx.prisma.movie.update({
+        const trueMovie = await ctx.prisma.movie.update({
             where: 
-            { id: input.movieID, 
+            { id: movie.id, 
             },
             data: {
                 promotion: { connect: { id: promotion.id } },
             },
         });
-        return promotion;
+        const users = await ctx.prisma.user.findMany({
+            where: {
+                agreeToPromo: true
+            }
+        }
+        );
+        for (var user of users) {
+            try {
+                const transporter = nodemailer.createTransport({
+                  service: "gmail",
+                  auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                  },
+                });
+                const mailConfigurations = {
+                    from: process.env.EMAIL_USER,
+                    to: user.email,
+                    subject: "Cinema E-Booking: Promotion Code!",
+                    text:
+                      "Use Promotion code: " +
+                      promotion.code +
+                      "to get " + promotion.discount + "dollars off on tickets for " + trueMovie.title + "!",
+                  };
+            await transporter.sendMail(mailConfigurations);
+          } catch (error) {
+            console.error(error);
+          }
+        }
     }),
     getPromotions: publicProcedure
     .input(
         z.object({
-            email: z.string(),
-            code: z.string(),
-            discount: z.number(),
+            movieTitle: z.string(),
         })
     )
     .mutation(async ({ input, ctx }) => {
-        const promotion = await ctx.prisma.promotion.findFirst({
-            where: { code: input.code },
-        });
         const movie = await ctx.prisma.movie.findFirst({
-            where: { id: promotion.movieId },
+            where: { title: input.movieTitle },
         });
-        try {
-            const transporter = nodemailer.createTransport({
-              service: "gmail",
-              auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-              },
-            });
-            const mailConfigurations = {
-                from: process.env.EMAIL_USER,
-                to: input.email,
-                subject: "Cinema E-Booking: Promotion Code!",
-                text:
-                  "Use Promotion code: " +
-                  input.code +
-                  "to get " + input.discount + "dollars off on tickets for " + movie.title + "!",
-              };
-        await transporter.sendMail(mailConfigurations);
-      } catch (error) {
-        console.error(error);
-      }
-        return true;
+        const promotion = await ctx.prisma.promotion.findMany({
+            where: { movieId: movie.id },
+        });
+        return promotion;
     }),
 
 });

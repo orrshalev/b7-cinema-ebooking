@@ -85,10 +85,3 @@ model Card {
     state      String
     zip        String
 }
-
-model Promotion {
-    id              String @id @default(auto()) @map("_id") @db.ObjectId
-    associatedMovie String
-    discount        Float
-    code            String
-}
