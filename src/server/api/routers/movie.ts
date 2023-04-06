@@ -235,4 +235,20 @@ export const movieRouter = createTRPCRouter({
       })
       return searchResults;
     }),
+
+    searchComingSoon: publicProcedure
+    .input(
+      z.object({
+        isComingSoon: z.boolean()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const moviesList = await ctx.prisma.movie.findMany({
+        where: {
+          upcoming: input.isComingSoon
+        }
+      });
+      return moviesList;
+    }),
+
 });
