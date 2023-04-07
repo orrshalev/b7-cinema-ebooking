@@ -37,7 +37,7 @@ export const promotionRouter = createTRPCRouter({
             }
         }
         );
-        for (var user of users) {
+        for (const user of users) {
             try {
                 const transporter = nodemailer.createTransport({
                   service: "gmail",
@@ -51,9 +51,9 @@ export const promotionRouter = createTRPCRouter({
                     to: user.email,
                     subject: "Cinema E-Booking: Promotion Code!",
                     text:
-                      "Use Promotion code: " +
+                      "Use promotion code: \"" +
                       promotion.code +
-                      "to get " + promotion.discount + "dollars off on tickets for " + trueMovie.title + "!",
+                      "\" to get $" + promotion.discount + " off on tickets for " + trueMovie.title + "!",
                   };
             await transporter.sendMail(mailConfigurations);
           } catch (error) {
