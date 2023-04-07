@@ -169,7 +169,15 @@ const Browse: NextPage = () => {
                       <br />
                       {`Synopsis: ${movie.synopsis}`}
                       <br />
-                      {`Reviews: ${movie.reviews}`}
+                      Reviews:
+                      <br />
+                      {movie.reviews.map((review) => (
+                        <div className="flex flex-col gap-1">
+                          <p className="font-firasans text-lg text-black">
+                            {review}
+                          </p>
+                        </div>
+                      ))}
                     </p>
                     <div className="flex flex-wrap">
                       {movie.showtimes.map((showtime) => (
