@@ -35,7 +35,7 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
       <Image
         width={200}
         height={200}
-        src={movie.poster!}
+        src={movie.poster}
         alt="Bee movie Poster"
         className="relative"
       ></Image>
@@ -141,7 +141,6 @@ const AdminBrowse: NextPage = () => {
                     setDayNum(daysNames.indexOf(dayName))
                     console.log("index of dayName", daysNames.indexOf(dayName))
                     console.log(movies)
-                    console.log(movies[0].showtimes)
                   }}
                 >
                   {dayName}
@@ -293,7 +292,7 @@ const AdminBrowse: NextPage = () => {
                           if (
                             !(await addShowTimeMutation.mutateAsync({
                               title: movie?.title,
-                              newShowtime: newShowtime as Date,
+                              newShowtime: newShowtime ,
                             }))
                           )
                             alert(
