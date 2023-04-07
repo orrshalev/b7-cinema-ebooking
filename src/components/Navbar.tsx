@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 
 const Navbar = () => {
   const { data } = useSession();

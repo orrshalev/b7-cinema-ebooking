@@ -3,16 +3,10 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { states, months, days } from "../utils/consts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import type { Session } from "next-auth";
-import { Formik, Field, Form } from "formik";
-import { type Address } from "@prisma/client";
-import type { FormikHelpers } from "formik";
-import bcrypt from "bcryptjs";
-import { type Card } from "@prisma/client";
 
 const NotLoggedIn = () => (
   <div className="my-auto flex w-full flex-col items-center gap-10 rounded-md bg-white py-20 px-3 shadow-md lg:max-w-xl">
@@ -35,35 +29,13 @@ type ManageProfileProps = {
 const ManageProfile = ({ data }: ManageProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
   const userUpdater = api.user.updateUser.useMutation();
-
   const currentUser = loggedInUser.data;
-  const loggedInUserAddress = api.address.getAddress.useQuery({
-    userID: currentUser?.id,
-  });
-
-
+  
   const [user, setUser] = useState(currentUser);
-  const [promo, setPromo] = useState(false);
-
-  const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (user) {
-      setUser((prevUser) => ({ ...prevUser, [name]: value }));
-    }
-  };
-
-  const handleChangePromo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPromo(e.target.checked);
-  };
 
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
-  useEffect(() => {
-    setPromo(currentUser?.agreeToPromo);
-  }, [currentUser?.agreeToPromo]);
-
-  
 
   const handleChangeInfo = async () => {
     if (!user) return;
@@ -91,7 +63,7 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
     return (
       <div className="mx-auto max-w-md">
         <h1 className="mb-4 text-3xl font-bold text-black">Manage Users</h1>
-        <table className="table-auto w-full">
+        <table className="table-auto w-full border text-black ">
       <thead>
         <tr>
           <th className="px-4 py-2">User Email</th>
@@ -99,9 +71,9 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
         </tr>
       </thead>
       <tbody>
-      {userList?.data && userList.data.map(user => (
-        <tr key={user.email}>
-            <td className="px-4 py-2">{user.email}</td>
+      {userList.data.map(user => (
+        <tr key={}>
+            <td className="px-4 py-2">{User.email}</td>
             <td className="px-4 py-2 flex justify-center"><input type="checkbox" /></td>
         </tr>
         ))}
@@ -134,3 +106,4 @@ const ManageUsers: NextPage = () => {
 };
 
 export default ManageUsers;
+
