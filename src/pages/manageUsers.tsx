@@ -37,19 +37,18 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
     setUser(currentUser);
   }, [currentUser]);
 
-  const handleChangeInfo = async () => {
-    if (!user) return;
+  const handleChangeInfo = async (clicked: boolean, email: string) => {
     await userUpdater.mutateAsync({
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.email,
+      email: email,
       phoneNumber: user.phoneNumber,
       homeStreet: homeAddress.street,
       homeCity: homeAddress.city,
       homeState: homeState,
       homeZip: homeAddress.zip,
       agreeToPromo: promo,
-      state: user.state,
+      state: clicked ? "SUSPENDED" : "ACTIVE",
     });
   };
 
@@ -74,9 +73,13 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
           <tbody>
             {userEmails.map((email) => (
               <tr key={email}>
-                <td className="px-4 py-2">{User.email}</td>
+                <td className="px-4 py-2">{email}</td>
                 <td className="flex justify-center px-4 py-2">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    id={`${email}-button`}
+                    onChange={(e) => handleChangeInfo(e.target.checked, email)}
+                  />
                 </td>
               </tr>
             ))}
