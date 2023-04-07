@@ -69,15 +69,14 @@ const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
 );
 
 const AdminBrowse: NextPage = () => {
-
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   const [day, setDay] = useState<(typeof daysNames)[number]>(
     daysNames[currentWeekDay]!
   );
-  const [dayNum, setDayNum] = useState(currentWeekDay)
-  
-  const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
+  const [dayNum, setDayNum] = useState(currentWeekDay);
+
+  const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
   const movies = allMovies.data ?? [];
 
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
@@ -91,7 +90,6 @@ const AdminBrowse: NextPage = () => {
   const removeMovieMutation = api.movie.removeMovie.useMutation();
   const deleteShowTimeMutation = api.movie.deleteShowTime.useMutation();
   const addShowTimeMutation = api.movie.addShowTime.useMutation();
-
 
   const handleUpdateMovie = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -137,10 +135,10 @@ const AdminBrowse: NextPage = () => {
                   }`}
                   key={dayName}
                   onClick={() => {
-                    setDay(dayName)
-                    setDayNum(daysNames.indexOf(dayName))
-                    console.log("index of dayName", daysNames.indexOf(dayName))
-                    console.log(movies)
+                    setDay(dayName);
+                    setDayNum(daysNames.indexOf(dayName));
+                    console.log("index of dayName", daysNames.indexOf(dayName));
+                    console.log(movies);
                   }}
                 >
                   {dayName}
@@ -215,6 +213,12 @@ const AdminBrowse: NextPage = () => {
                   </h1>
                   <p className={`mx-1 my-1 font-firasans text-lg text-black`}>
                     {`${movie.rating} | ${movie.genre} | ${movie.length} min`}
+                    <br />
+                    {`Cast: ${movie.cast} | Directors: ${movie.directors} | Producers: ${movie.producers}`}
+                    <br />
+                    {`Synopsis: ${movie.synopsis}`}
+                    <br />
+                    {`Reviews: ${movie.reviews}`}
                   </p>
                   <div className="flex flex-wrap gap-3">
                     {movie.showtimes.map((showtime) => (
@@ -255,7 +259,7 @@ const AdminBrowse: NextPage = () => {
                       </div>
                     ))}
                     <form
-                      onSubmit={ async (e: React.FormEvent<HTMLFormElement>) => {
+                      onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
                         // e.preventDefault();
                         let dup = false;
                         const inputs =
@@ -292,7 +296,7 @@ const AdminBrowse: NextPage = () => {
                           if (
                             !(await addShowTimeMutation.mutateAsync({
                               title: movie?.title,
-                              newShowtime: newShowtime ,
+                              newShowtime: newShowtime,
                             }))
                           )
                             alert(

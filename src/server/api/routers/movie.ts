@@ -75,36 +75,35 @@ export const movieRouter = createTRPCRouter({
       return moviesList;
     }),
 
-  getAllMovies: publicProcedure
-  .query(async ({ ctx }) => {
+  getAllMovies: publicProcedure.query(async ({ ctx }) => {
     const allMoviesList = await ctx.prisma.movie.findMany();
     return allMoviesList;
   }),
 
   getMovieByDate: publicProcedure
-  .input(z.object({ day: z.number() }))
-  .query(async ({ input, ctx }) => {
-    const moviesListOnDay = []
-    const allMoviesList = await ctx.prisma.movie.findMany();
-    allMoviesList.forEach((movie) => {
-      for (let i = 0; i < movie.showtimes.length; i++) {
-        if (movie.showtimes[i].getDay() == input.day) {
-          moviesListOnDay.push(movie)
-          i = movie.showtimes.length
+    .input(z.object({ day: z.number(), title: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const moviesListOnDay = [];
+      const allMoviesList = await ctx.prisma.movie.findMany();
+      allMoviesList.forEach((movie) => {
+        for (let i = 0; i < movie.showtimes.length; i++) {
+          if (movie.showtimes[i].getDay() == input.day) {
+            moviesListOnDay.push(movie);
+            i = movie.showtimes.length;
+          }
         }
-      }
-    })
-    moviesListOnDay.forEach((movie) => {
-      const relevantShowtimes = []
-      movie.showtimes.forEach ((showtime) => {
-        if (showtime.getDay() == input.day) {
-          relevantShowtimes.push(showtime)
-        }        
-      })
-      movie.showtimes = relevantShowtimes
-    })
-    return moviesListOnDay;
-  }),
+      });
+      moviesListOnDay.forEach((movie) => {
+        const relevantShowtimes = [];
+        movie.showtimes.forEach((showtime) => {
+          if (showtime.getDay() == input.day) {
+            relevantShowtimes.push(showtime);
+          }
+        });
+        movie.showtimes = relevantShowtimes;
+      });
+      return moviesListOnDay;
+    }),
 
   removeMovie: publicProcedure
     .input(z.object({ title: z.string() }))
@@ -205,76 +204,75 @@ export const movieRouter = createTRPCRouter({
       return true;
     }),
 
-    searchMovieTitle: publicProcedure
+  searchMovieTitle: publicProcedure
     .input(
       z.object({
-        search: z.string() // has to be correct spelling
+        search: z.string(), // has to be correct spelling
       })
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany();
-      let searchResults = [];
+      const searchResults = [];
       moviesList.every((movie) => {
         if (movie.title.toLowerCase() === input.search.toLowerCase()) {
-          searchResults.push(movie)
+          searchResults.push(movie);
           return false;
         }
-      })
+      });
       return searchResults;
     }),
 
-    searchMovieCategory: publicProcedure
+  searchMovieCategory: publicProcedure
     .input(
       z.object({
-        search: z.string()
+        search: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany({
         where: {
           genre: {
-            contains: input.search
-          }
+            contains: input.search,
+          },
         },
       });
       return moviesList;
     }),
 
-    searchMovieDate: publicProcedure
+  searchMovieDate: publicProcedure
     .input(
       z.object({
-        searchDate: z.string() // format: YYYY-MM-DD
+        searchDate: z.string(), // format: YYYY-MM-DD
       })
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany();
-      let searchResults = [];
+      const searchResults = [];
       moviesList.every((movie) => {
         movie.showtimes.every((showtime) => {
-          const dateTimeInParts = showtime.toISOString().split( "T" );
+          const dateTimeInParts = showtime.toISOString().split("T");
           const dateOnly = dateTimeInParts[0];
           if (dateOnly === input.searchDate) {
-            searchResults.push(movie)
+            searchResults.push(movie);
             return false;
           }
-        })
-      })
+        });
+      });
       return searchResults;
     }),
 
-    filterComingSoon: publicProcedure
+  filterComingSoon: publicProcedure
     .input(
       z.object({
-        isComingSoon: z.boolean()
+        isComingSoon: z.boolean(),
       })
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany({
         where: {
-          upcoming: input.isComingSoon
-        }
+          upcoming: input.isComingSoon,
+        },
       });
       return moviesList;
     }),
-
 });
