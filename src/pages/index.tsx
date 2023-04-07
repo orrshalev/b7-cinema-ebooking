@@ -3,12 +3,13 @@ import Footer from "../components/Footer";
 import Head from "next/head";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import { api } from "../utils/api";
 import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
 import type { Movie } from "@prisma/client";
-import dateRange from "src/pages/lib/dateRange"
+import dateRange from "src/pages/lib/dateRange";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -52,13 +53,13 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 };
 
 const dateRangeArr = dateRange();
-console.log("date range", dateRangeArr[142])
+console.log("date range", dateRangeArr[142]);
 
 const Home: NextPage = () => {
   const movies = api.movie.getTodayMovies.useQuery({
     limit: 4,
     range: dateRangeArr,
-    comingSoon: false
+    comingSoon: false,
   });
   const moviesData = movies.data ?? [];
   const comingSoonMovies = api.movie.getUpcomingMovies.useQuery({
@@ -66,6 +67,7 @@ const Home: NextPage = () => {
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
+  const router = useRouter();
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
@@ -96,11 +98,21 @@ const Home: NextPage = () => {
                   placeholder="Search"
                   aria-label="Search"
                   aria-describedby="button-addon2"
+                  id="search-field"
                 />
                 <button
                   className="btn flex items-center rounded bg-dark-red px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition  duration-150 ease-in-out hover:bg-light-coral hover:shadow-lg focus:bg-light-coral focus:shadow-lg focus:outline-none focus:ring-0 active:bg-dark-red active:shadow-lg"
                   type="button"
                   id="button-addon2"
+                  onClick={() => {
+                    const searchField =
+                      document.getElementById("search-field")?.value;
+                    router.push(
+                      `/browse?movie=${searchField
+                        .replace(/\s+/g, "-")
+                        .toLowerCase()}`
+                    );
+                  }}
                 >
                   <svg
                     aria-hidden="true"

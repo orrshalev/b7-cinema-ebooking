@@ -68,6 +68,7 @@ const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
 const Browse: NextPage = () => {
   const { data } = useSession();
   const router = useRouter();
+  const searchMovie = router.query.movie as string;
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
@@ -75,7 +76,7 @@ const Browse: NextPage = () => {
     daysNames[currentWeekDay]!
   );
 
-  const [dayNum, setDayNum] = useState(currentWeekDay)
+  const [dayNum, setDayNum] = useState(currentWeekDay);
 
   const onSubmit = async () => {
     if (!data?.user) {
@@ -86,9 +87,15 @@ const Browse: NextPage = () => {
     }
   };
 
-  const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
-  const movies = allMovies.data ?? [];
+  const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
+  let movies = allMovies.data ?? [];
+  const searchedMovieArray = movies.filter(
+    (movie) => movie.title.replace(/\s+/g, "-").toLowerCase() == searchMovie
+  );
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
+  if (searchedMovieArray.length > 0) {
+    movies = searchedMovieArray;
+  }
 
   return (
     <>
@@ -116,9 +123,9 @@ const Browse: NextPage = () => {
                     }`}
                     key={dayName}
                     onClick={() => {
-                      setDay(dayName)
-                      setDayNum(daysNames.indexOf(dayName))
-                      console.log(daysNames.indexOf(dayName))
+                      setDay(dayName);
+                      setDayNum(daysNames.indexOf(dayName));
+                      console.log(daysNames.indexOf(dayName));
                     }}
                   >
                     {dayName}
@@ -155,7 +162,14 @@ const Browse: NextPage = () => {
                       {movie.title}
                     </h1>
                     <p className={`mx-1 my-1 font-firasans text-lg text-black`}>
-                      Adult | Action | 125 min
+                      {/* Adult | Action | 125 min */}
+                      {`${movie.rating} | ${movie.genre} | ${movie.length} min`}
+                      <br />
+                      {`Cast: ${movie.cast} | Directors: ${movie.directors} | Producers: ${movie.producers}`}
+                      <br />
+                      {`Synopsis: ${movie.synopsis}`}
+                      <br />
+                      {`Reviews: ${movie.reviews}`}
                     </p>
                     <div className="flex flex-wrap">
                       {movie.showtimes.map((showtime) => (
