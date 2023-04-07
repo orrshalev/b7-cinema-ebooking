@@ -2,9 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { api } from "~/utils/api";
 
 const Navbar = () => {
   const { data } = useSession();
+  //const router = useRouter();
 
   return (
     <nav className="px-auto  top-0 w-full border-gray-200 bg-dark-red py-2.5 font-exo sm:px-4">
@@ -56,8 +58,27 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
+            {/* {data?.user && data.user.isAdmin && router.pathname !== "/admin" && (
+              <li>
+                <Link
+                  href="/admin"
+                  className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
+                >
+                  Users
+                </Link>
+              </li>
+            )} */}
               {data?.user ? (
                 <>
+            <li>
+              <Link
+                id="profileLink"
+                href="/manageUsers"
+                className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
+              >
+                Users
+              </Link>
+              </li>
             <li>
               <Link
                 id="profileLink"
