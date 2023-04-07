@@ -70,6 +70,12 @@ const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
 
 const AdminBrowse: NextPage = () => {
 
+<<<<<<< HEAD
+=======
+  const allMovies = api.movie.getAllMovies.useQuery();
+  const movies = allMovies.data ?? [];
+
+>>>>>>> backend/feature/search-and-filter-query
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   const [day, setDay] = useState<(typeof daysNames)[number]>(
@@ -254,6 +260,7 @@ const AdminBrowse: NextPage = () => {
                         </button>
                       </div>
                     ))}
+<<<<<<< HEAD
                     <form
                       onSubmit={ async (e: React.FormEvent<HTMLFormElement>) => {
                         // e.preventDefault();
@@ -269,6 +276,22 @@ const AdminBrowse: NextPage = () => {
                             timeVal = inputs[i].value;
                             validTime = true;
                           }
+=======
+                    <form 
+                    onSubmit={
+                      async (e: React.FormEvent<HTMLFormElement>) => {
+                      // e.preventDefault();
+                      let dup = false;
+                      const inputs = document.querySelectorAll('input[type="time"]');
+                      console.log(inputs)
+                      let timeVal = null;
+                      let validTime = false;
+                      for (let i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value) {
+                          console.log(inputs[i].value);
+                          timeVal = inputs[i].value;
+                          validTime = true;
+>>>>>>> backend/feature/search-and-filter-query
                         }
                         if (!validTime) alert("Please schedule a valid time.");
                         const newShowtime = new Date(
@@ -299,6 +322,7 @@ const AdminBrowse: NextPage = () => {
                               "You cannot schedule 2 movies at the same time."
                             );
                         }
+<<<<<<< HEAD
                         console.log(movie?.showtimes);
                         console.log(
                           "time input",
@@ -307,6 +331,21 @@ const AdminBrowse: NextPage = () => {
                         console.log("new date", newShowtime);
                         console.log(movie.title);
                       }}
+=======
+                      });
+                      if (dup) alert ("You cannot schedule 2 movies at the same time.")
+                      else {
+                        if (!(await addShowTimeMutation.mutateAsync({
+                          title: movie?.title,
+                          newShowtime: newShowtime as Date
+                        }))) alert ("You cannot schedule 2 movies at the same time...")
+                      }
+                      console.log(movie?.showtimes)
+                      console.log("time input", document.getElementById("time")?.value)
+                      console.log("new date", newShowtime)
+                      console.log(movie.title)
+                    }}
+>>>>>>> backend/feature/search-and-filter-query
                     >
                       <input
                         type="time"
