@@ -162,6 +162,7 @@ export const userRouter = createTRPCRouter({
         homeState: z.string().optional(),
         homeZip: z.string().optional(),
         agreeToPromo: z.boolean(),
+        state: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -355,12 +356,11 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-    getAllUserEmails: publicProcedure
-    .query(async ({ ctx }) => {
-      const allUsers = await ctx.prisma.user.findMany();
-      const allUserEmails = allUsers.map((user) => user.email);
-      return allUserEmails;
-    }),
+  getAllUserEmails: publicProcedure.query(async ({ ctx }) => {
+    const allUsers = await ctx.prisma.user.findMany();
+    const allUserEmails = allUsers.map((user) => user.email);
+    return allUserEmails;
+  }),
 
   confirmUserPwd: publicProcedure
     .input(z.object({ email: z.string(), changePwCode: z.string() }))
@@ -406,10 +406,12 @@ export const userRouter = createTRPCRouter({
       return false;
     }),
 
-    suspendUser: publicProcedure
-    .input(z.object({
-      email: z.string(),
-    }))
+  suspendUser: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      })
+    )
     .query(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
@@ -420,16 +422,18 @@ export const userRouter = createTRPCRouter({
             id: user.id,
           },
           data: {
-            state: "SUSPENDED"
+            state: "SUSPENDED",
           },
         });
       }
     }),
 
-    unsuspendUser: publicProcedure
-    .input(z.object({
-      email: z.string(),
-    }))
+  unsuspendUser: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      })
+    )
     .query(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
@@ -440,8 +444,8 @@ export const userRouter = createTRPCRouter({
             id: user.id,
           },
           data: {
-            state: "ACTIVE"
-          }
+            state: "ACTIVE",
+          },
         });
       }
     }),
