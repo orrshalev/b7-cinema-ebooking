@@ -12,6 +12,8 @@ import Link from "next/link";
 import AdminBrowse from "./admin";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -20,12 +22,18 @@ type MoviePreviewCardProps = {
 
 const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [url, setUrl] = useState("https://www.youtube.com/embed/VONRQMx78YI")
+  const [isOpen, setIsOpen] = useState(false);
   const { movie, setTrailerModalOpen } = props;
 
   return (
+    <>
     <button
       className="relative transition duration-300 ease-in-out hover:scale-105"
-      onClick={() => setTrailerModalOpen(true)}
+      onClick={() => {
+        setIsOpen(true)
+        setUrl(movie.trailer)
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -46,6 +54,40 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
         } `}
       ></Image>
     </button>
+    <Transition.Root show={isOpen} as={Fragment}>
+    <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+      </Transition.Child>
+
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enterTo="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <Dialog.Panel className="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8  sm:max-w-5xl">
+              <iframe width="854" height="480" src={url}></iframe>
+            </Dialog.Panel>
+          </Transition.Child>
+        </div>
+      </div>
+    </Dialog>
+  </Transition.Root>
+  </>
   );
 };
 
@@ -208,12 +250,12 @@ const Browse: NextPage = () => {
             </>
           ))}
 
-          <TrailerModal
+          {/* <TrailerModal
             open={trailerModalOpen}
             setOpen={setTrailerModalOpen}
             // Need to change url to be dynamic
             url={"https://www.youtube.com/embed/VONRQMx78YI"}
-          />
+          /> */}
         </main>
       )}
       <Footer />
