@@ -51,9 +51,6 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
-const dateBegin = new Date("2023-05-24T00:00:00.00");
-const dateEnd = new Date("2023-05-24T23:00:00.00");
-
 const dateRangeArr = dateRange();
 console.log("date range", dateRangeArr[142])
 
@@ -69,19 +66,6 @@ const Home: NextPage = () => {
     comingSoon: true,
   });
   const comingSoonMoviesData = comingSoonMovies.data ?? [];
-<<<<<<< HEAD
-  console.log("today:", moviesData.length)
-  const date = new Date()
-  const year = date.getFullYear().toString()
-  const month = date.getMonth().toString()
-  const day = date.getDate().toString()
-  const d = year + "\-0" + month + "\-" + day
-  const dateString = new Date(d + "T01:00:00.00")
-  const h = new Date("2023-03-30T01:00:00.00")
-  console.log(dateString)
-  console.log(d)
-=======
->>>>>>> backend/feature/search-and-filter-query
 
   const [selectedMovies, setSelectedMovies] = useState<
     "NOW_PLAYING" | "COMING_SOON"
