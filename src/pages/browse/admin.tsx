@@ -76,8 +76,8 @@ const AdminBrowse: NextPage = () => {
     daysNames[currentWeekDay]!
   );
   const [dayNum, setDayNum] = useState(currentWeekDay)
-  
-  const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
+
+  const allMovies = api.movie.getAllMovies.useQuery({day: dayNum});
   const movies = allMovies.data ?? [];
 
   const [movieTitle, setMovieTitle] = useState("Rubber")
@@ -261,6 +261,7 @@ const AdminBrowse: NextPage = () => {
                               title: movie.title,
                               showtime: showtime,
                             });
+                            window.location.reload();
                           }}
                           id="deleteTimeButton"
                           className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-center text-lg font-bold transition duration-200 ease-in-out hover:scale-125 hover:bg-red-500`}
