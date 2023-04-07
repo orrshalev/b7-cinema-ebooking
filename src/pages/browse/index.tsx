@@ -111,6 +111,7 @@ const Browse: NextPage = () => {
   const { data } = useSession();
   const router = useRouter();
   const searchMovie = router.query.movie as string;
+  const searchGenre = router.query.genre as string;
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   // make a union type based on daysNames
@@ -132,12 +133,22 @@ const Browse: NextPage = () => {
   const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
   let movies = allMovies.data ?? [];
   const searchedMovieArray = movies.filter(
-    (movie) => movie.title.replace(/\s+/g, "-").toLowerCase() == searchMovie
+    (movie) => movie.title.replace(/\s+/g, "-").toLowerCase().includes(searchMovie)
+  );
+  const searchedGenreMovieArray = movies.filter(
+    (movie) => movie.genre.replace(/\s+/g, "-").toLowerCase().includes(searchGenre)
   );
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
   if (searchedMovieArray.length > 0) {
+    console.log("search by title", searchMovie)
     movies = searchedMovieArray;
+  } else if (searchedGenreMovieArray.length > 0) {
+    console.log("search by genre", searchGenre)
+    movies = searchedGenreMovieArray;
+    console.log(movies)
   } else if (searchMovie) {
+    movies = [];
+  } else if (searchGenre) {
     movies = [];
   }
 

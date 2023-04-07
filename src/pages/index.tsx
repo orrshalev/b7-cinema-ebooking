@@ -154,7 +154,7 @@ const Home: NextPage = () => {
                     const searchField =
                       document.getElementById("search-field")?.value;
                     allMoviesData.forEach((movie) => {
-                      if (movie.title.toLowerCase() === searchField.toLowerCase()) {
+                      if (movie.title.toLowerCase().includes(searchField.toLowerCase())) {
                         router.push(
                           `/browse?movie=${searchField
                             .replace(/\s+/g, "-")
@@ -162,9 +162,17 @@ const Home: NextPage = () => {
                         );    
                         isMovie = true;                   
                       }
+                      if (movie.genre.toLowerCase().includes(searchField.toLowerCase())) {                        
+                        router.push(
+                          `/browse?genre=${searchField
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()}`
+                        );    
+                        isMovie = true; 
+                      }
                     })
                     if (isMovie === false) {
-                      alert ("No movies called \"" + searchField + "\"")
+                      alert ("No search results for \"" + searchField + "\"")
                       return false;
                     }
                   }}
