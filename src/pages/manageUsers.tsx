@@ -30,7 +30,7 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
   const userUpdater = api.user.updateUser.useMutation();
   const currentUser = loggedInUser.data;
-  
+
   const [user, setUser] = useState(currentUser);
 
   useEffect(() => {
@@ -56,29 +56,32 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
   interface User {
     email: string;
   }
-  
-  const userList = api.user.getAllUserEmails.useQuery<User[]>();
+
+  const userList = api.user.getAllUserEmails.useQuery();
+  const userEmails = userList.data ?? [];
 
   if (user) {
     return (
       <div className="mx-auto max-w-md">
         <h1 className="mb-4 text-3xl font-bold text-black">Manage Users</h1>
-        <table className="table-auto w-full border text-black ">
-      <thead>
-        <tr>
-          <th className="px-4 py-2">User Email</th>
-          <th className="px-4 py-2">Suspend</th>
-        </tr>
-      </thead>
-      <tbody>
-      {userList.data.map(user => (
-        <tr key={}>
-            <td className="px-4 py-2">{User.email}</td>
-            <td className="px-4 py-2 flex justify-center"><input type="checkbox" /></td>
-        </tr>
-        ))}
-      </tbody>
-    </table>
+        <table className="w-full table-auto border text-black ">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">User Email</th>
+              <th className="px-4 py-2">Suspend</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userEmails.map((email) => (
+              <tr key={email}>
+                <td className="px-4 py-2">{User.email}</td>
+                <td className="flex justify-center px-4 py-2">
+                  <input type="checkbox" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   } else {
@@ -106,4 +109,3 @@ const ManageUsers: NextPage = () => {
 };
 
 export default ManageUsers;
-

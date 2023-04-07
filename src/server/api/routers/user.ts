@@ -356,15 +356,11 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-    getAllUserEmails: publicProcedure
-    .query(async ({ ctx }) => {
-      const allUsers = await ctx.prisma.user.findMany();
-      let allUserEmails = []
-      allUsers.forEach((user) => {
-        allUserEmails.push(user.email)
-      })
-      return allUserEmails;
-    }),
+  getAllUserEmails: publicProcedure.query(async ({ ctx }) => {
+    const allUsers = await ctx.prisma.user.findMany();
+    const allUserEmails = allUsers.map((user) => user.email);
+    return allUserEmails;
+  }),
 
   confirmUserPwd: publicProcedure
     .input(z.object({ email: z.string(), changePwCode: z.string() }))
