@@ -152,11 +152,28 @@ export const movieRouter = createTRPCRouter({
       });
     }),
 
+    getAllShowTimes: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const movie = await ctx.prisma.movie.findFirst({
+        where: {
+          title: input.title,
+        },
+      });
+      return movie?.showtimes;
+    }),
+
+
   deleteShowTime: publicProcedure
     .input(
       z.object({
         title: z.string(),
-        showtimes: z.array(z.date()),
+        // showtimes: z.array(z.date()),
+        showtime: z.date()
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -165,10 +182,18 @@ export const movieRouter = createTRPCRouter({
           title: input.title,
         },
       });
+      const newShowtimes = [];
+      movie?.showtimes.forEach((showtime) => {
+        if ((showtime > input.showtime) || (showtime < input.showtime)) {
+          // console.log("hello", showtime)
+          newShowtimes.push(showtime)
+        }
+      })
       await ctx.prisma.movie.update({
         where: { id: movie?.id },
-        data: { showtimes: input.showtimes },
+        data: { showtimes: newShowtimes },
       });
+      return newShowtimes;
     }),
 
   addShowTime: publicProcedure
@@ -213,7 +238,7 @@ export const movieRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany();
-      let searchResults = [];
+      const searchResults = [];
       moviesList.every((movie) => {
         if (movie.title.toLowerCase() === input.search.toLowerCase()) {
           searchResults.push(movie)
@@ -248,7 +273,7 @@ export const movieRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const moviesList = await ctx.prisma.movie.findMany();
-      let searchResults = [];
+      const searchResults = [];
       moviesList.every((movie) => {
         movie.showtimes.every((showtime) => {
           const dateTimeInParts = showtime.toISOString().split( "T" );

@@ -80,6 +80,11 @@ const AdminBrowse: NextPage = () => {
   const allMovies = api.movie.getMovieByDate.useQuery({day: dayNum});
   const movies = allMovies.data ?? [];
 
+  const [movieTitle, setMovieTitle] = useState("Rubber")
+
+  const getAllShowtimesQuery = api.movie.getAllShowTimes.useQuery({title: movieTitle})
+  const allShowtimes = getAllShowtimesQuery.data ?? [];
+
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [promotionModalOpen, setPromotionModalOpen] = useState(false);
@@ -227,9 +232,9 @@ const AdminBrowse: NextPage = () => {
                         transition ease-in-out hover:bg-light-red "
                         >
                           {`${
-                            showtime.getHours() % 12 === 0
+                            (showtime.getHours()+4) % 12 === 0
                               ? 12
-                              : showtime.getHours() % 12
+                              : (showtime.getHours()+4) % 12
                           }:${showtime
                             .getMinutes()
                             .toString()
@@ -238,14 +243,11 @@ const AdminBrowse: NextPage = () => {
                         </button>
 
                         <button
-                          onClick={async () => {
-                            const index = movie.showtimes.indexOf(showtime);
-                            movie.showtimes.splice(index, 1);
-                            await deleteShowTimeMutation.mutateAsync({
+                          onClick={async () => {                            
+                            const shows = await deleteShowTimeMutation.mutateAsync({
                               title: movie.title,
-                              showtimes: movie.showtimes,
+                              showtime: showtime,
                             });
-                            console.log("movie.showtimes:", movie.showtimes);
                           }}
                           id="deleteTimeButton"
                           className={`absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-center text-lg font-bold transition duration-200 ease-in-out hover:scale-125 hover:bg-red-500`}
@@ -274,7 +276,7 @@ const AdminBrowse: NextPage = () => {
                         const newShowtime = new Date(
                           weekDates[daysNames.findIndex((d) => d === day)] +
                             timeVal +
-                            ":00.00-04:00"
+                            ":00.00-00:00"
                         );
                         movie?.showtimes.forEach(function (value: Date) {
                           if (
