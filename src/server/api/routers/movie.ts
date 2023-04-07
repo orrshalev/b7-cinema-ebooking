@@ -87,12 +87,12 @@ export const movieRouter = createTRPCRouter({
     let moviesListOnDay = []
     const allMoviesList = await ctx.prisma.movie.findMany();
     allMoviesList.forEach((movie) => {
-      movie.showtimes.every((showtime) => {
-        if (showtime.getDay() == input.day) {
+      for (let i = 0; i < movie.showtimes.length; i++) {
+        if (movie.showtimes[i].getDay() == input.day) {
           moviesListOnDay.push(movie)
-          return false;
+          i = movie.showtimes.length
         }
-      })
+      }
     })
     return moviesListOnDay;
   }),
