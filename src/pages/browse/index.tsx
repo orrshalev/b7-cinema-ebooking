@@ -95,6 +95,8 @@ const Browse: NextPage = () => {
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
   if (searchedMovieArray.length > 0) {
     movies = searchedMovieArray;
+  } else if (searchMovie) {
+    movies = [];
   }
 
   return (
