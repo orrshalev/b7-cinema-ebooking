@@ -405,4 +405,44 @@ export const userRouter = createTRPCRouter({
       }
       return false;
     }),
+
+    suspendUser: publicProcedure
+    .input(z.object({
+      email: z.string(),
+    }))
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user) {
+        await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            state: "SUSPENDED"
+          },
+        });
+      }
+    }),
+
+    unsuspendUser: publicProcedure
+    .input(z.object({
+      email: z.string(),
+    }))
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { email: input.email },
+      });
+      if (user) {
+        await ctx.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            state: "ACTIVE"
+          }
+        });
+      }
+    }),
 });
