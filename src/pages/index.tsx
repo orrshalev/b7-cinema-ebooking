@@ -10,24 +10,33 @@ import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
 import type { Movie } from "@prisma/client";
 import dateRange from "src/pages/lib/dateRange";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 type MoviePreviewCardProps = {
   movie: Movie;
   setTrailerModalOpen: (open: boolean) => void;
 };
 
+
 const MoviePreviewCard = (props: MoviePreviewCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { movie, setTrailerModalOpen } = props;
+  const [url, setUrl] = useState("https://www.youtube.com/embed/VONRQMx78YI")
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
+    <>
     <div
       className="flex w-[249] flex-col items-center justify-center gap-4 rounded-xl bg-dark-red p-4 text-white transition ease-in-out hover:scale-110"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <h2 className="font-exo text-2xl font-bold">{movie.title}</h2>
-      <button className="relative" onClick={() => setTrailerModalOpen(true)}>
+      <button className="relative" onClick={() => {
+        setIsOpen(true)
+        setUrl(movie.trailer)
+      }}>
         <Image
           width={299}
           height={399}
@@ -49,6 +58,40 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
         <h3 className="font-exo text-lg font-bold">Buy Tickets</h3>
       </button>
     </div>
+    <Transition.Root show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <Dialog.Panel className="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8  sm:max-w-5xl">
+                <iframe width="854" height="480" src={url}></iframe>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition.Root>
+    </>
   );
 };
 
@@ -205,12 +248,12 @@ const Home: NextPage = () => {
           </button>
         </div>
 
-        <TrailerModal
+        {/* <TrailerModal
           open={trailerModalOpen}
           setOpen={setTrailerModalOpen}
           // Need to change url to be dynamic
           url="https://www.youtube.com/embed/VONRQMx78YI"
-        />
+        /> */}
       </main>
       <Footer />
     </>
