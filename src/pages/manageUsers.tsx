@@ -28,7 +28,7 @@ type ManageProfileProps = {
 
 const ManageProfile = ({ data }: ManageProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
-  const userUpdater = api.user.updateUser.useMutation();
+  const userUpdater = api.user.suspendUser.useMutation();
   const currentUser = loggedInUser.data;
 
   const [user, setUser] = useState(currentUser);
@@ -37,27 +37,20 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
     setUser(currentUser);
   }, [currentUser]);
 
-  const handleChangeInfo = async (clicked: boolean, email: string) => {
-    await userUpdater.mutateAsync({
-      firstName: user.firstName,
-      lastName: user.lastName,
+  const handleChangeInfo = (clicked: boolean, email: string) => {
+    userUpdater.mutate({
       email: email,
-      phoneNumber: user.phoneNumber,
-      homeStreet: homeAddress.street,
-      homeCity: homeAddress.city,
-      homeState: homeState,
-      homeZip: homeAddress.zip,
-      agreeToPromo: promo,
       state: clicked ? "SUSPENDED" : "ACTIVE",
     });
+    location.reload(); // refresh page because LOL
   };
 
   interface User {
     email: string;
   }
 
-  const userList = api.user.getAllUserEmails.useQuery();
-  const userEmails = userList.data ?? [];
+  const userList = api.user.getAllUsers.useQuery();
+  const users = userList.data ?? [];
 
   if (user) {
     return (
@@ -71,14 +64,16 @@ const ManageProfile = ({ data }: ManageProfileProps) => {
             </tr>
           </thead>
           <tbody>
-            {userEmails.map((email) => (
-              <tr key={email}>
-                <td className="px-4 py-2">{email}</td>
+            {users.map((user) => (
+              <tr key={user.email}>
+                <td className="px-4 py-2">{user.email}</td>
                 <td className="flex justify-center px-4 py-2">
                   <input
                     type="checkbox"
-                    id={`${email}-button`}
-                    onChange={(e) => handleChangeInfo(e.target.checked, email)}
+                    checked={user.state === "SUSPENDED" ? true : false}
+                    onChange={(e) =>
+                      handleChangeInfo(e.target.checked, user.email)
+                    }
                   />
                 </td>
               </tr>

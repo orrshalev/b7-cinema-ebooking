@@ -356,10 +356,9 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-  getAllUserEmails: publicProcedure.query(async ({ ctx }) => {
+  getAllUsers: publicProcedure.query(async ({ ctx }) => {
     const allUsers = await ctx.prisma.user.findMany();
-    const allUserEmails = allUsers.map((user) => user.email);
-    return allUserEmails;
+    return allUsers;
   }),
 
   confirmUserPwd: publicProcedure
@@ -410,19 +409,20 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         email: z.string(),
+        state: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { email: input.email },
       });
       if (user) {
         await ctx.prisma.user.update({
           where: {
-            id: user.id,
+            id: user?.id,
           },
           data: {
-            state: "SUSPENDED",
+            state: input.state,
           },
         });
       }
