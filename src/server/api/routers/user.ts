@@ -162,6 +162,7 @@ export const userRouter = createTRPCRouter({
         homeState: z.string().optional(),
         homeZip: z.string().optional(),
         agreeToPromo: z.boolean(),
+        state: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
