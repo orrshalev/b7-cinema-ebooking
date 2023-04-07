@@ -6,7 +6,7 @@ import Navbar from "../../components/Navbar";
 import { daysNames } from "../../utils/consts";
 import Image from "next/image";
 import TrailerModal from "../../components/TrailerModal";
-import type { Movie } from "../../types/Movie";
+import type { Movie } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AdminBrowse from "./admin";
@@ -32,7 +32,7 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
       <Image
         width={200}
         height={200}
-        src={movie.poster!}
+        src={movie.poster}
         alt="Bee movie Poster"
         className="relative"
       ></Image>
