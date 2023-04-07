@@ -74,6 +74,8 @@ const Home: NextPage = () => {
   >("NOW_PLAYING");
 
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
+  const allMovies = api.movie.getMovies.useQuery();
+  const allMoviesData = allMovies.data ?? []
 
   return (
     <>
@@ -105,13 +107,23 @@ const Home: NextPage = () => {
                   type="button"
                   id="button-addon2"
                   onClick={() => {
+                    let isMovie = false;
                     const searchField =
                       document.getElementById("search-field")?.value;
-                    router.push(
-                      `/browse?movie=${searchField
-                        .replace(/\s+/g, "-")
-                        .toLowerCase()}`
-                    );
+                    allMoviesData.forEach((movie) => {
+                      if (movie.title.toLowerCase() === searchField.toLowerCase()) {
+                        router.push(
+                          `/browse?movie=${searchField
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()}`
+                        );    
+                        isMovie = true;                   
+                      }
+                    })
+                    if (isMovie === false) {
+                      alert ("No movies called \"" + searchField + "\"")
+                      return false;
+                    }
                   }}
                 >
                   <svg
