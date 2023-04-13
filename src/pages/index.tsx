@@ -117,7 +117,7 @@ const Home: NextPage = () => {
   >("NOW_PLAYING");
 
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
-  const allMovies = api.movie.getMovies.useQuery();
+  const allMovies = api.movie.getAllMovies.useQuery();
   const allMoviesData = allMovies.data ?? []
 
   return (

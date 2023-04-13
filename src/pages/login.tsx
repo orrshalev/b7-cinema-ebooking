@@ -23,6 +23,7 @@ const Login: NextPage = (props): JSX.Element => {
         if (response?.error == null) {
           alert("Login Success!");
           setStatus({ ...status, status: 200 });
+          router.push("/")
         } else if (response?.error == "verification") {
           alert("Please check your inbox and verify your account.");
         } else {

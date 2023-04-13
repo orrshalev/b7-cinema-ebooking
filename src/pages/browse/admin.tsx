@@ -115,7 +115,7 @@ const AdminBrowse: NextPage = () => {
   );
   const [dayNum, setDayNum] = useState(currentWeekDay);
 
-  const allMovies = api.movie.getAllMovies.useQuery({ day: dayNum });
+  const allMovies = api.movie.getAllMoviesOnDay.useQuery({ day: dayNum });
   const movies = allMovies.data ?? [];
 
   const [movieTitle, setMovieTitle] = useState("Rubber");
@@ -284,7 +284,7 @@ const AdminBrowse: NextPage = () => {
                     {movie.showtimes.map((showtime) => (
                       <div key={showtime.toString()} className="relative">
                         <button
-                          onClick={() => (location.href = "/ticketCheckout")}
+                          onClick={() => alert("Admin cannot purchase tickets.")}
                           id="timeButton"
                           className="mx-1 my-1 justify-center gap-1 
                         rounded-md bg-dark-red px-2 py-1 font-firasans text-lg
