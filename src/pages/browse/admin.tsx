@@ -319,11 +319,10 @@ const AdminBrowse: NextPage = () => {
                     ))}
                     <form
                       onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-                        // e.preventDefault();
+                        e.preventDefault();
                         let dup = false;
                         const inputs =
                           document.querySelectorAll('input[type="time"]');
-                        console.log(inputs);
                         let timeVal = null;
                         let validTime = false;
                         for (let i = 0; i < inputs.length; i++) {
