@@ -60,8 +60,10 @@ const TicketCheckout: NextPage = () => {
   //     seat: "",
   //     price: 0,
   //   });
-  
+
   const router = useRouter();
+  const movie = router.query.movie;
+  const showtime = new Date(router.query.showtime as string);
 
   const onSubmit = async () => {
     await router.push("/seatCheckout");
@@ -86,8 +88,13 @@ const TicketCheckout: NextPage = () => {
               className="relative"
             ></Image>
             <div className="center flex flex-col">
-              <h1 className="px-5 text-4xl font-bold text-black">Bee Movie</h1>
-              <p className="px-5 text-xl text-black">Date and Time</p>
+              <h1 className="px-5 text-4xl font-bold text-black">{movie}</h1>
+              <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
+                (showtime.getHours() + 4) % 12 === 0
+                  ? 12
+                  : (showtime.getHours() + 4) % 12
+              }:${showtime.getMinutes().toString().padStart(2, "0")} 
+                      ${showtime.getHours() >= 12 ? "PM" : "AM"}`}</p>
               <p className="px-5 text-xl text-black">Movie Info...</p>
             </div>
           </div>
@@ -167,13 +174,13 @@ const TicketCheckout: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-            <button
-              type="submit"
-              onClick={onSubmit}
+              <button
+                type="submit"
+                onClick={onSubmit}
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
               >
                 CONFIRM TICKETS
-            </button>
+              </button>
             </div>
           </div>
         </div>
