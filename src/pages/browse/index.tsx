@@ -121,12 +121,12 @@ const Browse: NextPage = () => {
 
   const [dayNum, setDayNum] = useState(currentWeekDay);
 
-  const onSubmit = async () => {
+  const onChosenTime = (showtime: Date, title: string) => async () => {
     if (!data?.user) {
       alert("Please log in to purchase.");
       await router.push("/login");
     } else {
-      await router.push("/ticketCheckout");
+      await router.push(`/ticketCheckout?showtime=${showtime.toISOString()}&movie=${title}`);
     }
   };
 
@@ -238,7 +238,7 @@ const Browse: NextPage = () => {
                       {movie.showtimes.map((showtime) => (
                         // <Link href="/ticketCheckout" key={showtime.toString()} id="timeButton">
                         <button
-                          onClick={onSubmit}
+                          onClick={onChosenTime(showtime, movie.title)}
                           key={showtime.toString()}
                           className="mx-1 my-1 justify-center gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans text-lg transition ease-in-out hover:bg-light-red"
                         >
