@@ -76,5 +76,17 @@ export const promotionRouter = createTRPCRouter({
         });
         return promotion;
     }),
+    getPromotionByCode: publicProcedure
+    .input(
+        z.object({
+            code: z.string(),
+        })
+    )
+    .query(async ({ input, ctx }) => {
+        const promotion = await ctx.prisma.promotion.findMany({
+            where: { code: input.code },
+        });
+        return promotion;
+    }),
 
 });
