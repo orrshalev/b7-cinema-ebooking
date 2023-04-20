@@ -69,7 +69,10 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
     await cardAdder.mutateAsync({
       userID: currentUser?.id,
-      cardNumber: Buffer.from(document.getElementById("cardNumber")?.value as string, 'utf8').toString('base64'),
+      cardNumber: Buffer.from(
+        document.getElementById("cardNumber")?.value as string,
+        "utf8"
+      ).toString("base64"),
       firstName: user?.firstName,
       lastName: user?.lastName,
       billStreet: document.getElementById("billStreet")?.value as string,
@@ -355,12 +358,17 @@ const EditProfile = ({ data }: EditProfileProps) => {
         <p className="mb-5 font-bold text-gray-700">Cards</p>
         <div className="my-4">
           {cards.map((card) => (
-            <form key={Buffer.from(card.cardNumber, "base64").toString("utf8")} className="-mx-3 mb-10 flex flex-wrap">
+            <form
+              key={Buffer.from(card.cardNumber, "base64").toString("utf8")}
+              className="-mx-3 mb-10 flex flex-wrap"
+            >
               <div className="mb-6 w-full px-3 md:mb-0 md:w-2/3">
                 <input
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   type="text"
-                  value={Buffer.from(card.cardNumber, "base64").toString("utf8")}
+                  value={Buffer.from(card.cardNumber, "base64").toString(
+                    "utf8"
+                  )}
                   readOnly
                 />
               </div>
@@ -559,6 +567,54 @@ const EditProfile = ({ data }: EditProfileProps) => {
               </button>
             </form>
           )}
+          <p className="mb-5 font-bold text-gray-700">Order History</p>
+          <div className="mb-4">
+            <div className={`grid w-full gap-3 rounded bg-white px-3 py-5`}>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>Movie:</span> Rubber{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>Date and time of show:</span>{" "}
+                5/2/2023 10:00 PM{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>Seats:</span>{" "}
+                B7, B8{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>
+                  Number of adult tickets purchased:{" "}
+                </span>{" "}
+                3{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>
+                  Number of child tickets purchased:{" "}
+                </span>{" "}
+                3{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>
+                  Number of senior tickets purchased:{" "}
+                </span>{" "}
+                3{" "}
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>Promotion applied:</span> $3.00
+              </p>
+              <p className={`text-black`}>
+                {" "}
+                <span className={`font-bold`}>Total price:</span> $20.00
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
