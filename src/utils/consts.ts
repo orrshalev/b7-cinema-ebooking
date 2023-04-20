@@ -66,3 +66,9 @@ export const daysNames = [
   "Friday",
   "Saturday",
 ] as const;
+
+export const ticketPrices = {
+  adult: 15.00,
+  senior: 14.00,
+  child: 13.00
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ticketPrices } from "~/utils/consts";
 import { type NextPage } from "next";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -14,52 +15,20 @@ type CounterProps = {
   id: string;
 };
 
-function Counter({ initialValue }: CounterProps) {
-  const [count, setCount] = useState<number>(initialValue);
-
-  function increment() {
-    setCount((prevCount) => prevCount + 1);
-  }
-
-  function decrement() {
-    setCount((prevCount) => {
-      if (prevCount <= 0) {
-        return 0;
-      }
-      return prevCount - 1;
-    });
-  }
-
-  return (
-    <div className="flex items-center justify-center">
-      <button
-        type="button"
-        className="mr-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
-        onClick={decrement}
-      >
-        -
-      </button>
-      <span className="text-2xl font-bold text-dark-red">{count}</span>
-      <button
-        type="button"
-        className="ml-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
-        onClick={increment}
-      >
-        +
-      </button>
-    </div>
-  );
-}
-
 const TicketCheckout: NextPage = () => {
-
   const router = useRouter();
-  const movieTitle = router.query.movie;
-  const movie = api.movie.getMovie.useQuery({title: movieTitle});
+  const movieTitle = router.query.movie as string;
+  const movie = api.movie.getMovie.useQuery({ title: movieTitle });
+  const movieData = movie.data;
   const showtime = new Date(router.query.showtime as string);
+  const [adultTickets, setAdultTickets] = useState(0);
+  const [childTickets, setChildTickets] = useState(0);
+  const [seniorTickets, setSeniorTickets] = useState(0);
 
   const onSubmit = async () => {
-    await router.push("/seatCheckout");
+    await router.push(
+      `/seatCheckout?showtime=${showtime.toISOString()}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}`
+    );
   };
 
   return (
@@ -76,19 +45,23 @@ const TicketCheckout: NextPage = () => {
             <Image
               width={250}
               height={300}
-              src={`https://i.imgur.com/i1rDBqw.jpg`}
+              src={movieData?.poster}
               alt="Bee movie Poster"
               className="relative"
             ></Image>
             <div className="center flex flex-col">
-              <h1 className="px-5 text-4xl font-bold text-black">{movieTitle}</h1>
+              <h1 className="px-5 text-4xl font-bold text-black">
+                {movieTitle}
+              </h1>
               <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
                 (showtime.getHours() + 4) % 12 === 0
                   ? 12
                   : (showtime.getHours() + 4) % 12
               }:${showtime.getMinutes().toString().padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}</p>
-              <p className="px-5 text-xl text-black">Movie Info...</p>
+              <p className="max-w-sm px-5 text-xl text-black">
+                {movieData?.synopsis}
+              </p>
             </div>
           </div>
           <div className="flex w-full flex-col items-center justify-center rounded-md">
@@ -137,33 +110,106 @@ const TicketCheckout: NextPage = () => {
               </div>
               <div></div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$19.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.adult.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$17.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.senior.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$14.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.child.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
-              <div></div>
-              <div></div>
+              <div />
+              <div />
               <div className="flex flex-col items-center justify-center">
-                <Counter id="adultTik" initialValue={0} />
+                <div className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    className="mr-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() =>
+                      setAdultTickets((prev) => (prev > 0 ? prev - 1 : prev))
+                    }
+                  >
+                    -
+                  </button>
+                  <span className="text-2xl font-bold text-dark-red">
+                    {adultTickets}
+                  </span>
+                  <button
+                    type="button"
+                    className="ml-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() => setAdultTickets((prev) => prev + 1)}
+                  >
+                    +
+                  </button>
+                </div>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <Counter id="seniorTik" initialValue={0} />
+                <div className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    className="mr-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() =>
+                      setSeniorTickets((prev) => (prev > 0 ? prev - 1 : prev))
+                    }
+                  >
+                    -
+                  </button>
+                  <span className="text-2xl font-bold text-dark-red">
+                    {seniorTickets}
+                  </span>
+                  <button
+                    type="button"
+                    className="ml-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() => setSeniorTickets((prev) => prev + 1)}
+                  >
+                    +
+                  </button>
+                </div>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <Counter id="childTik" initialValue={0} />
+                <div className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    className="mr-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() =>
+                      setChildTickets((prev) => (prev > 0 ? prev - 1 : prev))
+                    }
+                  >
+                    -
+                  </button>
+                  <span className="text-2xl font-bold text-dark-red">
+                    {childTickets}
+                  </span>
+                  <button
+                    type="button"
+                    className="ml-2 rounded-full bg-gray-200 px-3 py-1 text-dark-red"
+                    onClick={() => setChildTickets((prev) => prev + 1)}
+                  >
+                    +
+                  </button>
+                </div>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-4xl font-bold text-dark-red">$0.00</h2>
+                <h2 className="text-4xl font-bold text-dark-red">
+                  $
+                  {(
+                    adultTickets * ticketPrices.adult +
+                    childTickets * ticketPrices.child +
+                    seniorTickets * ticketPrices.senior
+                  ).toFixed(2)}
+                </h2>
               </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
