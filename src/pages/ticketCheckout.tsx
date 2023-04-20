@@ -26,9 +26,11 @@ const TicketCheckout: NextPage = () => {
   const [seniorTickets, setSeniorTickets] = useState(0);
 
   const onSubmit = async () => {
-    await router.push(
-      `/seatCheckout?showtime=${showtime.toISOString()}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}`
-    );
+    adultTickets === 0 && childTickets === 0 && seniorTickets === 0
+      ? alert("Must select at least one ticket!")
+      : await router.push(
+          `/seatCheckout?showtime=${showtime.toISOString()}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}`
+        );
   };
 
   return (
