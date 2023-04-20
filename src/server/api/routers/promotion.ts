@@ -86,6 +86,7 @@ export const promotionRouter = createTRPCRouter({
         const promotion = await ctx.prisma.promotion.findMany({
             where: { code: input.code },
         });
+        if (!promotion) return false;
         return promotion;
     }),
 
