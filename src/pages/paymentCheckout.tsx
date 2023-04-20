@@ -4,13 +4,23 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
 import Head from "next/head";
-import type { Movie } from "../types/Movie";
+import type { Promotion } from "@prisma/client";
 import Link from "next/link";
 import { states, months, days } from "../utils/consts";
+import { api } from "~/utils/api";
 
 //import type { Ticket } from "../types/ticket";
 
 const paymentCheckout: NextPage = () => {
+  // const router = useRouter();
+  // const movieTitle = router.query.movie as string;
+  // const allPromo = api.promotion.getPromotion.useQuery({ title: movieTitle });
+  // const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
+  // let movies = allMovies.data ?? [];
+  // const searchedMovieArray = movies.filter(
+  //   (movie) => movie.title.replace(/\s+/g, "-").toLowerCase().includes(searchMovie)
+  // );
+
   return (
     <>
       <Head>
@@ -58,6 +68,38 @@ const paymentCheckout: NextPage = () => {
                 Payment
               </span>
             </h1>
+            {/* <div className="flex w-full flex-row justify-center space-x-5">
+              <label className="text-2xl font-bold text-dark-red">
+                Promotion Code:
+              </label>
+              <input
+                className="center rounded border-2 border-gray-400 px-2 text-black hover:border-gray-600"
+                placeholder=" Promo Code"
+                id="promoCode"
+              />
+              <button className="rounded bg-dark-red px-5 py-2 text-center"
+              onClick={() => {
+                let isPromo = false;
+                const inputCode = document.getElementById("promoCode").value;
+                allPromoData.forEach((promotion) => {
+                  if (promotion.code.includes(inputCode)) {
+                    router.push(
+                      `/browse?movie=${searchField
+                        .replace(/\s+/g, "-")
+                        .toLowerCase()}`
+                    );    
+                    isPromo = true;                   
+                  }
+                })
+                if (isPromo === false) {
+                  alert ("No search results for \"" + code + "\"")
+                  return false;
+                }
+              }}
+              >
+                Add
+              </button>
+            </div> */}
             <div className="grid grid-flow-col grid-cols-3 grid-rows-6 gap-y-5">
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-dark-red">

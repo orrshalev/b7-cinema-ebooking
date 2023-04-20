@@ -74,7 +74,7 @@ const TicketCheckout: NextPage = () => {
               </span>
               &gt; Seats &gt; Payment
             </h1>
-            <div className="flex w-full flex-row justify-center space-x-5">
+            {/* <div className="flex w-full flex-row justify-center space-x-5">
               <label className="text-2xl font-bold text-dark-red">
                 Promotion Code:
               </label>
@@ -85,7 +85,7 @@ const TicketCheckout: NextPage = () => {
               <button className="rounded bg-dark-red px-5 py-2 text-center">
                 Add
               </button>
-            </div>
+            </div> */}
             <div className="grid grid-flow-col grid-cols-3 grid-rows-5 gap-y-5 pt-10">
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-dark-red">
