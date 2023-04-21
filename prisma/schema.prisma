@@ -18,6 +18,7 @@ datasource db {
 model Promotion {
     id        String     @id @default(auto()) @map("_id") @db.ObjectId
     movie     Movie      @relation(fields: [movieId], references: [id])
+    title     String
     movieId   String     @db.ObjectId
     code      String     @unique
     discount  Float

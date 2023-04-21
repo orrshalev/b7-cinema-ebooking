@@ -80,7 +80,16 @@ function SeatRow({ row, numSeats, selectedSeats, onSelect }: SeatRowProps) {
   return <div className="mb-4 flex items-center justify-center">{seats}</div>;
 }
 
-function MovieSeatSelection() {
+const SeatCheckout: NextPage = () => {
+  const router = useRouter();
+  const movieTitle = router.query.movie as string;
+  const adult = parseInt(router.query.adult as string);
+  const child = parseInt(router.query.child as string);
+  const senior = parseInt(router.query.senior as string);
+  const movie = api.movie.getMovie.useQuery({ title: movieTitle });
+  const movieData = movie.data;
+  const showtime = new Date(router.query.showtime as string);
+
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
   const handleSeatSelect = (id: string) => {
@@ -94,49 +103,21 @@ function MovieSeatSelection() {
   };
 
   const rowLetters = ["A", "B", "C"];
-  const numRows = rowLetters.length;
 
-  return (
-    <div className="container mx-auto p-4">
-      <div className="grid-row-1 mx-auto grid grid-cols-3 py-5 text-center text-dark-red">
-        <div></div>
-        <div className="text-md bg-gray-400 font-bold">SCREEN</div>
-        <div></div>
-      </div>
-      {rowLetters.map((row, index) => (
-        <SeatRow
-          key={row}
-          row={row}
-          numSeats={10}
-          selectedSeats={selectedSeats}
-          onSelect={handleSeatSelect}
-        />
-      ))}
-      <hr className="my-4 h-[0.2rem] bg-gray-400 " />
-      <div className="mx-auto max-w-md">
-        <h2 className="mb-2 text-xl font-bold text-dark-red">
-          Selected seats:
-        </h2>
-        {selectedSeats.length === 0 ? (
-          <p className="text-lg text-dark-red">No seats selected</p>
-        ) : (
-          <ul className="text-lg text-dark-red">
-            {selectedSeats.map((seat) => (
-              <li key={seat}>Seat {seat}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
-}
+  const nextPageHandler = async () => {
+    selectedSeats.length === adult + child + senior
+      ? await router.push(
+          `/paymentCheckout?movie=${movieTitle}&showtime=${showtime.toISOString()}&adult=${adult}&senior=${senior}&child=${child}&seats=${selectedSeats.toString()}`
+        )
+      : alert(
+          `You selected ${
+            selectedSeats.length
+          } seats while you are required to select ${
+            adult + child + senior
+          } seats based on your previous selection.`
+        );
+  };
 
-const seatCheckout: NextPage = () => {
-  const router = useRouter();
-  const movieTitle = router.query.movie as string;
-  const movie = api.movie.getMovie.useQuery({ title: movieTitle });
-  const movieData = movie.data;
-  const showtime = new Date(router.query.showtime as string);
   return (
     <>
       <Head>
@@ -156,7 +137,9 @@ const seatCheckout: NextPage = () => {
               className="relative"
             ></Image>
             <div className="center flex flex-col">
-              <h1 className="px-5 text-4xl font-bold text-black">{movieTitle}</h1>
+              <h1 className="px-5 text-4xl font-bold text-black">
+                {movieTitle}
+              </h1>
               <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
                 (showtime.getHours() + 4) % 12 === 0
                   ? 12
@@ -222,15 +205,45 @@ const seatCheckout: NextPage = () => {
                   <p className="text-md pl-1 text-dark-red">Booked</p>
                 </div>
               </div>
-              <MovieSeatSelection />
+              <div className="container mx-auto p-4">
+                <div className="grid-row-1 mx-auto grid grid-cols-3 py-5 text-center text-dark-red">
+                  <div></div>
+                  <div className="text-md bg-gray-400 font-bold">SCREEN</div>
+                  <div></div>
+                </div>
+                {rowLetters.map((row) => (
+                  <SeatRow
+                    key={row}
+                    row={row}
+                    numSeats={10}
+                    selectedSeats={selectedSeats}
+                    onSelect={handleSeatSelect}
+                  />
+                ))}
+                <hr className="my-4 h-[0.2rem] bg-gray-400 " />
+                <div className="mx-auto max-w-md">
+                  <h2 className="mb-2 text-xl font-bold text-dark-red">
+                    Selected seats:
+                  </h2>
+                  {selectedSeats.length === 0 ? (
+                    <p className="text-lg text-dark-red">No seats selected</p>
+                  ) : (
+                    <ul className="text-lg text-dark-red">
+                      {selectedSeats.map((seat) => (
+                        <li key={seat}>Seat {seat}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-              <Link
-                href="/paymentCheckout"
+              <button
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
+                onClick={nextPageHandler}
               >
                 CONFIRM SEATS
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -240,4 +253,4 @@ const seatCheckout: NextPage = () => {
   );
 };
 
-export default seatCheckout;
+export default SeatCheckout;

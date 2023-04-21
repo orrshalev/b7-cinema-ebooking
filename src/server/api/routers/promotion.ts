@@ -80,14 +80,15 @@ export const promotionRouter = createTRPCRouter({
     .input(
         z.object({
             code: z.string(),
+            title: z.string()
         })
     )
     .query(async ({ input, ctx }) => {
-        const promotion = await ctx.prisma.promotion.findMany({
-            where: { code: input.code },
+        const promotion = await ctx.prisma.promotion.findFirst({
+            where: { code: input.code, title: input.title },
         });
-        if (!promotion) return false;
-        return promotion;
+        if (!promotion) return 0;
+        return promotion.discount;
     }),
 
 });

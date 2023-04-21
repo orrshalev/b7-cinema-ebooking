@@ -8,13 +8,6 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
-//import type { Ticket } from "../types/ticket";
-
-type CounterProps = {
-  initialValue: number;
-  id: string;
-};
-
 const TicketCheckout: NextPage = () => {
   const router = useRouter();
   const movieTitle = router.query.movie as string;

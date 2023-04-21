@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ticketPrices } from "../utils/consts";
 import { type NextPage } from "next";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -12,48 +13,21 @@ import { useRouter } from "next/router";
 
 //import type { Ticket } from "../types/ticket";
 
-const paymentCheckout: NextPage = () => {
-  //movie poster and all info states invalid 
+const PaymentCheckout: NextPage = () => {
+  //movie poster and all info states invalid
   const router = useRouter();
   const movieTitle = router.query.movie as string;
   const movie = api.movie.getMovie.useQuery({ title: movieTitle });
   const movieData = movie.data;
+  const adult = parseInt(router.query.adult as string);
+  const child = parseInt(router.query.child as string);
+  const senior = parseInt(router.query.senior as string);
   const showtime = new Date(router.query.showtime as string);
+  const seats = (router.query.seats as string)?.split(",");
 
   const [promoCode, setPromoCode] = useState("");
-  const [isPromoFound, setIsPromoFound] = useState(false);
-  const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode });
-  const promoData = promo.data;
-  // const handlePromoCode = () => {
-  //   alert(promoData);
-  // };
-
-  /*Grabs the right objects, but can't pull data from the promotion objects? */
-  const handlePromoCode = () => {
-    alert(promoData);
-    if (promoData != "" && promoData != null && promoData != undefined) {
-      alert("Promo code added!");
-      assignPromo();
-      setIsPromoFound(true);
-    } else {
-      alert("Promo code not found!");
-      assignPromo();
-      setIsPromoFound(false);
-    }
-  };
-
-  const assignPromo = () => {
-    if (promoData != "" && promoData != null && promoData != undefined) {
-      alert(promoData?.discount)
-      const promoDiscount = promoData?.discount;
-      const promoFormat = promoDiscount;
-      return promoFormat;
-    } else {
-      const promoDiscount = 0;
-      const promoFormat = promoDiscount;
-      return promoFormat;
-    }
-  };
+  const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode, title: movieTitle });
+  const discountPrice = promo.data ?? 0;
 
   return (
     <>
@@ -74,7 +48,9 @@ const paymentCheckout: NextPage = () => {
               className="relative"
             ></Image>
             <div className="center flex flex-col">
-              <h1 className="px-5 text-4xl font-bold text-black">{movieTitle}</h1>
+              <h1 className="px-5 text-4xl font-bold text-black">
+                {movieTitle}
+              </h1>
               <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
                 (showtime.getHours() + 4) % 12 === 0
                   ? 12
@@ -114,17 +90,12 @@ const paymentCheckout: NextPage = () => {
                 Promotion Code:
               </label>
               <input
-                className="center rounded border-2 border-gray-400 px-2 text-black hover:border-gray-600"
+                className="center rounded border-2 border-gray-400 px-2 py-1 text-black hover:border-gray-600"
                 placeholder=" Promo Code"
                 id="promoCode"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value)}
               />
-              <button className="rounded bg-dark-red px-5 py-2 text-center"
-              onClick= {handlePromoCode}
-              >
-                Add
-              </button>
             </div>
             <div className="grid grid-flow-col grid-cols-3 grid-rows-6 gap-y-5">
               <div className="flex flex-col items-center justify-center">
@@ -133,15 +104,21 @@ const paymentCheckout: NextPage = () => {
                 </h2>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">Adult x2</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  Adult x{adult}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">Senior x1</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  Senior x{senior}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">Child x1</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  Child x{child}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
@@ -154,39 +131,70 @@ const paymentCheckout: NextPage = () => {
               </div>
               <div></div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$19.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.adult.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$17.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.senior.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$14.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${ticketPrices.child.toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div></div>
               <div></div>
               <div></div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$39.98</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${(ticketPrices.adult * adult).toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$17.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${(ticketPrices.senior * senior).toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$14.99</h2>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  ${(ticketPrices.child * child).toFixed(2)}
+                </h2>
                 <hr className="mt-8 h-[0.1rem] w-full bg-gray-400" />
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-dark-red">$72.96</h2>
-                <p className="text-lg font-bold text-dark-red">${ bookingFee.toFixed(2) }</p>
-                <p className="text-lg font-bold text-dark-red">${ isPromoFound ? assignPromo() : "0.00" }</p>
+                <h2 className="text-2xl font-bold text-dark-red">
+                  $
+                  {(
+                    adult * ticketPrices.adult +
+                    child * ticketPrices.child +
+                    senior * ticketPrices.senior
+                  ).toFixed(2)}
+                </h2>
+                <p className="text-lg font-bold text-dark-red">
+                  ${bookingFee.toFixed(2)}
+                </p>
+                <p className="text-lg font-bold text-dark-red">
+                  ${discountPrice.toFixed(2)}
+                </p>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h2 className="text-4xl font-bold text-dark-red">$77.96</h2>
+                <h2 className="text-4xl font-bold text-dark-red">
+                  $
+                  {(
+                    adult * ticketPrices.adult +
+                    child * ticketPrices.child +
+                    senior * ticketPrices.senior +
+                    bookingFee - discountPrice
+                  ).toFixed(2)}
+                </h2>
                 <p className="text-md text-dark-red">
                   Includes applicable state and local sales taxes.
                 </p>
@@ -411,4 +419,4 @@ const paymentCheckout: NextPage = () => {
   );
 };
 
-export default paymentCheckout;
+export default PaymentCheckout;

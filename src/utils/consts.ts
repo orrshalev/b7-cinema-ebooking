@@ -70,7 +70,7 @@ export const daysNames = [
 export const ticketPrices = {
   adult: 15.00,
   senior: 14.00,
-  child: 13.00
+  child: 13.00,
 }
 
-export const bookingFee = 5.00;
+export const bookingFee = 4.99;
