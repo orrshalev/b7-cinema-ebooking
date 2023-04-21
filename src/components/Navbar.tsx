@@ -28,8 +28,9 @@ const Navbar = () => {
             <li>
               <Link
                 href="/"
-                className="bg-dark-coral-700 md:text-dark-coral-700 text-dark-white block rounded py-2 pl-3 pr-4 font-bold dark:text-white sm:text-lg md:bg-transparent md:p-0"
-                aria-current="page"
+                // className="bg-dark-coral-700 md:text-dark-coral-700 text-dark-white block rounded py-2 pl-3 pr-4 font-bold dark:text-white sm:text-lg md:bg-transparent md:p-0"
+                // aria-current="page"
+                className="block rounded py-2 pl-3 pr-4 font-bold text-creme transition duration-300 ease-in-out hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:text-lg md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-white"
               >
                 Home
               </Link>
