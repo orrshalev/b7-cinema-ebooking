@@ -16,14 +16,15 @@ const paymentCheckout: NextPage = () => {
   const [promoCode, setPromoCode] = useState("");
   const [isPromoFound, setIsPromoFound] = useState(false);
   const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode });
+  const promoData = promo.data;
   // const handlePromoCode = () => {
   //   alert(promo.data);
   // };
 
   /*Grabs the right objects, but can't pull data from the promotion objects? */
   const handlePromoCode = () => {
-    alert(promo.data);
-    if (promo.data != "" && promo.data != null && promo.data != undefined) {
+    alert(promoData);
+    if (promoData != "" && promoData != null && promoData != undefined) {
       alert("Promo code added!");
       assignPromo();
       setIsPromoFound(true);
@@ -35,9 +36,9 @@ const paymentCheckout: NextPage = () => {
   };
 
   const assignPromo = () => {
-    if (promo.data != "" && promo.data != null && promo.data != undefined) {
-      alert(promo.data.discount)
-      const promoDiscount = promo.data.discount;
+    if (promoData != "" && promoData != null && promoData != undefined) {
+      alert(promoData?.discount)
+      const promoDiscount = promoData?.discount;
       const promoFormat = promoDiscount;
       return promoFormat;
     } else {
