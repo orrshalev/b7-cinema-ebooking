@@ -108,6 +108,9 @@ const weekDates = [...beforeDays, currentDate, ...afterDays].map((d) =>
 );
 
 const AdminBrowse: NextPage = () => {
+  const router = useRouter();
+  const searchMovie = router.query.movie as string;
+  const searchGenre = router.query.genre as string;
   const dayHoverEffect = "transition duration-300 hover:text-dark-red";
 
   const [day, setDay] = useState<(typeof daysNames)[number]>(
@@ -116,7 +119,27 @@ const AdminBrowse: NextPage = () => {
   const [dayNum, setDayNum] = useState(currentWeekDay);
 
   const allMovies = api.movie.getAllMoviesOnDay.useQuery({ day: dayNum });
-  const movies = allMovies.data ?? [];
+  let movies = allMovies.data ?? [];
+
+  const searchedMovieArray = movies.filter(
+    (movie) => movie.title.replace(/\s+/g, "-").toLowerCase().includes(searchMovie)
+  );
+  const searchedGenreMovieArray = movies.filter(
+    (movie) => movie.genre.replace(/\s+/g, "-").toLowerCase().includes(searchGenre)
+  );
+  
+  if (searchedMovieArray.length > 0) {
+    console.log("search by title", searchMovie)
+    movies = searchedMovieArray;
+  } else if (searchedGenreMovieArray.length > 0) {
+    console.log("search by genre", searchGenre)
+    movies = searchedGenreMovieArray;
+    console.log(movies)
+  } else if (searchMovie) {
+    movies = [];
+  } else if (searchGenre) {
+    movies = [];
+  }
 
   const [movieTitle, setMovieTitle] = useState("Rubber");
 

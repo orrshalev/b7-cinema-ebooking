@@ -132,6 +132,7 @@ const Browse: NextPage = () => {
 
   const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
   let movies = allMovies.data ?? [];
+  
   const searchedMovieArray = movies.filter(
     (movie) => movie.title.replace(/\s+/g, "-").toLowerCase().includes(searchMovie)
   );

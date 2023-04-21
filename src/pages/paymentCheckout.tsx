@@ -16,10 +16,10 @@ const PaymentCheckout: NextPage = () => {
   const seatsString = router.query.seats as string
   const seats = seatsString.split(',');
   seats.pop();
-  const movie = "Barbie"
-  const showtime = new Date("2023-04-07T08:00:00.000+00:00");
   // const movie = router.query.movie as string
   // const showtime = router.query.showtime as string
+  const movie = "Barbie"
+  const showtime = new Date("2023-04-07T08:00:00.000+00:00");
   console.log(seats)
   const bookSeatMutation = api.seat.bookSeat.useMutation();
   const handleSubmit = async () => {
