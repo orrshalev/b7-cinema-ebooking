@@ -4,8 +4,9 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
 import Head from "next/head";
-import type { Movie } from "../types/Movie";
 import Link from "next/link";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 //import type { Ticket } from "../types/ticket";
 
@@ -131,6 +132,11 @@ function MovieSeatSelection() {
 }
 
 const seatCheckout: NextPage = () => {
+  const router = useRouter();
+  const movieTitle = router.query.movie as string;
+  const movie = api.movie.getMovie.useQuery({ title: movieTitle });
+  const movieData = movie.data;
+  const showtime = new Date(router.query.showtime as string);
   return (
     <>
       <Head>
@@ -145,14 +151,21 @@ const seatCheckout: NextPage = () => {
             <Image
               width={250}
               height={300}
-              src={`https://i.imgur.com/i1rDBqw.jpg`}
-              alt="Bee movie Poster"
+              src={movieData?.poster}
+              alt="Movie Poster"
               className="relative"
             ></Image>
             <div className="center flex flex-col">
-              <h1 className="px-5 text-4xl font-bold text-black">Bee Movie</h1>
-              <p className="px-5 text-xl text-black">Date and Time</p>
-              <p className="px-5 text-xl text-black">Movie Info...</p>
+              <h1 className="px-5 text-4xl font-bold text-black">{movieTitle}</h1>
+              <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
+                (showtime.getHours() + 4) % 12 === 0
+                  ? 12
+                  : (showtime.getHours() + 4) % 12
+              }:${showtime.getMinutes().toString().padStart(2, "0")} 
+                      ${showtime.getHours() >= 12 ? "PM" : "AM"}`}</p>
+              <p className="max-w-sm px-5 text-xl text-black">
+                {movieData?.synopsis}
+              </p>
             </div>
           </div>
           <div className="flex w-full flex-col items-center justify-center rounded-md">

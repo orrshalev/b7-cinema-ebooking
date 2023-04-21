@@ -48,7 +48,7 @@ const TicketCheckout: NextPage = () => {
               width={250}
               height={300}
               src={movieData?.poster}
-              alt="Bee movie Poster"
+              alt="Movie Poster"
               className="relative"
             ></Image>
             <div className="center flex flex-col">
