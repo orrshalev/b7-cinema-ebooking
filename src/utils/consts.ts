@@ -72,3 +72,5 @@ export const ticketPrices = {
   senior: 14.00,
   child: 13.00
 }
+
+export const bookingFee = 5.00;

@@ -6,20 +6,44 @@ import Image from "next/image";
 import Head from "next/head";
 import type { Promotion } from "@prisma/client";
 import Link from "next/link";
-import { states, months, days } from "../utils/consts";
+import { states, months, days, bookingFee } from "../utils/consts";
 import { api } from "~/utils/api";
 
 //import type { Ticket } from "../types/ticket";
 
 const paymentCheckout: NextPage = () => {
-  // const router = useRouter();
-  // const movieTitle = router.query.movie as string;
-  // const allPromo = api.promotion.getPromotion.useQuery({ title: movieTitle });
-  // const allMovies = api.movie.getMovieByDate.useQuery({ day: dayNum });
-  // let movies = allMovies.data ?? [];
-  // const searchedMovieArray = movies.filter(
-  //   (movie) => movie.title.replace(/\s+/g, "-").toLowerCase().includes(searchMovie)
-  // );
+
+  const [promoCode, setPromoCode] = useState("");
+  const [isPromoFound, setIsPromoFound] = useState(false);
+  const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode });
+  // const handlePromoCode = () => {
+  //   alert(promo.data);
+  // };
+
+  const handlePromoCode = () => {
+    alert(promo.data);
+    if (promo.data != "" && promo.data != null && promo.data != undefined) {
+      alert("Promo code added!");
+      assignPromo();
+      setIsPromoFound(true);
+    } else {
+      alert("Promo code not found!");
+      assignPromo();
+      setIsPromoFound(false);
+    }
+  };
+
+  const assignPromo = () => {
+    if (promo.data != "" && promo.data != null && promo.data != undefined) {
+      const promoDiscount = promo.data.discount;
+      const promoFormat = promoDiscount.toFixed(2);
+      return promoFormat;
+    } else {
+      const promoDiscount = 0;
+      const promoFormat = promoDiscount.toFixed(2);
+      return promoFormat;
+    }
+  };
 
   return (
     <>
@@ -68,7 +92,7 @@ const paymentCheckout: NextPage = () => {
                 Payment
               </span>
             </h1>
-            {/* <div className="flex w-full flex-row justify-center space-x-5">
+            <div className="flex w-full flex-row justify-center space-x-5">
               <label className="text-2xl font-bold text-dark-red">
                 Promotion Code:
               </label>
@@ -76,30 +100,15 @@ const paymentCheckout: NextPage = () => {
                 className="center rounded border-2 border-gray-400 px-2 text-black hover:border-gray-600"
                 placeholder=" Promo Code"
                 id="promoCode"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
               />
               <button className="rounded bg-dark-red px-5 py-2 text-center"
-              onClick={() => {
-                let isPromo = false;
-                const inputCode = document.getElementById("promoCode").value;
-                allPromoData.forEach((promotion) => {
-                  if (promotion.code.includes(inputCode)) {
-                    router.push(
-                      `/browse?movie=${searchField
-                        .replace(/\s+/g, "-")
-                        .toLowerCase()}`
-                    );    
-                    isPromo = true;                   
-                  }
-                })
-                if (isPromo === false) {
-                  alert ("No search results for \"" + code + "\"")
-                  return false;
-                }
-              }}
+              onClick= {handlePromoCode}
               >
                 Add
               </button>
-            </div> */}
+            </div>
             <div className="grid grid-flow-col grid-cols-3 grid-rows-6 gap-y-5">
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-dark-red">
@@ -156,8 +165,8 @@ const paymentCheckout: NextPage = () => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-dark-red">$72.96</h2>
-                <p className="text-lg font-bold text-dark-red">$5.00</p>
-                <p className="text-lg font-bold text-dark-red">$0.00</p>
+                <p className="text-lg font-bold text-dark-red">${ bookingFee.toFixed(2) }</p>
+                <p className="text-lg font-bold text-dark-red">${  }</p>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-4xl font-bold text-dark-red">$77.96</h2>
