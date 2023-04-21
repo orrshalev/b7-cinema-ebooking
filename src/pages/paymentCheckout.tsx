@@ -67,19 +67,9 @@ const PaymentCheckout: NextPage = () => {
               Ticket Checkout
             </h1>
             <h1 className="py-5 pb-12 text-3xl font-bold text-gray-500 ">
-              <Link
-                className="py-10 text-3xl font-bold text-gray-500 transition duration-300 ease-in-out hover:text-dark-red"
-                href="/ticketCheckout"
-              >
                 Tickets
-              </Link>
               &gt;
-              <Link
-                className="py-10 text-3xl font-bold text-gray-500 transition duration-300 ease-in-out hover:text-dark-red"
-                href="/seatCheckout"
-              >
                 Seats
-              </Link>
               &gt;
               <span className="text-3xl font-bold text-gray-500 underline">
                 Payment
