@@ -15,6 +15,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 type MoviePreviewCardProps = {
   movie: Movie;
@@ -393,7 +394,19 @@ const AdminBrowse: NextPage = () => {
                         console.log(movie.title);
                       }}
                     >
-                      <input
+                      {movie.upcoming == true ? (
+                        <>
+                      <span
+                        className="my-1 w-[80px] justify-center
+                        gap-1 rounded-md bg-dark-red px-2 py-1 font-firasans
+                        text-lg transition ease-in-out"
+                      >
+                        {movie.title} has not been released yet.
+                      </span>   
+                      </>                     
+                      ) : (
+                        <>
+                        <input
                         type="time"
                         name="time"
                         id="time"
@@ -407,7 +420,9 @@ const AdminBrowse: NextPage = () => {
                       >
                         Add
                       </button>
-                    </form>
+                      </>
+                      )}   
+                    </form>                   
                   </div>
                 </div>
               </div>

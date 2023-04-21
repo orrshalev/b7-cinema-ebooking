@@ -9,7 +9,6 @@ import { api } from "../utils/api";
 import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
 import type { Movie } from "@prisma/client";
-import dateRange from "src/pages/lib/dateRange";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
@@ -94,9 +93,6 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
     </>
   );
 };
-
-const dateRangeArr = dateRange();
-console.log("date range", dateRangeArr[142]);
 
 const Home: NextPage = () => {
   // date is going to be 5 hours ahead of our current time (EST)
