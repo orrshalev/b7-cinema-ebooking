@@ -18,7 +18,7 @@ const paymentCheckout: NextPage = () => {
   const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode });
   const promoData = promo.data;
   // const handlePromoCode = () => {
-  //   alert(promo.data);
+  //   alert(promoData);
   // };
 
   /*Grabs the right objects, but can't pull data from the promotion objects? */
