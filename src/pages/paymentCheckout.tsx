@@ -20,6 +20,7 @@ const paymentCheckout: NextPage = () => {
   //   alert(promo.data);
   // };
 
+  /*Grabs the right objects, but can't pull data from the promotion objects? */
   const handlePromoCode = () => {
     alert(promo.data);
     if (promo.data != "" && promo.data != null && promo.data != undefined) {
@@ -35,12 +36,13 @@ const paymentCheckout: NextPage = () => {
 
   const assignPromo = () => {
     if (promo.data != "" && promo.data != null && promo.data != undefined) {
+      alert(promo.data.discount)
       const promoDiscount = promo.data.discount;
-      const promoFormat = promoDiscount.toFixed(2);
+      const promoFormat = promoDiscount;
       return promoFormat;
     } else {
       const promoDiscount = 0;
-      const promoFormat = promoDiscount.toFixed(2);
+      const promoFormat = promoDiscount;
       return promoFormat;
     }
   };
@@ -166,7 +168,7 @@ const paymentCheckout: NextPage = () => {
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-dark-red">$72.96</h2>
                 <p className="text-lg font-bold text-dark-red">${ bookingFee.toFixed(2) }</p>
-                <p className="text-lg font-bold text-dark-red">${  }</p>
+                <p className="text-lg font-bold text-dark-red">${ isPromoFound ? assignPromo() : "0.00" }</p>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <h2 className="text-4xl font-bold text-dark-red">$77.96</h2>
