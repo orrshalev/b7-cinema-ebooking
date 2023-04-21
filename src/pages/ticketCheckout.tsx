@@ -49,9 +49,7 @@ const TicketCheckout: NextPage = () => {
                 {movieTitle}
               </h1>
               <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
-                (showtime.getHours() + 4) % 12 === 0
-                  ? 12
-                  : (showtime.getHours() + 4) % 12
+                showtime.getHours() % 12 === 0 ? 12 : showtime.getHours() % 12
               }:${showtime.getMinutes().toString().padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}</p>
               <p className="max-w-sm px-5 text-xl text-black">

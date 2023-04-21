@@ -26,7 +26,10 @@ const PaymentCheckout: NextPage = () => {
   const seats = (router.query.seats as string)?.split(",");
 
   const [promoCode, setPromoCode] = useState("");
-  const promo = api.promotion.getPromotionByCode.useQuery({ code: promoCode, title: movieTitle });
+  const promo = api.promotion.getPromotionByCode.useQuery({
+    code: promoCode,
+    title: movieTitle,
+  });
   const discountPrice = promo.data ?? 0;
 
   return (
@@ -52,9 +55,7 @@ const PaymentCheckout: NextPage = () => {
                 {movieTitle}
               </h1>
               <p className="px-5 text-xl text-black">{`${showtime.toLocaleDateString()} ${
-                (showtime.getHours() + 4) % 12 === 0
-                  ? 12
-                  : (showtime.getHours() + 4) % 12
+                showtime.getHours() % 12 === 0 ? 12 : showtime.getHours() % 12
               }:${showtime.getMinutes().toString().padStart(2, "0")} 
                       ${showtime.getHours() >= 12 ? "PM" : "AM"}`}</p>
               <p className="max-w-sm px-5 text-xl text-black">
@@ -182,7 +183,8 @@ const PaymentCheckout: NextPage = () => {
                     adult * ticketPrices.adult +
                     child * ticketPrices.child +
                     senior * ticketPrices.senior +
-                    bookingFee - discountPrice
+                    bookingFee -
+                    discountPrice
                   ).toFixed(2)}
                 </h2>
                 <p className="text-md text-dark-red">
