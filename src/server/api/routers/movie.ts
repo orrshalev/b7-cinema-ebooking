@@ -59,21 +59,22 @@ export const movieRouter = createTRPCRouter({
     .input(
       z.object({
         limit: z.number(),
-        range: z.array(z.date()),
+        startTime: z.date(),
+        endTime: z.date(),
         comingSoon: z.boolean(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const moviesList = await ctx.prisma.movie.findMany({
-        where: {
-          showtimes: {
-            hasSome: input.range,
-          },
-          upcoming: input.comingSoon,
-        },
-        take: input.limit,
-      });
-      return moviesList;
+      const allMovies = await ctx.prisma.movie.findMany();
+      let todayMovies = []
+      allMovies.forEach((movie) => {
+        movie.showtimes.every((showtime) => {
+          if (showtime > input.startTime && showtime < input.endTime)
+            todayMovies.push(movie);
+        })
+      })
+      todayMovies = todayMovies.slice(0, 4);
+      return todayMovies;
     }),
 
   getAllMoviesOnDay: publicProcedure

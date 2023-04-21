@@ -19,9 +19,9 @@ const Login: NextPage = (props): JSX.Element => {
       password: userInfo.password,
       redirect: false,
     })
-      .then((response) => {
+      .then(async (response) => {
         if (response?.error == null) {
-          alert("Login Success!");
+          alert("Login Successful!");
           setStatus({ ...status, status: 200 });
           router.push("/")
         } else if (response?.error == "verification") {
