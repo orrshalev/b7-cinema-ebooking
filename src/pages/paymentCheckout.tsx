@@ -17,14 +17,17 @@ const PaymentCheckout: NextPage = () => {
   const seats = seatsString.split(',');
   seats.pop();
   const movie = "Barbie"
+  const showtime = new Date("2023-04-07T08:00:00.000+00:00");
   // const movie = router.query.movie as string
+  // const showtime = router.query.showtime as string
   console.log(seats)
-  const updateSeatMutation = api.seat.updateSeat.useMutation();
+  const bookSeatMutation = api.seat.bookSeat.useMutation();
   const handleSubmit = async () => {
     seats.forEach(async (seat) => {
-      const s = await updateSeatMutation.mutateAsync({
+      const s = await bookSeatMutation.mutateAsync({
         seat: seat,
-        movie: movie
+        movie: movie,
+        showtime: showtime
       });
     });
     await router.push('/checkoutSuccess')

@@ -57,7 +57,7 @@ model User {
     isAdmin      Boolean  @default(false)
     changePwCode String?
     agreeToPromo Boolean  @default(false)
-    // seats        Seat[]
+    // bookedSeats  Seat[]
 }
 
 model Address {
@@ -90,11 +90,9 @@ model Card {
 
 model Seat {
     id         String  @id @default(auto()) @map("_id") @db.ObjectId
-    // user       User    @relation(fields: [userId], references: [id])
     // movie      Movie  @relation(fields: [movieId], references: [id])
-    // userId     String  @db.ObjectId
     // movieId    String @db.ObjectId
-    seat       String  @unique
-    // isTaken    Boolean @default(false)
-    movies     String[]
+    seat       String
+    movie      String
+    showtime   DateTime
 }

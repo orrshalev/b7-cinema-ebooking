@@ -8,6 +8,7 @@ import type { Movie } from "../types/Movie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { constants } from "fs/promises";
+import { api } from "~/utils/api";
 
 //import type { Ticket } from "../types/ticket";
 
@@ -23,36 +24,93 @@ function Seat({ id, row, seat, selected, onSelect }: SeatProps) {
   const handleClick = async () => {
     onSelect(id);
   };
+  
+  const router = useRouter();
+  const movie = router.query.movie;
+  const showtime = router.query.showtime;
+  console.log(showtime)
+  const getBookedSeatsQuery = api.seat.getBookedSeats.useQuery({movie: movie, showtime: showtime});
+  let bookedSeats = getBookedSeatsQuery.data ?? []
+  // console.log(bookedSeats)
 
-  const img = selected ? (
-    <Image
-      className="rounded-md"
-      src={"/assets/svg/solid-seat-icon.svg"}
-      width={20}
-      height={20}
-      alt="seat"
-    />
-  ) : (
-    <Image
-      className="rounded-md"
-      src={"/assets/svg/available-seat-icon.svg"}
-      width={20}
-      height={20}
-      alt="seat"
-    />
-  );
+  bookedSeats = bookedSeats.map(bookedSeat => bookedSeat.seat)
+  console.log(bookedSeats)
 
-  return (
-    <button
-      type="button"
-      className={`bg-${
-        selected ? "green-500" : "gray-300"
-      } m-1 rounded-md p-2 text-sm font-bold text-dark-red`}
-      onClick={handleClick}
-    >
-      {img}
-    </button>
-  );
+  // const img = selected ? (
+  //   <Image
+  //     className="rounded-md"
+  //     src={"/assets/svg/solid-seat-icon.svg"}
+  //     width={20}
+  //     height={20}
+  //     alt="seat"
+  //   />
+  // ) : (
+  //   <Image
+  //     className="rounded-md"
+  //     src={"/assets/svg/available-seat-icon.svg"}
+  //     width={20}
+  //     height={20}
+  //     alt="seat"
+  //   />
+  // );
+
+  let click = true;
+  let img = 
+  <Image
+  className="rounded-md"
+  src={"/assets/svg/available-seat-icon.svg"}
+  width={20}
+  height={20}
+  alt="seat"
+  />;
+
+  if (bookedSeats.includes(id)) {
+    click = false;
+    img = 
+        <Image
+        className="rounded-md"
+        src={"/assets/svg/booked-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+        />;
+  } else if (selected) {
+    img = <Image
+        className="rounded-md"
+        src={"/assets/svg/solid-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+      />;  
+  } else {
+    img = <Image
+        className="rounded-md"
+        src={"/assets/svg/available-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+      />;
+  }
+
+  if (click) {
+    return (
+      <button
+        type="button"
+        className={`bg-${
+          selected ? "green-500" : "gray-300"
+        } m-1 rounded-md p-2 text-sm font-bold text-dark-red`}
+        onClick={handleClick}
+      >
+        {img}
+      </button>
+    );
+  } else {
+    return (
+      <span className={`bg- m-1 rounded-md p-2 text-sm font-bold text-dark-red`}>
+          {img}
+        </span>
+      );
+  }
 }
 
 type SeatRowProps = {
