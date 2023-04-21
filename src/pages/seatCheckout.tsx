@@ -6,6 +6,8 @@ import Image from "next/image";
 import Head from "next/head";
 import type { Movie } from "../types/Movie";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { constants } from "fs/promises";
 
 //import type { Ticket } from "../types/ticket";
 
@@ -18,7 +20,7 @@ type SeatProps = {
 };
 
 function Seat({ id, row, seat, selected, onSelect }: SeatProps) {
-  const handleClick = () => {
+  const handleClick = async () => {
     onSelect(id);
   };
 
@@ -79,10 +81,21 @@ function SeatRow({ row, numSeats, selectedSeats, onSelect }: SeatRowProps) {
   return <div className="mb-4 flex items-center justify-center">{seats}</div>;
 }
 
-function MovieSeatSelection() {
+const SeatCheckout: NextPage = () => {
+  const router = useRouter();
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
-  const handleSeatSelect = (id: string) => {
+  let seatsString = "";
+  selectedSeats.forEach(
+    (selectedSeat) => (seatsString = seatsString + selectedSeat + ",")
+  );
+  // console.log(seatsString);
+
+  const onSubmit = async () => {
+    await router.push(`/paymentCheckout?seats=${seatsString}`);
+  };
+
+  const handleSeatSelect = async (id: string) => {
     if (selectedSeats.includes(id)) {
       setSelectedSeats((prevSelectedSeats) =>
         prevSelectedSeats.filter((seat) => seat !== id)
@@ -95,42 +108,6 @@ function MovieSeatSelection() {
   const rowLetters = ["A", "B", "C"];
   const numRows = rowLetters.length;
 
-  return (
-    <div className="container mx-auto p-4">
-      <div className="grid-row-1 mx-auto grid grid-cols-3 py-5 text-center text-dark-red">
-        <div></div>
-        <div className="text-md bg-gray-400 font-bold">SCREEN</div>
-        <div></div>
-      </div>
-      {rowLetters.map((row, index) => (
-        <SeatRow
-          key={row}
-          row={row}
-          numSeats={10}
-          selectedSeats={selectedSeats}
-          onSelect={handleSeatSelect}
-        />
-      ))}
-      <hr className="my-4 h-[0.2rem] bg-gray-400 " />
-      <div className="mx-auto max-w-md">
-        <h2 className="mb-2 text-xl font-bold text-dark-red">
-          Selected seats:
-        </h2>
-        {selectedSeats.length === 0 ? (
-          <p className="text-lg text-dark-red">No seats selected</p>
-        ) : (
-          <ul className="text-lg text-dark-red">
-            {selectedSeats.map((seat) => (
-              <li key={seat}>Seat {seat}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
-}
-
-const seatCheckout: NextPage = () => {
   return (
     <>
       <Head>
@@ -209,15 +186,53 @@ const seatCheckout: NextPage = () => {
                   <p className="text-md pl-1 text-dark-red">Booked</p>
                 </div>
               </div>
-              <MovieSeatSelection />
+
+              {/* <MovieSeatSelection /> */}
+
+              <div className="container mx-auto p-4">
+                <div className="grid-row-1 mx-auto grid grid-cols-3 py-5 text-center text-dark-red">
+                  <div></div>
+                  <div className="text-md bg-gray-400 font-bold">SCREEN</div>
+                  <div></div>
+                </div>
+                {rowLetters.map((row, index) => (
+                  <SeatRow
+                    key={row}
+                    row={row}
+                    numSeats={10}
+                    selectedSeats={selectedSeats}
+                    onSelect={handleSeatSelect}
+                  />
+                ))}
+                <hr className="my-4 h-[0.2rem] bg-gray-400 " />
+                <div className="mx-auto max-w-md">
+                  <h2 className="mb-2 text-xl font-bold text-dark-red">
+                    Selected seats:
+                  </h2>
+                  {selectedSeats.length === 0 ? (
+                    <p className="text-lg text-dark-red">No seats selected</p>
+                  ) : (
+                    <ul className="text-lg text-dark-red">
+                      {selectedSeats.map((seat) => (
+                        <li key={seat}>Seat {seat}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              {/* <MovieSeatSelection /> */}
+              
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-              <Link
+              <button
+                type="submit"
+                onClick={onSubmit}
                 href="/paymentCheckout"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
               >
                 CONFIRM SEATS
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -227,4 +242,4 @@ const seatCheckout: NextPage = () => {
   );
 };
 
-export default seatCheckout;
+export default SeatCheckout;

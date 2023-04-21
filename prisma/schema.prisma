@@ -39,6 +39,7 @@ model Movie {
     producers String
     reviews   String[]
     promotion Promotion[]
+    // seatsFilled Seat[]
 }
 
 model User {
@@ -56,6 +57,7 @@ model User {
     isAdmin      Boolean  @default(false)
     changePwCode String?
     agreeToPromo Boolean  @default(false)
+    // seats        Seat[]
 }
 
 model Address {
@@ -84,4 +86,15 @@ model Card {
     city       String
     state      String
     zip        String
+}
+
+model Seat {
+    id         String  @id @default(auto()) @map("_id") @db.ObjectId
+    // user       User    @relation(fields: [userId], references: [id])
+    // movie      Movie  @relation(fields: [movieId], references: [id])
+    // userId     String  @db.ObjectId
+    // movieId    String @db.ObjectId
+    seat       String  @unique
+    // isTaken    Boolean @default(false)
+    movies     String[]
 }

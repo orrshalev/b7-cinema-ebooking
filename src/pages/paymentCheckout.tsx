@@ -4,13 +4,31 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Image from "next/image";
 import Head from "next/head";
-import type { Movie } from "../types/Movie";
 import Link from "next/link";
 import { states, months, days } from "../utils/consts";
+import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 
 //import type { Ticket } from "../types/ticket";
 
-const paymentCheckout: NextPage = () => {
+const PaymentCheckout: NextPage = () => {
+  const router = useRouter();
+  const seatsString = router.query.seats as string
+  const seats = seatsString.split(',');
+  seats.pop();
+  const movie = "Barbie"
+  // const movie = router.query.movie as string
+  console.log(seats)
+  const updateSeatMutation = api.seat.updateSeat.useMutation();
+  const handleSubmit = async () => {
+    seats.forEach(async (seat) => {
+      const s = await updateSeatMutation.mutateAsync({
+        seat: seat,
+        movie: movie
+      });
+    });
+    await router.push('/checkoutSuccess')
+  }
   return (
     <>
       <Head>
@@ -325,12 +343,14 @@ const paymentCheckout: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-              <Link
-                href="/checkoutSuccess"
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                // href="/checkoutSuccess"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
               >
                 COMPLETE ORDER
-              </Link>
+              </button>
               <Link href="/" className="mt-5 text-sm text-dark-red underline">
                 cancel order
               </Link>
@@ -343,4 +363,4 @@ const paymentCheckout: NextPage = () => {
   );
 };
 
-export default paymentCheckout;
+export default PaymentCheckout;
