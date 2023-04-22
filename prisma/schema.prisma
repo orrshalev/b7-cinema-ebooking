@@ -40,6 +40,7 @@ model Movie {
     producers String
     reviews   String[]
     promotion Promotion[]
+    // seatsFilled Seat[]
 }
 
 model User {
@@ -58,6 +59,7 @@ model User {
     isAdmin      Boolean  @default(false)
     changePwCode String?
     agreeToPromo Boolean  @default(false)
+    // bookedSeats  Seat[]
 }
 
 model Address {
@@ -100,4 +102,12 @@ model Order {
     sTicket     Int
     promoAmount Int
     total       Int
+}
+model Seat {
+    id         String  @id @default(auto()) @map("_id") @db.ObjectId
+    // movie      Movie  @relation(fields: [movieId], references: [id])
+    // movieId    String @db.ObjectId
+    seat       String
+    movie      String
+    showtime   DateTime
 }

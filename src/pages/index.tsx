@@ -9,7 +9,6 @@ import { api } from "../utils/api";
 import TrailerModal from "../components/TrailerModal";
 import Navbar from "../components/Navbar";
 import type { Movie } from "@prisma/client";
-import dateRange from "src/pages/lib/dateRange";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
@@ -95,13 +94,17 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
-const dateRangeArr = dateRange();
-console.log("date range", dateRangeArr[142]);
-
 const Home: NextPage = () => {
+  // date is going to be 5 hours ahead of our current time (EST)
+  const today = new Date()
+  const dateTimeInParts = today.toISOString().split( "T" );
+  const dateOnly = dateTimeInParts[0]; // YYYY-MM-DD ex:"2023-04-05"
+  const startTime = new Date(dateOnly + "T00:00:00.00")
+  const endTime = new Date(dateOnly + "T23:59:59.00")
   const movies = api.movie.getTodayMovies.useQuery({
     limit: 4,
-    range: dateRangeArr,
+    startTime: startTime,
+    endTime: endTime,
     comingSoon: false,
   });
   const moviesData = movies.data ?? [];

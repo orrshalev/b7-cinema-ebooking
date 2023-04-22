@@ -69,7 +69,7 @@ const Navbar = () => {
                 Users
               </Link>
               </li>
-            ): (<></>)}
+            ) : (<></>)}
               {data?.user ? (
                 <>
             <li>
@@ -92,7 +92,7 @@ const Navbar = () => {
               </Link>
               </li>
               </>
-              ): (
+              ) : (
                 <li>
                 <Link
                   id="loginlink"

@@ -31,7 +31,18 @@ const PaymentCheckout: NextPage = () => {
     title: movieTitle,
   });
   const discountPrice = promo.data ?? 0;
-
+  console.log(seats)
+  const bookSeatMutation = api.seat.bookSeat.useMutation();
+  const handleSubmit = async () => {
+    seats.forEach(async (seat) => {
+      const s = await bookSeatMutation.mutateAsync({
+        seat: seat,
+        movie: movieTitle,
+        showtime: showtime
+      });
+    });
+    await router.push('/checkoutSuccess')
+  }
   return (
     <>
       <Head>
@@ -393,12 +404,14 @@ const PaymentCheckout: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center py-10">
-              <Link
-                href="/checkoutSuccess"
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                // href="/checkoutSuccess"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
               >
                 COMPLETE ORDER
-              </Link>
+              </button>
               <Link href="/" className="mt-5 text-sm text-dark-red underline">
                 cancel order
               </Link>

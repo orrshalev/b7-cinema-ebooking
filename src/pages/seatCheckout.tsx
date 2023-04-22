@@ -7,6 +7,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { constants } from "fs/promises";
 
 //import type { Ticket } from "../types/ticket";
 
@@ -19,39 +20,96 @@ type SeatProps = {
 };
 
 function Seat({ id, row, seat, selected, onSelect }: SeatProps) {
-  const handleClick = () => {
+  const handleClick = async () => {
     onSelect(id);
   };
+  
+  const router = useRouter();
+  const movie = router.query.movie;
+  const showtime = router.query.showtime;
+  console.log(showtime)
+  const getBookedSeatsQuery = api.seat.getBookedSeats.useQuery({movie: movie, showtime: new Date(showtime)});
+  let bookedSeats = getBookedSeatsQuery.data ?? []
+  // console.log(bookedSeats)
 
-  const img = selected ? (
-    <Image
-      className="rounded-md"
-      src={"/assets/svg/solid-seat-icon.svg"}
-      width={20}
-      height={20}
-      alt="seat"
-    />
-  ) : (
-    <Image
-      className="rounded-md"
-      src={"/assets/svg/available-seat-icon.svg"}
-      width={20}
-      height={20}
-      alt="seat"
-    />
-  );
+  bookedSeats = bookedSeats.map(bookedSeat => bookedSeat.seat)
+  console.log(bookedSeats)
 
-  return (
-    <button
-      type="button"
-      className={`bg-${
-        selected ? "green-500" : "gray-300"
-      } m-1 rounded-md p-2 text-sm font-bold text-dark-red`}
-      onClick={handleClick}
-    >
-      {img}
-    </button>
-  );
+  // const img = selected ? (
+  //   <Image
+  //     className="rounded-md"
+  //     src={"/assets/svg/solid-seat-icon.svg"}
+  //     width={20}
+  //     height={20}
+  //     alt="seat"
+  //   />
+  // ) : (
+  //   <Image
+  //     className="rounded-md"
+  //     src={"/assets/svg/available-seat-icon.svg"}
+  //     width={20}
+  //     height={20}
+  //     alt="seat"
+  //   />
+  // );
+
+  let click = true;
+  let img = 
+  <Image
+  className="rounded-md"
+  src={"/assets/svg/available-seat-icon.svg"}
+  width={20}
+  height={20}
+  alt="seat"
+  />;
+
+  if (bookedSeats.includes(id)) {
+    click = false;
+    img = 
+        <Image
+        className="rounded-md"
+        src={"/assets/svg/booked-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+        />;
+  } else if (selected) {
+    img = <Image
+        className="rounded-md"
+        src={"/assets/svg/solid-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+      />;  
+  } else {
+    img = <Image
+        className="rounded-md"
+        src={"/assets/svg/available-seat-icon.svg"}
+        width={20}
+        height={20}
+        alt="seat"
+      />;
+  }
+
+  if (click) {
+    return (
+      <button
+        type="button"
+        className={`bg-${
+          selected ? "green-500" : "gray-300"
+        } m-1 rounded-md p-2 text-sm font-bold text-dark-red`}
+        onClick={handleClick}
+      >
+        {img}
+      </button>
+    );
+  } else {
+    return (
+      <span className={`bg- m-1 rounded-md p-2 text-sm font-bold text-dark-red`}>
+          {img}
+        </span>
+      );
+  }
 }
 
 type SeatRowProps = {
@@ -89,10 +147,25 @@ const SeatCheckout: NextPage = () => {
   const movie = api.movie.getMovie.useQuery({ title: movieTitle });
   const movieData = movie.data;
   const showtime = new Date(router.query.showtime as string);
-
+  const totalSeats = parseInt(adult, 10) + parseInt(senior, 10) + parseInt(child, 10);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
-  const handleSeatSelect = (id: string) => {
+  let seatsString = "";
+  selectedSeats.forEach(
+    (selectedSeat) => (seatsString = seatsString + selectedSeat + ",")
+  );
+  // console.log(seatsString);
+
+  // const onSubmit = async () => {
+  //   if (totalSeats != selectedSeats.length) {
+  //     if (totalSeats == 1) alert("You must book " + totalSeats + " seat!");
+  //     else alert("You must book " + totalSeats + " seats!");
+  //   } else {
+  //     await router.push(`/paymentCheckout?showtime=${showtime.toISOString()}&movie=${movieTitle}&adult=${adult}&senior=${senior}&child=${child}&seats=${seatsString}`);
+  //   }
+  // };
+
+  const handleSeatSelect = async (id: string) => {
     if (selectedSeats.includes(id)) {
       setSelectedSeats((prevSelectedSeats) =>
         prevSelectedSeats.filter((seat) => seat !== id)
@@ -198,6 +271,9 @@ const SeatCheckout: NextPage = () => {
                   <p className="text-md pl-1 text-dark-red">Booked</p>
                 </div>
               </div>
+
+              {/* <MovieSeatSelection /> */}
+
               <div className="container mx-auto p-4">
                 <div className="grid-row-1 mx-auto grid grid-cols-3 py-5 text-center text-dark-red">
                   <div></div>
@@ -230,8 +306,14 @@ const SeatCheckout: NextPage = () => {
                 </div>
               </div>
             </div>
+            {/* <div className="flex flex-col items-center justify-center py-10">
+              <button              
+            </div> */}
             <div className="flex flex-col items-center justify-center py-10">
               <button
+                type="submit"
+                // onClick={onSubmit}
+                // href="/paymentCheckout"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
                 onClick={nextPageHandler}
               >
