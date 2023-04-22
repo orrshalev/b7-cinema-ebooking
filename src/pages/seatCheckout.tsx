@@ -29,7 +29,7 @@ function Seat({ id, row, seat, selected, onSelect }: SeatProps) {
   const movie = router.query.movie;
   const showtime = router.query.showtime;
   console.log(showtime)
-  const getBookedSeatsQuery = api.seat.getBookedSeats.useQuery({movie: movie, showtime: showtime});
+  const getBookedSeatsQuery = api.seat.getBookedSeats.useQuery({movie: movie, showtime: new Date(showtime)});
   let bookedSeats = getBookedSeatsQuery.data ?? []
   // console.log(bookedSeats)
 
@@ -141,6 +141,11 @@ function SeatRow({ row, numSeats, selectedSeats, onSelect }: SeatRowProps) {
 
 const SeatCheckout: NextPage = () => {
   const router = useRouter();
+  const showtime = router.query.showtime;
+  const movieTitle = router.query.movie;
+  const adultTickets = router.query.adult;
+  const seniorTickets = router.query.senior;
+  const childTickets = router.query.child;
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
   let seatsString = "";
@@ -150,7 +155,7 @@ const SeatCheckout: NextPage = () => {
   // console.log(seatsString);
 
   const onSubmit = async () => {
-    await router.push(`/paymentCheckout?seats=${seatsString}`);
+    await router.push(`/paymentCheckout?showtime=${showtime}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}&seats=${seatsString}`);
   };
 
   const handleSeatSelect = async (id: string) => {
