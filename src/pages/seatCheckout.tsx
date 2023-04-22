@@ -154,16 +154,6 @@ const SeatCheckout: NextPage = () => {
   selectedSeats.forEach(
     (selectedSeat) => (seatsString = seatsString + selectedSeat + ",")
   );
-  // console.log(seatsString);
-
-  // const onSubmit = async () => {
-  //   if (totalSeats != selectedSeats.length) {
-  //     if (totalSeats == 1) alert("You must book " + totalSeats + " seat!");
-  //     else alert("You must book " + totalSeats + " seats!");
-  //   } else {
-  //     await router.push(`/paymentCheckout?showtime=${showtime.toISOString()}&movie=${movieTitle}&adult=${adult}&senior=${senior}&child=${child}&seats=${seatsString}`);
-  //   }
-  // };
 
   const handleSeatSelect = async (id: string) => {
     if (selectedSeats.includes(id)) {
@@ -306,14 +296,9 @@ const SeatCheckout: NextPage = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="flex flex-col items-center justify-center py-10">
-              <button              
-            </div> */}
             <div className="flex flex-col items-center justify-center py-10">
               <button
                 type="submit"
-                // onClick={onSubmit}
-                // href="/paymentCheckout"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
                 onClick={nextPageHandler}
               >
