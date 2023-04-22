@@ -146,6 +146,7 @@ const SeatCheckout: NextPage = () => {
   const adultTickets = router.query.adult;
   const seniorTickets = router.query.senior;
   const childTickets = router.query.child;
+  const totalSeats = parseInt(adultTickets, 10) + parseInt(seniorTickets, 10) + parseInt(childTickets, 10);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
   let seatsString = "";
@@ -155,7 +156,12 @@ const SeatCheckout: NextPage = () => {
   // console.log(seatsString);
 
   const onSubmit = async () => {
-    await router.push(`/paymentCheckout?showtime=${showtime}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}&seats=${seatsString}`);
+    if (totalSeats != selectedSeats.length) {
+      if (totalSeats == 1) alert("You must book " + totalSeats + " seat!");
+      else alert("You must book " + totalSeats + " seats!");
+    } else {
+      await router.push(`/paymentCheckout?showtime=${showtime}&movie=${movieTitle}&adult=${adultTickets}&senior=${seniorTickets}&child=${childTickets}&seats=${seatsString}`);
+    }
   };
 
   const handleSeatSelect = async (id: string) => {
