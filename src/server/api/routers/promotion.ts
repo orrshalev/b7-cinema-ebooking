@@ -19,6 +19,7 @@ export const promotionRouter = createTRPCRouter({
         const promotion = await ctx.prisma.promotion.create({
             data: {
                 code: input.code,
+                title: input.movieTitle,
                 discount: input.discount,
                 movie: { connect: { id: movie.id } },
             },
