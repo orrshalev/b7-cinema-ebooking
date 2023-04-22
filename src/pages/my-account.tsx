@@ -152,9 +152,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
     const oldPw = document.getElementById("oldPassword")?.value as string;
     const newPw = document.getElementById("newPassword")?.value as string;
     const hasNewPw = await bcrypt.hash(newPw, 10);
-    // console.log(user.password)
-    // console.log(oldPw)
-    // console.log(newPw)
     if ((await bcrypt.compare(oldPw, user.password)) === true) {
       const a = await changePwdMutation.mutateAsync({
         id: user.id,

@@ -30,28 +30,8 @@ function Seat({ id, row, seat, selected, onSelect }: SeatProps) {
   console.log(showtime)
   const getBookedSeatsQuery = api.seat.getBookedSeats.useQuery({movie: movie, showtime: new Date(showtime)});
   let bookedSeats = getBookedSeatsQuery.data ?? []
-  // console.log(bookedSeats)
 
   bookedSeats = bookedSeats.map(bookedSeat => bookedSeat.seat)
-  console.log(bookedSeats)
-
-  // const img = selected ? (
-  //   <Image
-  //     className="rounded-md"
-  //     src={"/assets/svg/solid-seat-icon.svg"}
-  //     width={20}
-  //     height={20}
-  //     alt="seat"
-  //   />
-  // ) : (
-  //   <Image
-  //     className="rounded-md"
-  //     src={"/assets/svg/available-seat-icon.svg"}
-  //     width={20}
-  //     height={20}
-  //     alt="seat"
-  //   />
-  // );
 
   let click = true;
   let img = 

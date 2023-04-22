@@ -6,7 +6,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import { FormikHelpers, Formik, Form, Field } from "formik";
+import { type FormikHelpers, Formik, Form, Field } from "formik";
 import bcrypt from "bcryptjs";
 
 const Changepwd: NextPage = () => {
@@ -21,8 +21,6 @@ const Changepwd: NextPage = () => {
     values: SubmitValues,
     { setSubmitting }: FormikHelpers<SubmitValues>
   ) => {
-    // jennyngo1925@gmail.com
-      console.log(values.code)
     if (typeof email === "string") {
       const confirmed = await confirmationMutation.mutateAsync({
         email: email,

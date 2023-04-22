@@ -31,7 +31,6 @@ const PaymentCheckout: NextPage = () => {
     title: movieTitle,
   });
   const discountPrice = promo.data ?? 0;
-  console.log(seats)
   const bookSeatMutation = api.seat.bookSeat.useMutation();
   const handleSubmit = async () => {
     seats.forEach(async (seat) => {
