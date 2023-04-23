@@ -353,7 +353,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
               </div>
             </div>
           </div>
-        </form>
+        </form> 
+
+        {/* start of cards */}
 
         <p className="mb-5 font-bold text-gray-700">Cards</p>
         <div className="my-4">
