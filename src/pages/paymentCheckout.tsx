@@ -89,6 +89,34 @@ const EditProfile = ({ data }: EditProfileProps) => {
     }
   };
 
+  // const [cardNumber, setCardNumber] = useState('');
+  // const [billStreet, setBillStreet] = useState('');
+  // const [billCity, setBillCity] = useState('');
+  // const [billState, setBillState] = useState('');
+  // const [billZip, setBillZip] = useState('');
+  const [billingAddress, setBillingAddress] = useState({
+    cardNumber: "",
+    billStreet: "",
+    billCity: "",
+    billState: "",
+    billZip: "",
+  });
+
+  const handleBillingChange = (e) => {
+    const { id, value } = e.target;
+    setBillingAddress({ ...billingAddress, [id]: value });
+  };
+
+  const handleCompleteOrder = () => {
+    if (cardSelected || (billingAddress.cardNumber && billingAddress.billStreet && billingAddress.billCity && billingAddress.billState && billingAddress.billZip)) {
+      // Perform order completion logic here
+      console.log("Order completed");
+    } else {
+      // Show error message or perform other actions for incomplete order
+      console.log("Error: Complete all required fields or select a saved card");
+    }
+  };
+
   if (user) {
     return (
       <>
@@ -100,7 +128,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
             <button
               key={Buffer.from(card.cardNumber, "base64").toString("utf8")}
               className={`${
-                cardSelected ? "bg-sky-500" : "bg-gray-100"
+                cardSelected === card ? "bg-sky-500" : "bg-gray-100"
               } mx-2 my-2 flex-1 overflow-hidden rounded`}
               onClick={() => handleCardSelection(card)}
             >
@@ -127,6 +155,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="cardNumber"
                 type="text"
                 placeholder="####-####-####-####"
+                onChange={handleBillingChange}
               />
             </div>
             <div className="flex-basis-0 w-96 flex-shrink">
@@ -141,6 +170,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="billStreet"
                 type="text"
                 placeholder="1234 Alphabet St"
+                onChange={handleBillingChange}
               />
             </div>
           </div>
@@ -157,6 +187,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="billCity"
                 type="text"
                 placeholder="Albuquerque"
+                onChange={handleBillingChange}
               />
             </div>
             <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
@@ -171,6 +202,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="billState"
                   name="homeState"
+                  onChange={handleBillingChange}
                 >
                   {states.map((state) => {
                     return <option key={state}>{state}</option>;
@@ -200,6 +232,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="text"
                 placeholder="90210"
                 name="homeZip"
+                onChange={handleBillingChange}
               />
             </div>
           </div>
@@ -291,6 +324,19 @@ const EditProfile = ({ data }: EditProfileProps) => {
             Save Card
           </button>
         )}
+        <div className="flex flex-col items-center justify-center py-10">
+              <Link
+                href="/checkoutSuccess"
+                className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
+                type="button"
+                onClick={handleCompleteOrder}
+              >
+                COMPLETE ORDER
+              </Link>
+              <Link href="/" className="mt-5 text-sm text-dark-red underline">
+                cancel order
+              </Link>
+            </div>
       </>
     );
   } else {
@@ -475,252 +521,21 @@ const PaymentCheckout: NextPage = () => {
                 </p>
               </div>
             </div>
-            {/* <div className="grid grid-flow-col grid-cols-3 grid-rows-2 gap-y-5"> */}
-            {/* <h2 className="py-5 text-2xl font-bold text-dark-red">
-                Payment Methods
-              </h2>
-              <div className="my-4">
-              {cards.map((card) => (
-            <form
-              key={Buffer.from(card.cardNumber, "base64").toString("utf8")}
-              className="-mx-3 mb-10 flex flex-wrap"
-            >
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-2/3">
-                <input
-                  className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  type="text"
-                  value={Buffer.from(card.cardNumber, "base64").toString(
-                    "utf8"
-                  )}
-                  readOnly
-                />
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <button
-                  className="block w-full appearance-none rounded border border-dark-red bg-light-red py-3 px-4 leading-tight focus:border-gray-500 focus:bg-white focus:outline-none"
-                  onClick={async () => {
-                    await cardRemover.mutateAsync({
-                      cardNumber: card.cardNumber,
-                      userID: user.id,
-                    });
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            </form>
-          ))}
-              </div>
-              <h3 className="text-xl font-bold text-dark-red">
-                Add Payment Method
-              </h3>
-            </div> */}
-            {/* <div className="flex flex-col">
-              <label htmlFor="checkbox" className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="checkbox"
-                  className="form-checkbox h-5 w-5 text-gray-600"
-                />
-                <span className="ml-2 text-gray-700">Save Payment</span>
-              </label>
-            </div>
-            <div className="-mx-3 my-6 flex flex-row">
-              <div className="w-full px-3">
-                <label
-                  htmlFor="grid-card-number"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Card Number<span className="text-red-500">*</span>
-                </label>
-                <input
-                  className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  id="grid-card-number"
-                  type="text"
-                  placeholder="####-####-####-####"
-                />
-              </div>
-              <div className="w-full px-3">
-                <label
-                  htmlFor="grid-home-address"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Billing Address<span className="text-red-500">*</span>
-                </label>
-                <input
-                  className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  id="grid-shipping-address"
-                  type="text"
-                />
-              </div>
-            </div>
-            <div className="-mx-3 mb-10 flex flex-wrap">
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <label
-                  htmlFor="grid-city"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  City<span className="text-red-500">*</span>
-                </label>
-                <input
-                  className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  id="grid-city"
-                  type="text"
-                  placeholder="Albuquerque"
-                />
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <label
-                  htmlFor="grid-state"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  State<span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="grid-state"
-                  >
-                    {states.map((state) => {
-                      return <option key={state}>{state}</option>;
-                    })}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg
-                      className="h-4 w-4 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <label
-                  htmlFor="grid-zip"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Zip<span className="text-red-500">*</span>
-                </label>
-                <input
-                  className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  id="grid-zip"
-                  type="text"
-                  placeholder="90210"
-                />
-              </div>
-            </div>
-            <div className="-mx-3 mb-10 flex flex-wrap">
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <label
-                  htmlFor="grid-payment-type"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Payment Type<span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="grid-payment-type"
-                  >
-                    <option>Credit</option>
-                    <option>Debit</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg
-                      className="h-4 w-4 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
-                <label
-                  htmlFor="grid-month"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Month<span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="grid-month"
-                  >
-                    {months.map((month) => {
-                      return <option key={month}>{month}</option>;
-                    })}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg
-                      className="h-4 w-4 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/6">
-                <label
-                  htmlFor="grid-month"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  Day<span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="grid-month"
-                  >
-                    {days.map((day) => {
-                      return <option key={day}>{day}</option>;
-                    })}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg
-                      className="h-4 w-4 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
-                <label
-                  htmlFor="grid-cvv"
-                  className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                >
-                  CVV<span className="text-red-500">*</span>
-                </label>
-                <input
-                  className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  id="grid-cvv"
-                  type="text"
-                  placeholder="###"
-                />
-              </div>
-            </div> */}
             <div className="my-10 flex min-h-screen flex-col items-center">
               {data?.user ? <EditProfile data={data} /> : <NotLoggedIn />}
             </div>
-            <div className="flex flex-col items-center justify-center py-10">
+            {/* <div className="flex flex-col items-center justify-center py-10">
               <Link
                 href="/checkoutSuccess"
                 className="rounded bg-dark-red px-10 py-4 text-center text-2xl"
+                onClick={handleCompleteOrder}
               >
                 COMPLETE ORDER
               </Link>
               <Link href="/" className="mt-5 text-sm text-dark-red underline">
                 cancel order
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
