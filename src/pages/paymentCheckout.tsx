@@ -78,66 +78,73 @@ const EditProfile = ({ data }: EditProfileProps) => {
     currentCards ? setCards(currentCards) : setCards([]);
   }, [currentCards]);
 
+  const [cardSelected, setCardSelected] = useState(null);
+
+  const handleCardSelection = (card) => {
+    if (cardSelected === card) {
+      setCardSelected(null);
+    } else {
+      setCardSelected(card);
+    }
+  };
+
   if (user) {
     return (
       <>
         <h2 className="py-5 text-2xl font-bold text-dark-red">
                 Saved Payment Methods
               </h2>
-              <div className="my-4">
+              <div className="flex my-4 center">
               {cards.map((card) => (
-            <form
-              key={Buffer.from(card.cardNumber, "base64").toString("utf8")}
-              className="-mx-3 mb-10 flex flex-wrap"
-            >
-              <div className="mb-6 w-full px-3 md:mb-0 md:w-2/3">
-                <input
-                  className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                  type="text"
-                  value={Buffer.from(card.cardNumber, "base64").toString(
-                    "utf8"
-                  )}
-                  readOnly
-                />
-              </div>
-            </form>
+                <button
+                key={Buffer.from(card.cardNumber, 'base64').toString('utf8')}
+                className={`${
+                  cardSelected ? 'bg-sky-500' : 'bg-gray-100'
+                } flex-1 mx-2 my-2 rounded overflow-hidden`}
+                onClick={() => handleCardSelection(card)}
+              >
+                <div className="p-4">
+                  <span className="block w-full appearance-none bg-transparent border-none text-gray-700">
+                    {Buffer.from(card.cardNumber, 'base64').toString('utf8')}
+                  </span>
+                </div>
+              </button>
           ))}
               </div>
               <h3 className="text-xl font-bold text-dark-red">
                 New Payment Method
               </h3>
               <form>
-              <div className="-mx-3 my-6 flex flex-wrap">
-                <div className="w-full px-3">
-                  <label
-                    htmlFor="cardNumber"
-                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                  >
-                    Card Number<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="cardNumber"
-                    type="text"
-                    placeholder="####-####-####-####"
-                  />
-                </div>
-              </div>
-              <div className="-mx-3 mb-6 flex flex-wrap">
-                <div className="w-full px-3">
-                  <label
-                    htmlFor="billStreet"
-                    className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
-                  >
-                    Billing Address<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                    id="billStreet"
-                    type="text"
-                  />
-                </div>
-              </div>
+                <div className="flex my-4 center">
+    <div className="flex-grow">
+      <label
+        htmlFor="cardNumber"
+        className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+      >
+        Card Number<span className="text-red-500">*</span>
+      </label>
+      <input
+        className="mb-3 block w-3/4 appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+        id="cardNumber"
+        type="text"
+        placeholder="####-####-####-####"
+      />
+    </div>
+    <div className="flex-shrink flex-basis-0 w-96">
+      <label
+        htmlFor="billStreet"
+        className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+      >
+        Billing Address<span className="text-red-500">*</span>
+      </label>
+      <input
+        className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+        id="billStreet"
+        type="text"
+        placeholder="1234 Alphabet St"
+      />
+    </div>
+  </div>
               <div className="-mx-3 mb-10 flex flex-wrap">
                 <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
                   <label
@@ -276,7 +283,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   />
                 </div>
               </div>
-              
             </form>
             {showPaymentForm && (
               <button
