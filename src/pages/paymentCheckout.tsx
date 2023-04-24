@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ticketPrices } from "../utils/consts";
 import { type NextPage } from "next";
 import Footer from "../components/Footer";
@@ -10,12 +10,14 @@ import Link from "next/link";
 import { states, months, days, bookingFee } from "../utils/consts";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 //import type { Ticket } from "../types/ticket";
 
 const PaymentCheckout: NextPage = () => {
   //movie poster and all info states invalid
   const router = useRouter();
+  const { data } = useSession();
   const movieTitle = router.query.movie as string;
   const movie = api.movie.getMovie.useQuery({ title: movieTitle });
   const movieData = movie.data;
@@ -32,16 +34,38 @@ const PaymentCheckout: NextPage = () => {
   });
   const discountPrice = promo.data ?? 0;
   const bookSeatMutation = api.seat.bookSeat.useMutation();
+  const addOrderMutation = api.order.addOrder.useMutation();
+  const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
+  const currentUser = loggedInUser.data;
+  const [user, setUser] = useState(currentUser);
   const handleSubmit = async () => {
     seats.forEach(async (seat) => {
       const s = await bookSeatMutation.mutateAsync({
         seat: seat,
         movie: movieTitle,
-        showtime: showtime
+        showtime: showtime,
+      });
+      const o = await addOrderMutation.mutateAsync({
+        userId: user?.id,
+        title: movieData.title,
+        seats: seats,
+        adult: adult,
+        children: child,
+        senior: senior,
+        promo: discountPrice,
+        total:
+          adult * ticketPrices.adult +
+          child * ticketPrices.child +
+          senior * ticketPrices.senior +
+          bookingFee -
+          discountPrice,
+        showtime: showtime,
       });
     });
-    await router.push('/checkoutSuccess')
-  }
+    await router.push("/checkoutSuccess");
+  };
+  useEffect(() => setUser(currentUser), [currentUser]);
+
   return (
     <>
       <Head>
@@ -78,10 +102,7 @@ const PaymentCheckout: NextPage = () => {
               Ticket Checkout
             </h1>
             <h1 className="py-5 pb-12 text-3xl font-bold text-gray-500 ">
-                Tickets
-              &gt;
-                Seats
-              &gt;
+              Tickets &gt; Seats &gt;
               <span className="text-3xl font-bold text-gray-500 underline">
                 Payment
               </span>

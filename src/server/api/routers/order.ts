@@ -13,7 +13,8 @@ export const orderRouter = createTRPCRouter({
             children: z.number(),
             senior: z.number(),
             promo: z.number(),
-            total: z.number()
+            total: z.number(),
+            showtime: z.date()
         })
     )
     .mutation(async ({ input, ctx }) => {
@@ -28,6 +29,7 @@ export const orderRouter = createTRPCRouter({
             sTicket: input.senior,
             promoAmount: input.promo,
             total: input.total,
+            showtime: input.showtime
         },
         });
         const addOrder = await ctx.prisma.user.update({
