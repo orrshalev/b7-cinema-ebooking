@@ -68,6 +68,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
       billMonth: document.getElementById("billMonth")?.value as string,
       billYear: document.getElementById("billYear")?.value as string,
     });
+    alert("Card saved! Please proceed with checkout.");
   };
 
   useEffect(() => {
