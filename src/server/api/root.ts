@@ -5,6 +5,7 @@ import { cardRouter } from "~/server/api/routers/card";
 import { addressRouter } from "~/server/api/routers/address";
 import { promotionRouter } from "~/server/api/routers/promotion";
 import { seatRouter } from "~/server/api/routers/seat";
+import { orderRouter } from "~/server/api/routers/order";
 /**
  * This is the primary router for your server.
  *
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   card: cardRouter,
   address: addressRouter,
   promotion: promotionRouter,
+  order: orderRouter,
   seat: seatRouter,
 });
 
