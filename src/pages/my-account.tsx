@@ -12,7 +12,7 @@ import { Formik, Field, Form } from "formik";
 import { type Address } from "@prisma/client";
 import type { FormikHelpers } from "formik";
 import bcrypt from "bcryptjs";
-import { type Card } from "@prisma/client";
+import { type Card, type Order } from "@prisma/client";
 
 const NotLoggedIn = () => (
   <div className="my-auto flex w-full flex-col items-center gap-10 rounded-md bg-white py-20 px-3 shadow-md lg:max-w-xl">
@@ -47,6 +47,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
   });
   const currentAddress = loggedInUserAddress.data;
   const currentCards = userCards.data;
+  const ordersQuery = api.order.getOrders.useQuery({ userId: currentUser?.id });
+  const currentOrders = ordersQuery.data;
 
   const noAddress = {
     id: "",
@@ -63,6 +65,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const [homeAddress, setHomeAddress] = useState(noAddress);
   const [homeState, setHomeState] = useState("Alabama");
   const [cards, setCards] = useState<Card[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [promo, setPromo] = useState(false);
   const showPaymentForm = cards.length < 3;
 
@@ -120,6 +123,10 @@ const EditProfile = ({ data }: EditProfileProps) => {
   useEffect(() => {
     currentCards ? setCards(currentCards) : setCards([]);
   }, [currentCards]);
+
+  useEffect(() => {
+    currentOrders ? setOrders(currentOrders) : setOrders([]);
+  }, [currentOrders]);
 
   const changePwdMutation = api.user.updateUserPwd.useMutation();
 
@@ -565,53 +572,61 @@ const EditProfile = ({ data }: EditProfileProps) => {
             </form>
           )}
           <p className="mb-5 font-bold text-gray-700">Order History</p>
-          <div className="mb-4">
-            <div className={`grid w-full gap-3 rounded bg-white px-3 py-5`}>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>Movie:</span> Rubber{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>Date and time of show:</span>{" "}
-                5/2/2023 10:00 PM{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>Seats:</span>{" "}
-                B7, B8{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>
-                  Number of adult tickets purchased:{" "}
-                </span>{" "}
-                3{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>
-                  Number of child tickets purchased:{" "}
-                </span>{" "}
-                3{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>
-                  Number of senior tickets purchased:{" "}
-                </span>{" "}
-                3{" "}
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>Promotion applied:</span> $3.00
-              </p>
-              <p className={`text-black`}>
-                {" "}
-                <span className={`font-bold`}>Total price:</span> $20.00
-              </p>
+          {orders.map((order) => (
+            <div key={order.bookingNo} className="mb-4">
+              <div className={`grid w-full gap-3 rounded bg-white px-3 py-5`}>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>Movie:</span> {order.title}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>
+                    Date and time of show:
+                  </span>{" "}
+                  {`${order.showtime.toLocaleDateString()} ${
+                    order.showtime.getHours() % 12 === 0
+                      ? 12
+                      : order.showtime.getHours() % 12
+                  }:${order.showtime.getMinutes().toString().padStart(2, "0")} 
+                      ${order.showtime.getHours() >= 12 ? "PM" : "AM"}`}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>Seats:</span> {order.seats.toString()}{" "}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>
+                    Number of adult tickets purchased:{" "}
+                  </span>{" "}
+                  {order.aTicket}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>
+                    Number of child tickets purchased:{" "}
+                  </span>{" "}
+                  {order.cTicket}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>
+                    Number of senior tickets purchased:{" "}
+                  </span>{" "}
+                  {order.sTicket}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>Promotion applied:</span> ${order.promoAmount.toFixed(2)}
+                </p>
+                <p className={`text-black`}>
+                  {" "}
+                  <span className={`font-bold`}>Total price:</span> ${order.total.toFixed(2)}
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     );

@@ -45,22 +45,23 @@ const PaymentCheckout: NextPage = () => {
         movie: movieTitle,
         showtime: showtime,
       });
-      const o = await addOrderMutation.mutateAsync({
-        userId: user?.id,
-        title: movieData.title,
-        seats: seats,
-        adult: adult,
-        children: child,
-        senior: senior,
-        promo: discountPrice,
-        total:
-          adult * ticketPrices.adult +
-          child * ticketPrices.child +
-          senior * ticketPrices.senior +
-          bookingFee -
-          discountPrice,
-        showtime: showtime,
-      });
+    });
+
+    const o = await addOrderMutation.mutateAsync({
+      userId: user?.id,
+      title: movieData.title,
+      seats: seats,
+      adult: adult,
+      children: child,
+      senior: senior,
+      promo: discountPrice,
+      total:
+        adult * ticketPrices.adult +
+        child * ticketPrices.child +
+        senior * ticketPrices.senior +
+        bookingFee -
+        discountPrice,
+      showtime: showtime,
     });
     await router.push("/checkoutSuccess");
   };

@@ -37,7 +37,7 @@ export const orderRouter = createTRPCRouter({
                 id: input.userId,
             },
             data: {
-                card: { connect: { id: order.id} },
+                order: { connect: { id: order.id} },
             },
         });
         return order;
