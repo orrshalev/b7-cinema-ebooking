@@ -39,14 +39,6 @@ const PaymentCheckout: NextPage = () => {
   const currentUser = loggedInUser.data;
   const [user, setUser] = useState(currentUser);
   const handleSubmit = async () => {
-    seats.forEach(async (seat) => {
-      const s = await bookSeatMutation.mutateAsync({
-        seat: seat,
-        movie: movieTitle,
-        showtime: showtime,
-      });
-    });
-
     const o = await addOrderMutation.mutateAsync({
       userId: user?.id,
       title: movieData.title,
@@ -63,6 +55,16 @@ const PaymentCheckout: NextPage = () => {
         discountPrice,
       showtime: showtime,
     });
+
+    if (o) {
+      seats.forEach(async (seat) => {
+        const s = await bookSeatMutation.mutateAsync({
+          seat: seat,
+          movie: movieTitle,
+          showtime: showtime,
+        });
+      });
+    }
     await router.push("/checkoutSuccess");
   };
   useEffect(() => setUser(currentUser), [currentUser]);
