@@ -387,8 +387,6 @@ const EditProfile = ({ data }: EditProfileProps) => {
 };
 
 const PaymentCheckout: NextPage = () => {
-  const { data } = useSession();
-
   const router = useRouter();
   const { data } = useSession();
   const movieTitle = router.query.movie as string;
