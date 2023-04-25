@@ -1,4 +1,5 @@
 import { z } from "zod";
+import nodemailer from "nodemailer";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -40,6 +41,30 @@ export const orderRouter = createTRPCRouter({
                 order: { connect: { id: order.id} },
             },
         });
+        try {
+            const transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+              },
+            });
+            const x = input.adult + input.senior + input.children
+            const mailConfigurations = {
+              from: process.env.EMAIL_USER,
+              to: addOrder.email,
+              subject: "Cinema E-Booking: Ticket Confirmation",
+              text:
+                "This email is to confirm your order of " + 
+                x + " tickets for: " + input.title +
+                " at " + input.showtime + " for a total of " +
+                input.total.toFixed(2) + " dollars.",
+            };
+  
+            await transporter.sendMail(mailConfigurations);
+          } catch (error) {
+            console.error(error);
+          }
         return order;
     }),
     getOrders: publicProcedure
