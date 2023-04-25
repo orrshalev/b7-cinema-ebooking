@@ -94,8 +94,6 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 
 let currentDate = new Date();
 currentDate = new Date(currentDate.getTime() - (240 * 60000))
-const dateTimeInParts = currentDate.toISOString().split( "T" );
-const dateOnly = dateTimeInParts[0]; // YYYY-MM-DD ex:"2023-04-05"
 const currentWeekDay = currentDate.getDay();
 const beforeDays = daysNames
   .filter((_, i) => i < currentWeekDay)
@@ -360,12 +358,12 @@ const AdminBrowse: NextPage = () => {
                           }
                         }
                         if (!validTime) alert("Please schedule a valid time.");
-                        // const newShowtime = new Date(
-                        //   weekDates[daysNames.findIndex((d) => d === day)] +
-                        //     timeVal +
-                        //     ":00.00-00:00"
-                        // );
-                        let newShowtime = new Date (dateOnly + "T" + timeVal + ":00.00-00:00");
+                        let newShowtime = new Date(
+                          weekDates[daysNames.findIndex((d) => d === day)] +
+                            timeVal +
+                            ":00.00-00:00"
+                        );
+                        // let newShowtime = new Date (dateOnly + "T" + timeVal + ":00.00-00:00");
                         newShowtime = new Date(newShowtime.getTime() + (240 * 60000));
                         movie?.showtimes.forEach(function (value: Date) {
                           if (
@@ -392,7 +390,6 @@ const AdminBrowse: NextPage = () => {
                           else window.location.reload();
                         }
                         console.log(movie?.showtimes);
-                        console.log("date only", dateOnly)
                         console.log("cur date", currentDate)
                         console.log("day name", currentDate.getDay())
                         console.log(
