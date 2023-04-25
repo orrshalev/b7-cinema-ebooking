@@ -357,7 +357,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
               </div>
             </div>
           </div>
-        </form>
+        </form> 
+
+        {/* start of cards */}
 
         <p className="mb-5 font-bold text-gray-700">Cards</p>
         <div className="my-4">
@@ -407,6 +409,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     id="cardNumber"
                     type="text"
                     placeholder="####-####-####-####"
+                    required
                   />
                 </div>
               </div>
@@ -422,6 +425,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="billStreet"
                     type="text"
+                    required
                   />
                 </div>
               </div>
@@ -438,6 +442,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     id="billCity"
                     type="text"
                     placeholder="Albuquerque"
+                    required
                   />
                 </div>
                 <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
@@ -481,6 +486,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     type="text"
                     placeholder="90210"
                     name="homeZip"
+                    required
                   />
                 </div>
               </div>
@@ -560,6 +566,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                     id="grid-cvv"
                     type="text"
                     placeholder="###"
+                    required
                   />
                 </div>
               </div>
