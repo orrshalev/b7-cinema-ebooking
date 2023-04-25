@@ -68,12 +68,13 @@ export const movieRouter = createTRPCRouter({
       const allMovies = await ctx.prisma.movie.findMany();
       let todayMovies = []
       allMovies.forEach((movie) => {
-        movie.showtimes.every((showtime) => {
+        movie.showtimes.forEach((showtime) => {
           if (showtime > input.startTime && showtime < input.endTime)
             todayMovies.push(movie);
         })
       })
       todayMovies = todayMovies.slice(0, 4);
+      todayMovies = [...new Set(todayMovies)];
       return todayMovies;
     }),
 
@@ -243,12 +244,6 @@ export const movieRouter = createTRPCRouter({
         movie.showtimes.forEach((showtime) => 
         endShowtime.push(showtime.getTime() + parseInt(movie.length, 10) * 60000))
       })
-      // const startShowtime = movies.forEach((movie) => {
-      //   movie.showtimes.map((showtime) => showtime);
-      // });
-      // const endShowtime = movies.forEach((movie) => {
-      //   movie.showtimes.map((showtime) => showtime.getTime() + 60000);
-      // });
       const findTime = await ctx.prisma.movie.findFirst({
         where: {
           showtimes: {

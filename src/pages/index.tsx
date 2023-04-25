@@ -95,12 +95,20 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
 };
 
 const Home: NextPage = () => {
-  // date is going to be 5 hours ahead of our current time (EST)
-  const today = new Date()
+  // date is going to be 4 hours ahead of our current time (EST)
+  let today = new Date()
+  today = new Date(today.getTime() - (240 * 60000))
+  const prevDate = new Date(today.getTime() - (1440 * 60000))
   const dateTimeInParts = today.toISOString().split( "T" );
   const dateOnly = dateTimeInParts[0]; // YYYY-MM-DD ex:"2023-04-05"
-  const startTime = new Date(dateOnly + "T00:00:00.00")
-  const endTime = new Date(dateOnly + "T23:59:59.00")
+  const dateTimeInPartsPrev = prevDate.toISOString().split( "T" );
+  const dateOnlyPrev = dateTimeInPartsPrev[0]; // YYYY-MM-DD ex:"2023-04-05"
+  console.log("date only", dateOnly)
+  console.log("today", today.toISOString())
+  const startTime = new Date(dateOnlyPrev + "T20:00:00.00")
+  console.log("startTime", startTime.toISOString())
+  const endTime = new Date(dateOnly + "T19:59:59.00")
+  console.log("endTime", endTime.toISOString())
   const movies = api.movie.getTodayMovies.useQuery({
     limit: 4,
     startTime: startTime,

@@ -92,7 +92,10 @@ const MoviePreviewCard = (props: MoviePreviewCardProps) => {
   );
 };
 
-const currentDate = new Date();
+let currentDate = new Date();
+currentDate = new Date(currentDate.getTime() - (240 * 60000))
+const dateTimeInParts = currentDate.toISOString().split( "T" );
+const dateOnly = dateTimeInParts[0]; // YYYY-MM-DD ex:"2023-04-05"
 const currentWeekDay = currentDate.getDay();
 const beforeDays = daysNames
   .filter((_, i) => i < currentWeekDay)
@@ -315,9 +318,9 @@ const AdminBrowse: NextPage = () => {
                         transition ease-in-out hover:bg-light-red "
                         >
                           {`${
-                            (showtime.getHours() + 4) % 12 === 0
+                            (showtime.getHours()) % 12 === 0
                               ? 12
-                              : (showtime.getHours() + 4) % 12
+                              : (showtime.getHours()) % 12
                           }:${showtime
                             .getMinutes()
                             .toString()
@@ -347,7 +350,7 @@ const AdminBrowse: NextPage = () => {
                         let dup = false;
                         const inputs =
                           document.querySelectorAll('input[type="time"]');
-                        let timeVal = null;
+                        let timeVal = null as string;
                         let validTime = false;
                         for (let i = 0; i < inputs.length; i++) {
                           if (inputs[i].value) {
@@ -357,11 +360,13 @@ const AdminBrowse: NextPage = () => {
                           }
                         }
                         if (!validTime) alert("Please schedule a valid time.");
-                        const newShowtime = new Date(
-                          weekDates[daysNames.findIndex((d) => d === day)] +
-                            timeVal +
-                            ":00.00-00:00"
-                        );
+                        // const newShowtime = new Date(
+                        //   weekDates[daysNames.findIndex((d) => d === day)] +
+                        //     timeVal +
+                        //     ":00.00-00:00"
+                        // );
+                        let newShowtime = new Date (dateOnly + "T" + timeVal + ":00.00-00:00");
+                        newShowtime = new Date(newShowtime.getTime() + (240 * 60000));
                         movie?.showtimes.forEach(function (value: Date) {
                           if (
                             !(newShowtime > value) &&
@@ -384,8 +389,12 @@ const AdminBrowse: NextPage = () => {
                             alert(
                               "You cannot schedule 2 movies at the same time."
                             );
+                          else window.location.reload();
                         }
                         console.log(movie?.showtimes);
+                        console.log("date only", dateOnly)
+                        console.log("cur date", currentDate)
+                        console.log("day name", currentDate.getDay())
                         console.log(
                           "time input",
                           document.getElementById("time")?.value
