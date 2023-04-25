@@ -233,14 +233,15 @@ export const movieRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const movieInput = await ctx.prisma.movie.findFirst({
+        where: {
+          title: input.title,
+        },
+      });
       const movies = await ctx.prisma.movie.findMany();
-      const beforeShowtime = []
       const startShowtime = []
       const endShowtime = []
-      movies.forEach((movie) => {
-        movie.showtimes.forEach((showtime) => 
-        beforeShowtime.push(showtime.getTime() - ((parseInt(movie.length, 10) + 10) * 60000)))
-      })
+      const endNewShowtime = input.newShowtime.getTime() + ((parseInt(movieInput.length, 10) + 10) * 60000)
       movies.forEach((movie) => {
         movie.showtimes.forEach((showtime) => 
         startShowtime.push(showtime))
@@ -259,18 +260,13 @@ export const movieRouter = createTRPCRouter({
       for (let i = 0; i < startShowtime.length; i++) {
         if (input.newShowtime > startShowtime[i] && input.newShowtime < endShowtime[i])
           return false;
-        else if (input.newShowtime > beforeShowtime[i] && input.newShowtime < startShowtime[i])
+        if (endNewShowtime > startShowtime[i] && endNewShowtime < endShowtime[i])
           return false;
       }
       if (findTime) return false;
       else {
-        const movie = await ctx.prisma.movie.findFirst({
-          where: {
-            title: input.title,
-          },
-        });
         await ctx.prisma.movie.update({
-          where: { id: movie?.id },
+          where: { id: movieInput?.id },
           data: {
             showtimes: {
               push: input.newShowtime,
