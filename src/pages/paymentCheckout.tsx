@@ -52,23 +52,28 @@ const EditProfile = ({ data }: EditProfileProps) => {
   const showPaymentForm = cards.length < 3;
 
   const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
-    await cardAdder.mutateAsync({
-      userID: currentUser?.id,
-      cardNumber: Buffer.from(
-        document.getElementById("cardNumber")?.value as string,
-        "utf8"
-      ).toString("base64"),
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      billStreet: document.getElementById("billStreet")?.value as string,
-      billCity: document.getElementById("billCity")?.value as string,
-      billState: document.getElementById("billState")?.value as string,
-      billZip: document.getElementById("billZip")?.value as string,
-      cardType: document.getElementById("cardType")?.value as string,
-      billMonth: document.getElementById("billMonth")?.value as string,
-      billYear: document.getElementById("billYear")?.value as string,
-    });
-    alert("Card saved! Please proceed with checkout.");
+    if ((billingAddress.cardNumber && billingAddress.billStreet && billingAddress.billCity && billingAddress.billState && billingAddress.billZip && billingAddress.billMonth && billingAddress.billYear && billingAddress.billCVV)) {
+      await cardAdder.mutateAsync({
+        userID: currentUser?.id,
+        cardNumber: Buffer.from(
+          document.getElementById("cardNumber")?.value as string,
+          "utf8"
+        ).toString("base64"),
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        billStreet: document.getElementById("billStreet")?.value as string,
+        billCity: document.getElementById("billCity")?.value as string,
+        billState: document.getElementById("billState")?.value as string,
+        billZip: document.getElementById("billZip")?.value as string,
+        cardType: document.getElementById("cardType")?.value as string,
+        billMonth: document.getElementById("billMonth")?.value as string,
+        billYear: document.getElementById("billYear")?.value as string,
+      });
+      alert("Card saved! Please proceed with checking out.");
+    } else {
+      alert("Please fill out all fields to save card.");
+    }
+ 
   };
 
   useEffect(() => {
@@ -89,31 +94,32 @@ const EditProfile = ({ data }: EditProfileProps) => {
     }
   };
 
-  // const [cardNumber, setCardNumber] = useState('');
-  // const [billStreet, setBillStreet] = useState('');
-  // const [billCity, setBillCity] = useState('');
-  // const [billState, setBillState] = useState('');
-  // const [billZip, setBillZip] = useState('');
   const [billingAddress, setBillingAddress] = useState({
     cardNumber: "",
     billStreet: "",
     billCity: "",
     billState: "",
     billZip: "",
+    billMonth: "",
+    billYear: "",
+    billCVV: "",
   });
 
-  const handleBillingChange = (e) => {
+  const handleBillingChange = (e: React.FormEvent<HTMLFormElement>) => {
     const { id, value } = e.target;
-    setBillingAddress({ ...billingAddress, [id]: value });
+    //if (billingAddress) {
+    setBillingAddress((prevAddress) => ({ ...prevAddress, [id]: value }));
+    //}
   };
 
-  const handleCompleteOrder = () => {
-    if (cardSelected || (billingAddress.cardNumber && billingAddress.billStreet && billingAddress.billCity && billingAddress.billState && billingAddress.billZip)) {
+  const handleCompleteOrder = (event) => {
+    if (cardSelected || (billingAddress.cardNumber && billingAddress.billStreet && billingAddress.billCity && billingAddress.billState && billingAddress.billZip && billingAddress.billMonth && billingAddress.billYear && billingAddress.billCVV)) {
       // Perform order completion logic here
       console.log("Order completed");
     } else {
       // Show error message or perform other actions for incomplete order
-      console.log("Error: Complete all required fields or select a saved card");
+      event.preventDefault();
+      alert("Please select a payment method or enter a new one. Please fill out all fields.");
     }
   };
 
@@ -155,7 +161,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="cardNumber"
                 type="text"
                 placeholder="####-####-####-####"
+                value={billingAddress.cardNumber}
                 onChange={handleBillingChange}
+                required
               />
             </div>
             <div className="flex-basis-0 w-96 flex-shrink">
@@ -170,7 +178,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="billStreet"
                 type="text"
                 placeholder="1234 Alphabet St"
+                value={billingAddress.billStreet}
                 onChange={handleBillingChange}
+                required
               />
             </div>
           </div>
@@ -187,7 +197,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 id="billCity"
                 type="text"
                 placeholder="Albuquerque"
+                value={billingAddress.billCity}
                 onChange={handleBillingChange}
+                required
               />
             </div>
             <div className="mb-6 w-full px-3 md:mb-0 md:w-1/3">
@@ -202,6 +214,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                   id="billState"
                   name="homeState"
+                  value={billingAddress.billState}
                   onChange={handleBillingChange}
                 >
                   {states.map((state) => {
@@ -232,7 +245,9 @@ const EditProfile = ({ data }: EditProfileProps) => {
                 type="text"
                 placeholder="90210"
                 name="homeZip"
+                value={billingAddress.billZip}
                 onChange={handleBillingChange}
+                required
               />
             </div>
           </div>
@@ -278,6 +293,8 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   name="billMonth"
                   placeholder="12"
                   pattern="([1-9]|1[012])"
+                  value={billingAddress.billMonth}
+                  onChange={handleBillingChange}
                   required
                 />
               </div>
@@ -296,22 +313,27 @@ const EditProfile = ({ data }: EditProfileProps) => {
                   name="billYear"
                   placeholder="2023"
                   pattern="(\d\d\d\d)"
+                  value={billingAddress.billYear}
+                  onChange={handleBillingChange}
                   required
                 />
               </div>
             </div>
             <div className="mb-6 w-full px-3 md:mb-0 md:w-1/4">
               <label
-                htmlFor="grid-cvv"
+                htmlFor="billCVV"
                 className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
               >
                 CVV<span className="text-red-500">*</span>
               </label>
               <input
                 className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
-                id="grid-cvv"
+                id="billCVV"
                 type="text"
                 placeholder="###"
+                value={billingAddress.billCVV}
+                onChange={handleBillingChange}
+                required
               />
             </div>
           </div>
