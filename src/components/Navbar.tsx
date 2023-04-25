@@ -59,7 +59,7 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-            {api.user.isAdmin.useQuery({ email: data?.user.email }).data == true ? (
+            {data && (api.user.isAdmin.useQuery({ email: data?.user.email }).data == true) ? (
               <li>
               <Link
                 id="profileLink"

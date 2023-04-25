@@ -161,7 +161,7 @@ const Browse: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      {api.user.isAdmin.useQuery({ email: data?.user.email }).data == true ? (
+      {data && (api.user.isAdmin.useQuery({ email: data?.user.email }).data == true) ? (
         <AdminBrowse></AdminBrowse>
       ) : (
         <main className="my-10 flex min-h-screen flex-col items-center">
