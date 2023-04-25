@@ -98,11 +98,8 @@ const Home: NextPage = () => {
   // date is going to be 4 hours ahead of our current time (EST)
   let today = new Date()
   today = new Date(today.getTime() - (240 * 60000))
-  const prevDate = new Date(today.getTime() - (1440 * 60000))
   const dateTimeInParts = today.toISOString().split( "T" );
   const dateOnly = dateTimeInParts[0]; // YYYY-MM-DD ex:"2023-04-05"
-  // const dateTimeInPartsPrev = prevDate.toISOString().split( "T" );
-  // const dateOnlyPrev = dateTimeInPartsPrev[0]; // YYYY-MM-DD ex:"2023-04-05"
   console.log("date only", dateOnly)
   console.log("today", today.toISOString())
   const startTime = new Date(dateOnly + "T00:00:00.00")
