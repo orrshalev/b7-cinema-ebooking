@@ -176,6 +176,10 @@ const AdminBrowse: NextPage = () => {
       poster: document.getElementById("poster")?.value as string,
       trailer: document.getElementById("trailer")?.value as string,
       length: document.getElementById("length")?.value as string,
+      synopsis: document.getElementById("synopsis")?.value as string,
+      cast: document.getElementById("cast")?.value as string,
+      directors: document.getElementById("directors")?.value as string,
+      producers: document.getElementById("producers")?.value as string,
     });
     console.log(movie?.title);
     console.log(document.getElementById("length")?.value);
@@ -514,6 +518,21 @@ const AdminBrowse: NextPage = () => {
                         </div>
                       </div>
                       <div className="-mx-3 mb-6 flex flex-wrap">
+                      <div className="w-full px-3">
+                        <label
+                          htmlFor="synopsis"
+                          className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                        >
+                          Synopsis
+                        </label>
+                        <textarea
+                          className="mb-3 block h-[100px] w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3  px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                          id="synopsis"
+                          defaultValue={movie?.synopsis}
+                        />
+                      </div>
+                    </div>
+                      <div className="-mx-3 mb-6 flex flex-wrap">
                         <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">
                           <label
                             htmlFor="grid-city"
@@ -562,10 +581,55 @@ const AdminBrowse: NextPage = () => {
                       <div className="-mx-3 mb-6 flex flex-wrap">
                         <div className="w-full px-3">
                           <label
+                            htmlFor="cast"
+                            className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                          >
+                            Cast
+                          </label>
+                          <textarea
+                            className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3  px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                            id="cast"
+                            defaultValue={movie?.cast}
+                          />
+                        </div>
+                      </div>
+                      <div className="-mx-3 mb-6 flex flex-wrap">
+                        <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">
+                          <label
+                            htmlFor="directors"
+                            className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                          >
+                            Director
+                          </label>
+                          <input
+                            className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                            id="directors"
+                            type="text"
+                            defaultValue={movie?.directors}
+                          />
+                        </div>
+                        <div className="mb-6 w-full px-3 md:mb-0 md:w-1/2">
+                          <label
+                            htmlFor="producers"
+                            className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
+                          >
+                            Producer
+                          </label>
+                          <input
+                            className="block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                            id="producers"
+                            type="text"
+                            defaultValue={movie?.producers}
+                          />
+                        </div>
+                      </div>
+                      <div className="-mx-3 mb-6 flex flex-wrap">
+                        <div className="w-full px-3">
+                          <label
                             htmlFor="grid-email-address"
                             className="mb-2 block text-xs font-bold uppercase tracking-wide text-gray-700"
                           >
-                            Thumbnail URL
+                            Poster URL
                           </label>
                           <input
                             className="mb-3 block w-full appearance-none rounded border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"

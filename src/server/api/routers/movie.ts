@@ -161,6 +161,10 @@ export const movieRouter = createTRPCRouter({
         poster: z.string(),
         trailer: z.string(),
         length: z.string(),
+        synopsis: z.string(),
+        cast: z.string(),
+        directors: z.string(),
+        producers: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -178,6 +182,10 @@ export const movieRouter = createTRPCRouter({
           trailer: input.trailer,
           poster: input.poster,
           length: input.length,
+          synopsis: input.synopsis,
+          cast: input.cast,
+          directors: input.directors,
+          producers: input.producers,
         },
       });
     }),
