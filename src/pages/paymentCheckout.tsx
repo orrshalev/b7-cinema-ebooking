@@ -34,9 +34,10 @@ const NotLoggedIn = () => (
 
 type EditProfileProps = {
   data: Session;
+  onSubmit: () => void;
 };
 
-const EditProfile = ({ data }: EditProfileProps) => {
+const EditProfile = ({ data, onSubmit }: EditProfileProps) => {
   const loggedInUser = api.user.getUser.useQuery({ email: data?.user?.email });
   const cardAdder = api.card.addCard.useMutation();
   const currentUser = loggedInUser.data;
@@ -134,6 +135,7 @@ const EditProfile = ({ data }: EditProfileProps) => {
     ) {
       // Perform order completion logic here
       console.log("Order completed");
+      onSubmit();
     } else {
       // Show error message or perform other actions for incomplete order
       event.preventDefault();
@@ -598,7 +600,11 @@ const PaymentCheckout: NextPage = () => {
               </div>
             </div>
             <div className="my-10 flex min-h-screen flex-col items-center">
-              {data?.user ? <EditProfile data={data} /> : <NotLoggedIn />}
+              {data?.user ? (
+                <EditProfile data={data} onSubmit={handleSubmit} />
+              ) : (
+                <NotLoggedIn />
+              )}
             </div>
             {/* <div className="flex flex-col items-center justify-center py-10">
               <Link
