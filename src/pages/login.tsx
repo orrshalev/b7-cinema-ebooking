@@ -6,13 +6,20 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 
 const Login: NextPage = (props): JSX.Element => {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({ status: 100 });
+  const isBanned = api.user.isSuspended.useQuery({ email: userInfo.email });
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    if (isBanned.data === "SUSPENDED") {
+      alert("You are banned");
+      return;
+    }
 
     signIn("credentials", {
       email: userInfo.email,
@@ -23,7 +30,7 @@ const Login: NextPage = (props): JSX.Element => {
         if (response?.error == null) {
           alert("Login Successful!");
           setStatus({ ...status, status: 200 });
-          router.push("/")
+          router.push("/");
         } else if (response?.error == "verification") {
           alert("Please check your inbox and verify your account.");
         } else {
