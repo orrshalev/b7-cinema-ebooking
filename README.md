@@ -1,6 +1,6 @@
 # Cinema E-Booking App
 
-![Cat](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDM5MzAzYTBlNGI1Njk1ZWZmMTBkZTJiZDA2ODllYjMzM2NjM2JlMyZjdD1n/BESLeyWO2xpVrG3w2B/giphy.gif)
+![Screenshot from 2023-05-04 17-44-37](https://user-images.githubusercontent.com/78034726/236342806-8b2fadf1-f76d-42f1-ac5f-ce3c6cd84034.png)
 
 ## Overview
 
@@ -17,12 +17,12 @@ in order to create a full-stack web application. Contributors and roles are:
 
 ## Stack
 
-This project was bootstrapped with [create.t3.gg](create.t3.gg). It includes the following technologies:
+This project was bootstrapped with [create.t3.gg](http://create.t3.gg). It includes the following technologies:
 
-- [React.js](react.dev)
-- [TailwindCSS](tailwindcss.com)
-- [Next.js](nextjs.org)
-- [trpc](trpc.io)
-- [MongoDB](mongodb.com)
-- [Prisma](prisma.io)
-- [TypeScript](typescriptlang.org)
+- [React.js](http://react.dev)
+- [TailwindCSS](http://tailwindcss.com)
+- [Next.js](http://nextjs.org)
+- [trpc](http://trpc.io)
+- [MongoDB](http://mongodb.com)
+- [Prisma](http://prisma.io)
+- [TypeScript](http://typescriptlang.org)
